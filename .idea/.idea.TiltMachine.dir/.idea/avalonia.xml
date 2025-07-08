@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="App.axaml" value="TiltMachine.csproj" />
+        <entry key="ConfiguracoesWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="EnsaiosWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="MainWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="PropriedadesEnsaioWindow.axaml" value="TiltMachine.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

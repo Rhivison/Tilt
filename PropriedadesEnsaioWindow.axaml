@@ -1,0 +1,221 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.PropriedadesEnsaioWindow"
+        Title="Propriedades do Ensaio"
+        Width="600"
+        Height="450"
+        MinWidth="500"
+        MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid Margin="10">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Header com ícone e título -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+      <Border Background="#4CAF50" 
+              CornerRadius="15" 
+              Width="30" 
+              Height="30"
+              Margin="0,0,10,0">
+        <TextBlock Text="+" 
+                   Foreground="White" 
+                   FontSize="18" 
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+      </Border>
+      <TextBlock Text="Propriedades do Ensaio" 
+                 FontSize="16" 
+                 FontWeight="Bold"
+                 VerticalAlignment="Center"/>
+    </StackPanel>
+
+    <!-- Conteúdo principal -->
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="15">
+        
+        <!-- Primeira linha: Amostra e Local -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Amostra:" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtAmostra" Watermark="Digite a amostra"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Amostra N°:" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtAmostraNum" Text="0" Width="80" HorizontalAlignment="Left"/>
+          </StackPanel>
+        </Grid>
+
+        <!-- Segunda linha: Local e Responsável -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Local:" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtLocal" Watermark="Digite o local"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Responsável:" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtResponsavel" Watermark="Digite o responsável"/>
+          </StackPanel>
+        </Grid>
+
+        <!-- Terceira linha: Tipo de Rocha e Formato -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Tipo de Rocha:" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtTipoRocha" Watermark="Digite o tipo de rocha"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Formato do Corpo de Prova:" Margin="0,0,0,5"/>
+            <ComboBox x:Name="cmbFormato" SelectedIndex="0">
+              <ComboBoxItem Content="Prismático"/>
+              <ComboBoxItem Content="Cilíndrico"/>
+              <ComboBoxItem Content="Cúbico"/>
+            </ComboBox>
+          </StackPanel>
+        </Grid>
+
+        <!-- Dimensões -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Altura (mm):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtAltura" Text="0,00" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Largura (mm):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtLargura" Text="0,00" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="4">
+            <TextBlock Text="Profundidade (mm):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtProfundidade" Text="0,00" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+        </Grid>
+
+        <!-- Área e Taxa de Inclinação -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Área de Contato (cm²):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtAreaContato" Text="0" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Taxa de Inclinação (°/min):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtTaxaInclinacao" Text="0" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+        </Grid>
+
+        <!-- Inclinação e Deslocamento -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Inclinação Máxima (°):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtInclinacaoMaxima" Text="0" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Deslocamento Máximo (mm):" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtDeslocamentoMaximo" Text="0" HorizontalAlignment="Stretch"/>
+          </StackPanel>
+        </Grid>
+
+        <!-- Observações -->
+        <StackPanel>
+          <TextBlock Text="Observações:" Margin="0,0,0,5"/>
+          <TextBox x:Name="txtObservacoes" 
+                   Height="80" 
+                   TextWrapping="Wrap" 
+                   AcceptsReturn="True"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   Watermark="Digite suas observações aqui..."/>
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Botões -->
+    <StackPanel Grid.Row="2" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Right" 
+                Spacing="10"
+                Margin="0,15,0,0">
+      
+      <Button x:Name="btnSalvar" 
+              Content="Salvar" 
+              Background="#4CAF50" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnSalvarClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#45a049"/>
+          </Style>
+        </Button.Styles>
+      </Button>
+      
+      <Button x:Name="btnCancelar" 
+              Content="Cancelar" 
+              Background="#f44336" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnCancelarClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#da190b"/>
+          </Style>
+        </Button.Styles>
+      </Button>
+      
+    </StackPanel>
+
+  </Grid>
+</Window>

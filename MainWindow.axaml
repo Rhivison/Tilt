@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.MainWindow"
+        Title="Software Tilting Table"
+        Width="800" Height="600">
+    <DockPanel>
+
+        <!-- Menu -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Arquivo"/>
+            <MenuItem Header="_Ensaios"/>
+            <MenuItem Header="_Utilitários"/>
+            <MenuItem Header="_?"/>
+        </Menu>
+
+        <!-- Botões principais logo abaixo do menu -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,0,0" DockPanel.Dock="Top">
+            <Button Margin="5" Width="120" Height="50" Click="AmostraButton_Click">
+                <StackPanel>
+                    <Image Source="avares://TiltMachine/Assets/amostras.png" Width="100" Height="20"/>
+                    <TextBlock Text="Amostras" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="5" Width="120" Height="50">
+                <StackPanel>
+                    <Image Source="avares://TiltMachine/Assets/preteste.png" Width="100" Height="20"/>
+                    <TextBlock Text="Pré-teste" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="5" Width="120" Height="50">
+                <StackPanel>
+                    <Image Source="avares://TiltMachine/Assets/config.png" Width="100" Height="20"/>
+                    <TextBlock Text="Configurações" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="5" Width="120" Height="50">
+                <StackPanel>
+                    <Image Source="avares://TiltMachine/Assets/sair.png" Width="100" Height="20"/>
+                    <TextBlock Text="Sair" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- Área principal com título -->
+        <Grid Background="#F0F0F0">
+            <TextBlock Text="Software Tilting Table" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Foreground="#333333"/>
+        </Grid>
+
+    </DockPanel>
+</Window>

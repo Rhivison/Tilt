@@ -1,0 +1,291 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.ConfiguracoesWindow"
+        Title="Configurações"
+        Width="750"
+        Height="400"
+        MinWidth="700"
+        MinHeight="350"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid Margin="15">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Header com ícone e título -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+      <Border Background="#FF6B35" 
+              CornerRadius="15" 
+              Width="30" 
+              Height="30"
+              Margin="0,0,10,0">
+        <TextBlock Text="⚙" 
+                   Foreground="White" 
+                   FontSize="16" 
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+      </Border>
+      <TextBlock Text="Configurações" 
+                 FontSize="16" 
+                 FontWeight="Bold"
+                 VerticalAlignment="Center"/>
+    </StackPanel>
+
+    <!-- Conteúdo principal -->
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="15"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- Painel esquerdo: Unidade de Exibição -->
+      <Border Grid.Column="0" 
+              BorderBrush="#CCCCCC" 
+              BorderThickness="1" 
+              CornerRadius="5"
+              Padding="15">
+        <StackPanel>
+          <TextBlock Text="Unidade de Exibição" 
+                     FontSize="14" 
+                     FontWeight="Bold"
+                     Margin="0,0,0,15"
+                     HorizontalAlignment="Center"/>
+          
+          <!-- Inclinação -->
+          <Grid Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="10"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="Inclinação:" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,10,0"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" 
+                      x:Name="cmbInclinacaoUnidade" 
+                      SelectedIndex="0"
+                      MinWidth="80">
+              <ComboBoxItem Content="°"/>
+              <ComboBoxItem Content="rad"/>
+              <ComboBoxItem Content="grad"/>
+            </ComboBox>
+            
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+                       Text="Unidade:" 
+                       VerticalAlignment="Center" 
+                       Margin="15,0,10,0"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" 
+                       Text="Fator de Correção:" 
+                       VerticalAlignment="Center"/>
+            
+            <TextBox Grid.Row="2" Grid.Column="2" 
+                     x:Name="txtInclinacaoUnidade"
+                     Text="1"
+                     Width="60"
+                     HorizontalAlignment="Left"
+                     Margin="15,0,10,0"/>
+            <TextBox Grid.Row="2" Grid.Column="3" 
+                     x:Name="txtInclinacaoFator"
+                     Text="1"
+                     Width="60"
+                     HorizontalAlignment="Left"/>
+          </Grid>
+          
+          <!-- Deslocamento -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="10"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="Deslocamento:" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,10,0"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" 
+                      x:Name="cmbDeslocamentoUnidade" 
+                      SelectedIndex="0"
+                      MinWidth="80">
+              <ComboBoxItem Content="mm"/>
+              <ComboBoxItem Content="cm"/>
+              <ComboBoxItem Content="m"/>
+              <ComboBoxItem Content="in"/>
+            </ComboBox>
+            
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+                       Text="Unidade:" 
+                       VerticalAlignment="Center" 
+                       Margin="15,0,10,0"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" 
+                       Text="Fator de Correção:" 
+                       VerticalAlignment="Center"/>
+            
+            <TextBox Grid.Row="2" Grid.Column="2" 
+                     x:Name="txtDeslocamentoUnidade"
+                     Text="mm"
+                     Width="60"
+                     HorizontalAlignment="Left"
+                     Margin="15,0,10,0"/>
+            <TextBox Grid.Row="2" Grid.Column="3" 
+                     x:Name="txtDeslocamentoFator"
+                     Text="1"
+                     Width="60"
+                     HorizontalAlignment="Left"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Painel direito: Configurações de Ensaio -->
+      <StackPanel Grid.Column="2" Spacing="15">
+        
+        <!-- Configurações de Ensaio -->
+        <Border BorderBrush="#CCCCCC" 
+                BorderThickness="1" 
+                CornerRadius="5"
+                Padding="15">
+          <StackPanel>
+            <TextBlock Text="Configurações de Ensaio" 
+                       FontSize="14" 
+                       FontWeight="Bold"
+                       Margin="0,0,0,15"
+                       HorizontalAlignment="Center"/>
+            
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              
+              <TextBlock Grid.Column="0" 
+                         Text="Taxa de aquisição (s):" 
+                         VerticalAlignment="Center" 
+                         Margin="0,0,10,0"/>
+              <TextBox Grid.Column="2" 
+                       x:Name="txtTaxaAquisicao"
+                       Text="1,0"
+                       Width="80"
+                       HorizontalAlignment="Right"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Imagem para Relatório -->
+        <Border BorderBrush="#CCCCCC" 
+                BorderThickness="1" 
+                CornerRadius="5"
+                Padding="15"
+                Height="150">
+          <StackPanel>
+            <TextBlock Text="Imagem para Relatório" 
+                       FontSize="14" 
+                       FontWeight="Bold"
+                       Margin="0,0,0,15"
+                       HorizontalAlignment="Center"/>
+            
+            <Border BorderBrush="#DDDDDD" 
+                    BorderThickness="1" 
+                    CornerRadius="3"
+                    Height="80"
+                    Background="#FAFAFA">
+              <Grid>
+                <TextBlock Text="Nenhuma imagem selecionada" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"
+                           Foreground="#666666"
+                           FontStyle="Italic"/>
+                <Button x:Name="btnSelecionarImagem"
+                        Content="📁"
+                        Width="30"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="5"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="16"
+                        ToolTip.Tip="Selecionar imagem"
+                        Click="OnSelecionarImagemClick"/>
+              </Grid>
+            </Border>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Grid>
+
+    <!-- Botões -->
+    <StackPanel Grid.Row="2" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Center" 
+                Spacing="15"
+                Margin="0,20,0,0">
+      
+      <Button x:Name="btnCalibracao" 
+              Content="Calibração" 
+              Background="#4CAF50" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnCalibracaoClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#45a049"/>
+          </Style>
+        </Button.Styles>
+      </Button>
+      
+      <Button x:Name="btnCancelar" 
+              Content="Cancelar" 
+              Background="#f44336" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnCancelarClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#da190b"/>
+          </Style>
+        </Button.Styles>
+      </Button>
+      
+      <Button x:Name="btnSalvar" 
+              Content="Salvar" 
+              Background="#2196F3" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnSalvarClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#1976D2"/>
+          </Style>
+        </Button.Styles>
+      </Button>
+      
+    </StackPanel>
+
+  </Grid>
+</Window>
