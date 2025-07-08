@@ -1,0 +1,42 @@
+# Build artifacts
+bin/
+obj/
+
+# Avalonia XAML-generated files
+*.axaml.cs
+*.g.cs
+*.g.i.cs
+*.xaml.cs
+
+# User-specific files and IDE settings
+*.user
+*.suo
+*.DotSettings.user
+.idea/
+.vscode/
+
+# OS and temp files
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.assets.json
+project.nuget.cache
+project.packagespec.json
+
+# Rider and VS generated
+*.sln.iml
+_ReSharper*/
+*.sln.docstates
+*.sln.cache
+
+# Publish output
+publish/
+AppPackages/
+TestResults/
