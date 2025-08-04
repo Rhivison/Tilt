@@ -13,15 +13,10 @@ namespace TiltMachine
     {   
         private readonly DatabaseService _db = new();
 
-        public ObservableCollection<Ensaio> Ensaios { get; set; } = new()
-        {
-            new Ensaio { AmostraNumero = 1, AmostraNome = "Amostra A", Local = "São Paulo", Responsavel = "João", DataEnsaio = "04/07/2025", FormatoCorpoProva = "Cilíndrico" },
-            new Ensaio { AmostraNumero = 2, AmostraNome = "Amostra B", Local = "Rio", Responsavel = "Maria", DataEnsaio = "04/07/2025", FormatoCorpoProva = "Cúbico" },
-            new Ensaio { AmostraNumero = 3, AmostraNome = "Amostra C", Local = "BH", Responsavel = "Carlos", DataEnsaio = "04/07/2025", FormatoCorpoProva = "Prismático" }
-        };
+        public ObservableCollection<PropriedadesEnsaio> Ensaios { get; set; } = new();
 
-        private Ensaio? _ensaioSelecionado;
-        public Ensaio? EnsaioSelecionado
+        private PropriedadesEnsaio? _ensaioSelecionado;
+        public PropriedadesEnsaio? EnsaioSelecionado
         {
             get => _ensaioSelecionado;
             set
@@ -36,6 +31,7 @@ namespace TiltMachine
             InitializeComponent();
             _db.Inicializar();
             DataContext = this;
+            CarregarEnsaios();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -54,15 +50,15 @@ namespace TiltMachine
                 Console.WriteLine(ex.Message);
             }
         }
-    }
+        
+        private void CarregarEnsaios()
+        {
+            Ensaios.Clear();
+            var lista = _db.ObterTodos(); // método do DatabaseService
+            foreach (var ensaio in lista)
+                Ensaios.Add(ensaio);
+        }
 
-    public class Ensaio
-    {
-        public int AmostraNumero { get; set; }
-        public string AmostraNome { get; set; } = "";
-        public string Local { get; set; } = "";
-        public string Responsavel { get; set; } = "";
-        public string DataEnsaio { get; set; } = "";
-        public string FormatoCorpoProva { get; set; } = "";
     }
+    
 }

@@ -4,20 +4,37 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Threading.Tasks;
-
+using TiltMachine.Models;
+using TiltMachine.Services;
 namespace TiltMachine;
 
 public partial class PropriedadesEnsaioWindow : Window
-{
+{   
+    
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
         this.DataContext = this;
+        
     }
 
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+        txtAmostra = this.FindControl<TextBox>("txtAmostra");
+        txtAmostraNum = this.FindControl<TextBox>("txtAmostraNum");
+        txtLocal = this.FindControl<TextBox>("txtLocal");
+        txtResponsavel = this.FindControl<TextBox>("txtResponsavel");
+        txtTipoRocha = this.FindControl<TextBox>("txtTipoRocha");
+        cmbFormato = this.FindControl<ComboBox>("cmbFormato");
+        txtAltura = this.FindControl<TextBox>("txtAltura");
+        txtLargura = this.FindControl<TextBox>("txtLargura");
+        txtProfundidade = this.FindControl<TextBox>("txtProfundidade");
+        txtAreaContato = this.FindControl<TextBox>("txtAreaContato");
+        txtTaxaInclinacao = this.FindControl<TextBox>("txtTaxaInclinacao");
+        txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
+        txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
+        txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
     }
 
     // Evento do botão Salvar
@@ -31,7 +48,8 @@ public partial class PropriedadesEnsaioWindow : Window
                 await ShowMessageAsync("Erro", "O campo 'Amostra' é obrigatório.");
                 return;
             }
-
+            var itemSelecionado = cmbFormato.SelectedItem as ComboBoxItem;
+            var formatoTexto = itemSelecionado?.Content?.ToString() ?? "Prismático";
             // Aqui você pode adicionar a lógica para salvar os dados
             var propriedades = new PropriedadesEnsaio
             {
@@ -40,7 +58,7 @@ public partial class PropriedadesEnsaioWindow : Window
                 Local = txtLocal.Text,
                 Responsavel = txtResponsavel.Text,
                 TipoRocha = txtTipoRocha.Text,
-                FormatoCorpoProva = cmbFormato.SelectedItem?.ToString() ?? "Prismático",
+                FormatoCorpoProva = formatoTexto,
                 Altura = ParseDouble(txtAltura.Text),
                 Largura = ParseDouble(txtLargura.Text),
                 Profundidade = ParseDouble(txtProfundidade.Text),
@@ -126,34 +144,17 @@ public partial class PropriedadesEnsaioWindow : Window
     // Método para salvar (você pode implementar conforme sua necessidade)
     private async Task SalvarPropriedades(PropriedadesEnsaio propriedades)
     {
-        // Simular salvamento assíncrono
-        await Task.Delay(100);
-        
-        // Aqui você pode implementar:
-        // - Salvamento em banco de dados
-        // - Salvamento em arquivo
-        // - Envio para API
-        // etc.
+        try
+        {
+            var db = new DatabaseService();
+            db.Inicializar();
+            db.Inserir(propriedades);
+        }
+        catch (Exception ex)
+        {
+            await ShowMessageAsync("Erro ao salvar no banco", ex.Message);
+        }
         
         Console.WriteLine($"Propriedades salvas: {propriedades.Amostra}");
     }
-}
-
-// Classe modelo para representar as propriedades
-public class PropriedadesEnsaio
-{
-    public string Amostra { get; set; } = string.Empty;
-    public int AmostraNumero { get; set; }
-    public string Local { get; set; } = string.Empty;
-    public string Responsavel { get; set; } = string.Empty;
-    public string TipoRocha { get; set; } = string.Empty;
-    public string FormatoCorpoProva { get; set; } = "Prismático";
-    public double Altura { get; set; }
-    public double Largura { get; set; }
-    public double Profundidade { get; set; }
-    public double AreaContato { get; set; }
-    public double TaxaInclinacao { get; set; }
-    public double InclinacaoMaxima { get; set; }
-    public double DeslocamentoMaximo { get; set; }
-    public string Observacoes { get; set; } = string.Empty;
 }
