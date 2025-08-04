@@ -185,6 +185,20 @@
                 Spacing="10"
                 Margin="0,15,0,0">
       
+      <Button x:Name="btnEnsaiar" 
+              Content="Ensaiar" 
+              Background="#2196F3" 
+              Foreground="White"
+              Padding="20,8"
+              CornerRadius="4"
+              FontWeight="SemiBold"
+              Click="OnEnsaiarClick">
+        <Button.Styles>
+          <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#1976D2"/>
+          </Style>
+        </Button.Styles>
+      </Button>
       <Button x:Name="btnSalvar" 
               Content="Salvar" 
               Background="#4CAF50" 

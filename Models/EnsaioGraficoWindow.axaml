@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:local="clr-namespace:TiltMachine"
+        x:Class="TiltMachine.EnsaioGraficoWindow"
+        x:DataType="local:EnsaioGraficoWindow"
+        Title="Detalhes do Ensaio"
+        Width="1000"
+        Height="700"
+        Icon="/Assets/chart-icon.png"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid RowDefinitions="Auto,*,Auto">
+    <!-- Cabeçalho -->
+    <StackPanel Orientation="Vertical" Margin="20">
+      <TextBlock Text="Informações do Ensaio" FontSize="20" FontWeight="Bold" Margin="0 0 0 10"/>
+      <WrapPanel ItemWidth="300" Orientation="Horizontal">
+        <TextBlock Text="{Binding Ensaio.Amostra}" />
+        <TextBlock Text=" | Nº: " />
+        <TextBlock Text="{Binding Ensaio.AmostraNumero}" />
+        <TextBlock Text=" | Local: " />
+        <TextBlock Text="{Binding Ensaio.Local}" />
+        <TextBlock Text=" | Responsável: " />
+        <TextBlock Text="{Binding Ensaio.Responsavel}" />
+        <TextBlock Text=" | Data: " />
+        <TextBlock Text="{Binding Ensaio.DataEnsaio}" />
+      </WrapPanel>
+
+      <WrapPanel Margin="0 10 0 0" Orientation="Horizontal">
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Tipo de Rocha:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.TipoRocha}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Formato do Corpo de Prova:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.FormatoCorpoProva}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Altura:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.Altura}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Largura:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.Largura}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Profundidade:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.Profundidade}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,20,0">
+          <TextBlock Text="Área de Contato:" FontWeight="Bold"/>
+          <TextBlock Text="{Binding Ensaio.AreaContato}" />
+        </StackPanel>
+      </WrapPanel>
+    </StackPanel>
+
+    <!-- Gráfico -->
+    <Border Grid.Row="1" Margin="20" BorderBrush="#ccc" BorderThickness="1" CornerRadius="6">
+      <lvc:CartesianChart x:Name="chart"
+                          Series="{Binding ChartSeries}"
+                          LegendPosition="Bottom"
+                          Background="White"/>
+    </Border>
+
+    <!-- Rodapé -->
+    <StackPanel Grid.Row="2" Margin="20" Orientation="Vertical" Spacing="10">
+      <TextBlock Text="Observações" FontWeight="Bold"/>
+      <TextBlock Text="{Binding Ensaio.Observacoes}" TextWrapping="Wrap"/>
+    </StackPanel>
+  </Grid>
+</Window>

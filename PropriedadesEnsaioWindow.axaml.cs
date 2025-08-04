@@ -200,4 +200,10 @@ public partial class PropriedadesEnsaioWindow : Window
         
         Console.WriteLine($"Propriedades salvas: {propriedades.Amostra}");
     }
+
+    private void OnEnsaiarClick(object sender, RoutedEventArgs e)
+    {
+        var janela = new EnsaioGraficoWindow();
+        janela.Show();
+    }
 }

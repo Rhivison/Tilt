@@ -8,6 +8,7 @@
         <entry key="EnsaiosWindow.axaml" value="TiltMachine.csproj" />
         <entry key="MainWindow.axaml" value="TiltMachine.csproj" />
         <entry key="PropriedadesEnsaioWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="Services/EnsaioGraficoWindow.axaml" value="TiltMachine.csproj" />
       </map>
     </option>
   </component>
