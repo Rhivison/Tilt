@@ -7,10 +7,7 @@
 
         <!-- Menu -->
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_Arquivo"/>
-            <MenuItem Header="_Ensaios" Click="AmostraButton_Click"/>
-            <MenuItem Header="_Utilitários"/>
-            <MenuItem Header="_?"/>
+            <MenuItem Header="_Ensaios" Click="EnsaiosButton_Click"/>
         </Menu>
 
         <!-- Botões principais logo abaixo do menu -->

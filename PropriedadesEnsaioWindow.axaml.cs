@@ -3,24 +3,63 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TiltMachine.Models;
 using TiltMachine.Services;
+
 namespace TiltMachine;
 
 public partial class PropriedadesEnsaioWindow : Window
-{   
-    
+{
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
         this.DataContext = this;
+    }
+
+    public PropriedadesEnsaioWindow(PropriedadesEnsaio propriedades) : this()
+    {   
+        // Não chamar InitializeComponent() novamente, pois já foi chamado pelo construtor base
+        // InitializeComponent(); // REMOVER ESTA LINHA
         
+        // Verificar se os controles foram inicializados antes de usar
+        if (txtAmostra != null) txtAmostra.Text = propriedades.Amostra ?? string.Empty;
+        if (txtAmostraNum != null) txtAmostraNum.Text = propriedades.AmostraNumero.ToString();
+        if (txtLocal != null) txtLocal.Text = propriedades.Local ?? string.Empty;
+        if (txtResponsavel != null) txtResponsavel.Text = propriedades.Responsavel ?? string.Empty;
+        if (txtTipoRocha != null) txtTipoRocha.Text = propriedades.TipoRocha ?? string.Empty;
+        
+        if (cmbFormato != null)
+        {
+            cmbFormato.SelectedItem = EncontrarItemPorTexto(cmbFormato, propriedades.FormatoCorpoProva);
+        }
+        
+        if (txtAltura != null) txtAltura.Text = propriedades.Altura.ToString("F2");
+        if (txtLargura != null) txtLargura.Text = propriedades.Largura.ToString("F2");
+        if (txtProfundidade != null) txtProfundidade.Text = propriedades.Profundidade.ToString("F2");
+        if (txtAreaContato != null) txtAreaContato.Text = propriedades.AreaContato.ToString("F2");
+        if (txtTaxaInclinacao != null) txtTaxaInclinacao.Text = propriedades.TaxaInclinacao.ToString("F2");
+        if (txtInclinacaoMaxima != null) txtInclinacaoMaxima.Text = propriedades.InclinacaoMaxima.ToString("F2");
+        if (txtDeslocamentoMaximo != null) txtDeslocamentoMaximo.Text = propriedades.DeslocamentoMaximo.ToString("F2");
+        if (txtObservacoes != null) txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
+
+        if (btnSalvar != null) btnSalvar.IsEnabled = false;
+    }
+    
+    private ComboBoxItem? EncontrarItemPorTexto(ComboBox combo, string texto)
+    {
+        if (string.IsNullOrEmpty(texto)) return null;
+        
+        return combo.Items.OfType<ComboBoxItem>()
+            .FirstOrDefault(item => item.Content?.ToString() == texto);
     }
 
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+        
+        // Inicializar todos os controles
         txtAmostra = this.FindControl<TextBox>("txtAmostra");
         txtAmostraNum = this.FindControl<TextBox>("txtAmostraNum");
         txtLocal = this.FindControl<TextBox>("txtLocal");
@@ -35,6 +74,8 @@ public partial class PropriedadesEnsaioWindow : Window
         txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
         txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
         txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
+        btnSalvar = this.FindControl<Button>("btnSalvar");
+        btnCancelar = this.FindControl<Button>("btnCancelar");
     }
 
     // Evento do botão Salvar
@@ -48,28 +89,30 @@ public partial class PropriedadesEnsaioWindow : Window
                 await ShowMessageAsync("Erro", "O campo 'Amostra' é obrigatório.");
                 return;
             }
-            var itemSelecionado = cmbFormato.SelectedItem as ComboBoxItem;
+            
+            var itemSelecionado = cmbFormato?.SelectedItem as ComboBoxItem;
             var formatoTexto = itemSelecionado?.Content?.ToString() ?? "Prismático";
-            // Aqui você pode adicionar a lógica para salvar os dados
+            
+            // Criar o objeto com os dados do formulário
             var propriedades = new PropriedadesEnsaio
             {
-                Amostra = txtAmostra.Text,
-                AmostraNumero = int.TryParse(txtAmostraNum.Text, out int num) ? num : 0,
-                Local = txtLocal.Text,
-                Responsavel = txtResponsavel.Text,
-                TipoRocha = txtTipoRocha.Text,
+                Amostra = txtAmostra?.Text ?? string.Empty,
+                AmostraNumero = int.TryParse(txtAmostraNum?.Text, out int num) ? num : 0,
+                Local = txtLocal?.Text ?? string.Empty,
+                Responsavel = txtResponsavel?.Text ?? string.Empty,
+                TipoRocha = txtTipoRocha?.Text ?? string.Empty,
                 FormatoCorpoProva = formatoTexto,
-                Altura = ParseDouble(txtAltura.Text),
-                Largura = ParseDouble(txtLargura.Text),
-                Profundidade = ParseDouble(txtProfundidade.Text),
-                AreaContato = ParseDouble(txtAreaContato.Text),
-                TaxaInclinacao = ParseDouble(txtTaxaInclinacao.Text),
-                InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima.Text),
-                DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo.Text),
-                Observacoes = txtObservacoes.Text
+                Altura = ParseDouble(txtAltura?.Text),
+                Largura = ParseDouble(txtLargura?.Text),
+                Profundidade = ParseDouble(txtProfundidade?.Text),
+                AreaContato = ParseDouble(txtAreaContato?.Text),
+                TaxaInclinacao = ParseDouble(txtTaxaInclinacao?.Text),
+                InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima?.Text),
+                DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo?.Text),
+                Observacoes = txtObservacoes?.Text ?? string.Empty
             };
 
-            // Exemplo de salvamento (você pode adaptar para sua necessidade)
+            // Salvar as propriedades
             await SalvarPropriedades(propriedades);
             
             await ShowMessageAsync("Sucesso", "Propriedades salvas com sucesso!");
@@ -141,7 +184,7 @@ public partial class PropriedadesEnsaioWindow : Window
         await messageBox.ShowDialog(this);
     }
 
-    // Método para salvar (você pode implementar conforme sua necessidade)
+    // Método para salvar as propriedades
     private async Task SalvarPropriedades(PropriedadesEnsaio propriedades)
     {
         try

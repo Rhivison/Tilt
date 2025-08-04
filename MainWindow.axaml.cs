@@ -26,5 +26,18 @@ namespace TiltMachine
                 // Avalonia.Controls.MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow("Erro", ex.Message).Show();
             }
         }
+
+        private void EnsaiosButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var propriedadeEnsaiosWindow = new PropriedadesEnsaioWindow();
+                propriedadeEnsaiosWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+        }
     }
 }

@@ -3,7 +3,8 @@ using System;
 namespace TiltMachine.Models;
 
 public class PropriedadesEnsaio
-{
+{   
+    public int Id { get; set; }
     public string Amostra { get; set; } = string.Empty;
     public int AmostraNumero { get; set; }
     public string Local { get; set; } = string.Empty;

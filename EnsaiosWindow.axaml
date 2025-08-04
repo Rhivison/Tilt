@@ -60,13 +60,13 @@
             <Button Margin="5" Width="120" Height="40" Background="#4CAF50" Foreground="White" Click="NovoEnsaioButton_Click">
                 <TextBlock Text="Novo Ensaio" VerticalAlignment="Center"/>
             </Button>
-            <Button Margin="5" Width="120" Height="40" Background="#FF9800" Foreground="White">
-                <TextBlock Text="Abrir Ensaio" VerticalAlignment="Center"/>
+            <Button Margin="5" Width="120" Height="40" Background="#FF9800" Foreground="White" Click="AbrirEnsaioButton_Click">
+                <TextBlock Text="Abrir Ensaio" VerticalAlignment="Center" />
             </Button>
-            <Button Margin="5" Width="120" Height="40" Background="#F44336" Foreground="White">
+            <Button Margin="5" Width="120" Height="40" Background="#F44336" Foreground="White" Click="DeletarEnsaioButton_Click">
                 <TextBlock Text="Deletar" VerticalAlignment="Center"/>
             </Button>
-            <Button Margin="5" Width="120" Height="40" Background="#607D8B" Foreground="White">
+            <Button Margin="5" Width="120" Height="40" Background="#607D8B" Foreground="White" Click="SairButton_Click">
                 <TextBlock Text="Sair" VerticalAlignment="Center"/>
             </Button>
         </StackPanel>
