@@ -90,7 +90,8 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
             while (reader.Read())
             {
                 lista.Add(new PropriedadesEnsaio
-                {
+                {   
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
                     Amostra = reader.GetString(reader.GetOrdinal("Amostra")),
                     AmostraNumero = reader.GetInt32(reader.GetOrdinal("AmostraNumero")),
                     Local = reader.GetString(reader.GetOrdinal("Local")),

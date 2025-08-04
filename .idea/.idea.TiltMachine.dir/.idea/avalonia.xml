@@ -5,6 +5,7 @@
       <map>
         <entry key="App.axaml" value="TiltMachine.csproj" />
         <entry key="ConfiguracoesWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="EnsaioGraficoWindow.axaml" value="TiltMachine.csproj" />
         <entry key="EnsaiosWindow.axaml" value="TiltMachine.csproj" />
         <entry key="MainWindow.axaml" value="TiltMachine.csproj" />
         <entry key="PropriedadesEnsaioWindow.axaml" value="TiltMachine.csproj" />

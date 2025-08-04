@@ -38,8 +38,8 @@
             </Button>
         </StackPanel>
 
-        <!-- Área principal com título -->
-        <Grid Background="#F0F0F0">
+        <!-- Área principal com título, ocupando espaço restante -->
+        <Grid Background="#F0F0F0" DockPanel.Dock="Top" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <TextBlock Text="Software Tilting Table" 
                        FontSize="24" 
                        FontWeight="Bold" 
@@ -47,6 +47,18 @@
                        VerticalAlignment="Center" 
                        Foreground="#333333"/>
         </Grid>
+
+        <!-- Rodapé fixo na parte inferior -->
+        <Border DockPanel.Dock="Bottom" Background="#EEE" Height="30" Padding="10,5" >
+            <Grid>
+                <StackPanel Orientation="Horizontal" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Left">
+                    <TextBlock Text="Status:" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="StatusLabel" Text="Desconectado" Foreground="Red" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
     </DockPanel>
 </Window>

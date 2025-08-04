@@ -99,7 +99,7 @@ namespace TiltMachine
             {
                 var db = new DatabaseService();
                 db.Inicializar();
-                db.Deletar(EnsaioSelecionado.AmostraNumero);
+                db.Deletar(EnsaioSelecionado.Id);
 
                 Ensaios.Remove(EnsaioSelecionado);
                 EnsaioSelecionado = null;

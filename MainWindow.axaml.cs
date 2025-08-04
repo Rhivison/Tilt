@@ -1,14 +1,26 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-
+using Avalonia.Media;
+using Avalonia.Threading;
+using TiltMachine.Services;
 namespace TiltMachine
-{
+{   
     public partial class MainWindow : Window
-    {
+    {   
+        private ArduinoService _arduinoService;
         public MainWindow()
         {
             InitializeComponent();
+            App.Arduino.StatusConexaoAlterado += conectado =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    StatusLabel.Text = conectado ? "Conectado" : "Desconectado";
+                    StatusLabel.Foreground = conectado ? Brushes.Green : Brushes.Red;
+                });
+            };
+            
         }
 
         private void AmostraButton_Click(object sender, RoutedEventArgs e)

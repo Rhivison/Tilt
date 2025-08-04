@@ -12,18 +12,17 @@ namespace TiltMachine;
 
 public partial class PropriedadesEnsaioWindow : Window
 {
+    public PropriedadesEnsaio _ensaioPropriedades = new PropriedadesEnsaio();
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
         this.DataContext = this;
+        
     }
 
     public PropriedadesEnsaioWindow(PropriedadesEnsaio propriedades) : this()
     {   
-        // Não chamar InitializeComponent() novamente, pois já foi chamado pelo construtor base
-        // InitializeComponent(); // REMOVER ESTA LINHA
-        
-        // Verificar se os controles foram inicializados antes de usar
+       
         if (txtAmostra != null) txtAmostra.Text = propriedades.Amostra ?? string.Empty;
         if (txtAmostraNum != null) txtAmostraNum.Text = propriedades.AmostraNumero.ToString();
         if (txtLocal != null) txtLocal.Text = propriedades.Local ?? string.Empty;
@@ -45,6 +44,7 @@ public partial class PropriedadesEnsaioWindow : Window
         if (txtObservacoes != null) txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
 
         if (btnSalvar != null) btnSalvar.IsEnabled = false;
+        if (btnEnsaiar != null) btnEnsaiar.IsEnabled = true;
     }
     
     private ComboBoxItem? EncontrarItemPorTexto(ComboBox combo, string texto)
@@ -76,6 +76,8 @@ public partial class PropriedadesEnsaioWindow : Window
         txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
         btnSalvar = this.FindControl<Button>("btnSalvar");
         btnCancelar = this.FindControl<Button>("btnCancelar");
+        btnEnsaiar = this.FindControl<Button>("btnEnsaiar");
+        if (btnEnsaiar != null) btnEnsaiar.IsEnabled = false;
     }
 
     // Evento do botão Salvar
@@ -112,13 +114,13 @@ public partial class PropriedadesEnsaioWindow : Window
                 Observacoes = txtObservacoes?.Text ?? string.Empty
             };
 
+            _ensaioPropriedades = propriedades;
+
             // Salvar as propriedades
             await SalvarPropriedades(propriedades);
             
             await ShowMessageAsync("Sucesso", "Propriedades salvas com sucesso!");
             
-            // Fechar a janela após salvar
-            this.Close(true);
         }
         catch (Exception ex)
         {
@@ -192,6 +194,7 @@ public partial class PropriedadesEnsaioWindow : Window
             var db = new DatabaseService();
             db.Inicializar();
             db.Inserir(propriedades);
+            btnEnsaiar.IsEnabled = true;
         }
         catch (Exception ex)
         {
@@ -202,8 +205,8 @@ public partial class PropriedadesEnsaioWindow : Window
     }
 
     private void OnEnsaiarClick(object sender, RoutedEventArgs e)
-    {
-        var janela = new EnsaioGraficoWindow();
+    {   
+        var janela = new EnsaioGraficoWindow(_ensaioPropriedades);
         janela.Show();
     }
 }
