@@ -2,27 +2,195 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.OperacaoWindow"
         Title="Operação da Máquina"
-        Width="600" Height="400">
-    <DockPanel>
+        Width="600" Height="700"
+        MinWidth="400" MinHeight="500">
 
-        <!-- Rodapé com status -->
-        <Border DockPanel.Dock="Bottom" Background="#EEE" Height="30" Padding="10,5">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Status:" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBlock x:Name="StatusLabel" Text="Desconectado" Foreground="Red" Margin="5,0,0,0" VerticalAlignment="Center"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>      <!-- Conteúdo principal expansível -->
+            <RowDefinition Height="Auto"/>   <!-- Controles de velocidade -->
+            <RowDefinition Height="Auto"/>   <!-- Status bar -->
+        </Grid.RowDefinitions>
+
+        <!-- Conteúdo principal - Grid.Row="0" -->
+        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        Spacing="20" Margin="20">
+
+                <!-- Botão Conectar -->
+                <Button Content="🔌 Conectar" 
+                        MinWidth="200" MaxWidth="400"
+                        Height="50" 
+                        HorizontalAlignment="Stretch"
+                        Click="Conectar_Click"/>
+
+                <!-- Botões de comando -->
+                <StackPanel Spacing="15" HorizontalAlignment="Center">
+                    <Button Content="✅ START1" 
+                            MinWidth="200" MaxWidth="400"
+                            Height="50" 
+                            HorizontalAlignment="Stretch"
+                            Click="Start1_Click"/>
+                    
+                    <Button Content="✅ START2" 
+                            MinWidth="200" MaxWidth="400"
+                            Height="50" 
+                            HorizontalAlignment="Stretch"
+                            Click="Start2_Click"/>
+                    
+                    <Button Content="🛑 STOP" 
+                            MinWidth="200" MaxWidth="400"
+                            Height="50" 
+                            HorizontalAlignment="Stretch"
+                            Background="Red" 
+                            Foreground="White" 
+                            Click="Stop_Click"/>
+                    
+                    <Button Content="⚙️ MANUAL" 
+                            MinWidth="200" MaxWidth="400"
+                            Height="50" 
+                            HorizontalAlignment="Stretch"
+                            Click="Manual_Click"/>
+                    
+                    <Button Content="↩️ REPOSICIONAR" 
+                            MinWidth="200" MaxWidth="400"
+                            Height="50" 
+                            HorizontalAlignment="Stretch"
+                            Click="Reposicionar_Click"/>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Controle de Velocidade - Grid.Row="1" -->
+        <Border Grid.Row="1" 
+                Margin="10" 
+                BorderBrush="Gray" 
+                BorderThickness="1" 
+                CornerRadius="5" 
+                Padding="15">
+            <StackPanel Spacing="15">
+                
+                <!-- Primeira linha: Slider e controles principais -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                               Text="Velocidade:" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,10,0"/>
+                    
+                    <Slider Grid.Column="1" 
+                            x:Name="SpeedSlider" 
+                            Minimum="0.1" 
+                            Maximum="300" 
+                            Value="10"
+                            TickFrequency="10" 
+                            IsSnapToTickEnabled="True"
+                            ValueChanged="SpeedSlider_ValueChanged" 
+                            IsEnabled="False" 
+                            Margin="0,0,10,0"/>
+                    
+                    <TextBox Grid.Column="2" 
+                             x:Name="SpeedTextBox" 
+                             Text="10.0" 
+                             Width="70"
+                             KeyDown="SpeedTextBox_KeyDown" 
+                             IsEnabled="False" 
+                             Margin="0,0,5,0"/>
+                    
+                    <TextBlock Grid.Column="3" 
+                               Text="graus/min" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,10,0"/>
+                    
+                    <Button Grid.Column="4" 
+                            x:Name="SetSpeedButton" 
+                            Content="Definir" 
+                            Click="SetSpeedButton_Click" 
+                            IsEnabled="False"
+                            MinWidth="70"/>
+                </Grid>
+
+                <!-- Segunda linha: Botões de velocidade responsivos -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" 
+                            x:Name="Speed1Button" 
+                            Content="1 grau/min" 
+                            Click="Speed1Button_Click" 
+                            IsEnabled="False" 
+                            Margin="0,0,2,0"
+                            FontSize="11"
+                            MinWidth="60"/>
+                    
+                    <Button Grid.Column="1" 
+                            x:Name="Speed10Button" 
+                            Content="10 graus/min" 
+                            Click="Speed10Button_Click" 
+                            IsEnabled="False" 
+                            Margin="2,0,2,0"
+                            FontSize="11"
+                            MinWidth="60"/>
+                    
+                    <Button Grid.Column="2" 
+                            x:Name="Speed30Button" 
+                            Content="30 graus/min" 
+                            Click="Speed30Button_Click" 
+                            IsEnabled="False" 
+                            Margin="2,0,2,0"
+                            FontSize="11"
+                            MinWidth="60"/>
+                    
+                    <Button Grid.Column="3" 
+                            x:Name="SpeedPlusButton" 
+                            Content="+ 5" 
+                            Click="SpeedPlusButton_Click" 
+                            IsEnabled="False" 
+                            Margin="2,0,2,0"
+                            FontSize="12"
+                            MinWidth="50"/>
+                    
+                    <Button Grid.Column="4" 
+                            x:Name="SpeedMinusButton" 
+                            Content="- 5" 
+                            Click="SpeedMinusButton_Click" 
+                            IsEnabled="False" 
+                            Margin="2,0,0,0"
+                            FontSize="12"
+                            MinWidth="50"/>
+                </Grid>
             </StackPanel>
         </Border>
 
-        <!-- Conteúdo principal -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-            <Button Content="CONECTAR" Width="200" Height="50" Click="Conectar_Click"/>
-            <Button Content="START1" Width="200" Height="50" Click="Start1_Click"/>
-            <Button Content="START2" Width="200" Height="50" Click="Start2_Click"/>
-            <Button Content="STOP" Width="200" Height="50" Click="Stop_Click"/>
-            <Button Content="MANUAL" Width="200" Height="50" Click="Manual_Click"/>
-            <Button Content="REPOSICIONAR" Width="200" Height="50" Click="Reposicionar_Click"/>
+        <!-- Rodapé com status - Grid.Row="2" -->
+        <Border Grid.Row="2" 
+                Background="#EEE" 
+                Height="35" 
+                Padding="15,8">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Status:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="StatusLabel" 
+                           Text="Desconectado" 
+                           Foreground="Red" 
+                           Margin="8,0,0,0" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
 
-        </StackPanel>
+    </Grid>
 
-    </DockPanel>
 </Window>
