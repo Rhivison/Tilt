@@ -45,6 +45,7 @@ public partial class PropriedadesEnsaioWindow : Window
 
         if (btnSalvar != null) btnSalvar.IsEnabled = false;
         if (btnEnsaiar != null) btnEnsaiar.IsEnabled = true;
+        _ensaioPropriedades = propriedades;
     }
     
     private ComboBoxItem? EncontrarItemPorTexto(ComboBox combo, string texto)

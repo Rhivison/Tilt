@@ -3,24 +3,30 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Threading;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using TiltMachine.Models;
 
 public class ArduinoService
 {
     private TcpClient? _client;
     private NetworkStream? _stream;
     private CancellationTokenSource? _cts;
-    private StringBuilder _messageBuilder = new();
+    private readonly StringBuilder _messageBuilder = new();
 
     private readonly string _ip = "192.168.0.200";
     private readonly int _port = 5000;
 
+    private bool _ensaioAtivo = false;
+    private readonly List<DadoEnsaio> _dadosEnsaio = new();
+
+    public event Action? EnsaioIniciado;
+    public event Action<List<DadoEnsaio>>? EnsaioFinalizado;
+    public event Action<DadoEnsaio>? DadoRecebido;
+
     public event Action<string>? LinhaRecebida;
     public event Action<bool>? StatusConexaoAlterado;
+
+    public IReadOnlyList<DadoEnsaio> DadosEnsaio => _dadosEnsaio.AsReadOnly();
 
     private bool _conectado;
     public bool Conectado
@@ -35,11 +41,10 @@ public class ArduinoService
             }
         }
     }
-    
+
     public ArduinoService()
     {
-        // Inicia a conexão assim que a instância é criada
-        _ = ConnectAsync();
+        _ = ConnectAsync(); // Conecta automaticamente ao iniciar
     }
 
     private async Task ConnectAsync()
@@ -62,17 +67,16 @@ public class ArduinoService
         catch
         {
             Conectado = false;
-            // Pode tentar reconectar depois
             await Task.Delay(5000);
             _ = ConnectAsync();
         }
     }
-    
+
     public async Task ReconnectAsync()
     {
         await ConnectAsync();
     }
-    
+
     private async Task ListenAsync(CancellationToken ct)
     {
         byte[] buffer = new byte[4096];
@@ -82,7 +86,7 @@ public class ArduinoService
             try
             {
                 int bytesRead = await _stream!.ReadAsync(buffer, 0, buffer.Length, ct);
-                if (bytesRead == 0) break; // conexão fechada
+                if (bytesRead == 0) break;
 
                 string dados = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 _messageBuilder.Append(dados);
@@ -93,11 +97,38 @@ public class ArduinoService
                 for (int i = 0; i < linhas.Length - 1; i++)
                 {
                     string linha = linhas[i].Trim();
-                    if (!string.IsNullOrEmpty(linha))
-                        LinhaRecebida?.Invoke(linha);
+                    if (string.IsNullOrWhiteSpace(linha)) continue;
+
+                    LinhaRecebida?.Invoke(linha);
+
+                    if (linha.Contains("tempo_ms,angulo_graus"))
+                    {
+                        _ensaioAtivo = true;
+                        _dadosEnsaio.Clear();
+                        EnsaioIniciado?.Invoke();
+                    }
+                    else if (linha.Contains("ENSAIO_FINALIZADO"))
+                    {
+                        _ensaioAtivo = false;
+                        EnsaioFinalizado?.Invoke(new List<DadoEnsaio>(_dadosEnsaio));
+                    }
+                    else if (_ensaioAtivo && linha.Contains(","))
+                    {
+                        var partes = linha.Split(',');
+                        if (partes.Length == 2 &&
+                            double.TryParse(partes[0], out double tempo) &&
+                            double.TryParse(partes[1], out double angulo))
+                        {
+                            var dado = new DadoEnsaio(tempo, angulo);
+                            _dadosEnsaio.Add(dado);
+                            DadoRecebido?.Invoke(dado);
+                        }
+                    }
                 }
 
                 _messageBuilder.Clear();
+
+                // Se não terminou com \n, guarda a última linha incompleta
                 if (!completo.EndsWith('\n'))
                     _messageBuilder.Append(linhas[^1]);
             }
@@ -107,12 +138,11 @@ public class ArduinoService
             }
         }
 
-        // Se saiu do loop de escuta, está desconectado, tenta reconectar
         Conectado = false;
         await Task.Delay(5000);
         await ConnectAsync();
     }
-  
+
     public async Task EnviarComandoAsync(string comando)
     {
         if (!Conectado || _stream == null) return;
@@ -128,7 +158,7 @@ public class ArduinoService
             Conectado = false;
         }
     }
-    
+
     public void Dispose()
     {
         _cts?.Cancel();
@@ -136,6 +166,4 @@ public class ArduinoService
         _client?.Close();
         Conectado = false;
     }
-
-
 }
