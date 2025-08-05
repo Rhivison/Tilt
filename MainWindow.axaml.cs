@@ -51,5 +51,11 @@ namespace TiltMachine
                 Console.WriteLine($"{ex.Message}");
             }
         }
+
+        private void OperacaoButton_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var operacaoWindow = new OperacaoWindow();
+            operacaoWindow.Show();
+        }
     }
 }

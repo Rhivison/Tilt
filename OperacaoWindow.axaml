@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.OperacaoWindow"
+        Title="Operação da Máquina"
+        Width="600" Height="400">
+    <DockPanel>
+
+        <!-- Rodapé com status -->
+        <Border DockPanel.Dock="Bottom" Background="#EEE" Height="30" Padding="10,5">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Status:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="StatusLabel" Text="Desconectado" Foreground="Red" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Conteúdo principal -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+            <Button Content="CONECTAR" Width="200" Height="50" Click="Conectar_Click"/>
+            <Button Content="START1" Width="200" Height="50" Click="Start1_Click"/>
+            <Button Content="START2" Width="200" Height="50" Click="Start2_Click"/>
+            <Button Content="STOP" Width="200" Height="50" Click="Stop_Click"/>
+            <Button Content="MANUAL" Width="200" Height="50" Click="Manual_Click"/>
+            <Button Content="REPOSICIONAR" Width="200" Height="50" Click="Reposicionar_Click"/>
+
+        </StackPanel>
+
+    </DockPanel>
+</Window>

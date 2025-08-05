@@ -18,10 +18,10 @@
                     <TextBlock Text="Amostras" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button Margin="5" Width="120" Height="50">
+            <Button Margin="5" Width="120" Height="50" Click="OperacaoButton_OnClick">
                 <StackPanel>
                     <Image Source="avares://TiltMachine/Assets/preteste.png" Width="100" Height="20"/>
-                    <TextBlock Text="Pré-teste" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Operação" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Margin="5" Width="120" Height="50">

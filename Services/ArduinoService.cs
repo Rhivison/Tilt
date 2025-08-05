@@ -68,6 +68,11 @@ public class ArduinoService
         }
     }
     
+    public async Task ReconnectAsync()
+    {
+        await ConnectAsync();
+    }
+    
     private async Task ListenAsync(CancellationToken ct)
     {
         byte[] buffer = new byte[4096];
