@@ -100,29 +100,62 @@ public class ArduinoService
                     if (string.IsNullOrWhiteSpace(linha)) continue;
 
                     LinhaRecebida?.Invoke(linha);
-
-                    if (linha.Contains("tempo_ms,angulo_graus"))
+                    
+                    // Verifica se é comando de controle
+                    if (linha.Contains("tempo_ms,angulo_graus") || linha.Contains("ENSAIO_INICIADO"))
                     {
-                        _ensaioAtivo = true;
-                        _dadosEnsaio.Clear();
-                        EnsaioIniciado?.Invoke();
+                        if (!_ensaioAtivo) // Só inicia se não estiver já ativo
+                        {
+                            _ensaioAtivo = true;
+                            _dadosEnsaio.Clear();
+                            EnsaioIniciado?.Invoke();
+                            Console.WriteLine("DEBUG: ENSAIO INICIADO!");
+                        }
                     }
-                    else if (linha.Contains("ENSAIO_FINALIZADO"))
-                    {
-                        _ensaioAtivo = false;
-                        EnsaioFinalizado?.Invoke(new List<DadoEnsaio>(_dadosEnsaio));
-                    }
-                    else if (_ensaioAtivo && linha.Contains(","))
+                    // Se recebemos dados no formato tempo,angulo e ainda não estamos em modo ensaio,
+                    // provavelmente o cabeçalho se perdeu - inicia automaticamente
+                    else if (!_ensaioAtivo && linha.Contains(",") && !linha.Contains(" "))
                     {
                         var partes = linha.Split(',');
                         if (partes.Length == 2 &&
-                            double.TryParse(partes[0], out double tempo) &&
-                            double.TryParse(partes[1], out double angulo))
+                            double.TryParse(partes[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double tempo) &&
+                            double.TryParse(partes[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double angulo) &&
+                            tempo > 1000) // tempo em ms deve ser > 1000 para ser válido
                         {
+                            _ensaioAtivo = true;
+                            _dadosEnsaio.Clear();
+                            EnsaioIniciado?.Invoke();
+                            Console.WriteLine("DEBUG: ENSAIO AUTO-INICIADO pelos dados!");
+                            
+                            // Processa este primeiro dado
                             var dado = new DadoEnsaio(tempo, angulo);
                             _dadosEnsaio.Add(dado);
                             DadoRecebido?.Invoke(dado);
                         }
+                    }
+                    else if (linha.Contains("ENSAIO_FINALIZADO"))
+                    {
+                        if (_ensaioAtivo) // Só finaliza se estiver ativo
+                        {
+                            _ensaioAtivo = false;
+                            Console.WriteLine($"DEBUG: ENSAIO FINALIZADO! {_dadosEnsaio.Count} dados coletados");
+                            EnsaioFinalizado?.Invoke(new List<DadoEnsaio>(_dadosEnsaio));
+                        }
+                        else
+                        {
+                            Console.WriteLine("DEBUG: ENSAIO_FINALIZADO recebido, mas ensaio não estava ativo!");
+                        }
+                    }
+                    else if (_ensaioAtivo)
+                    {
+                        // Processa dados do ensaio
+                        ProcessarDadosEnsaio(linha);
+                    }
+                    else if (linha.Contains(",") && !linha.Contains(" "))
+                    {
+                        // Se não estamos em modo ensaio mas recebemos dados válidos,
+                        // pode ser que o cabeçalho se perdeu
+                        Console.WriteLine($"DEBUG: Dados recebidos fora do modo ensaio: {linha}");
                     }
                 }
 
@@ -141,6 +174,52 @@ public class ArduinoService
         Conectado = false;
         await Task.Delay(5000);
         await ConnectAsync();
+    }
+
+    private void ProcessarDadosEnsaio(string linha)
+    {
+        // Usa cultura invariante para parsing correto dos números
+        var cultura = System.Globalization.CultureInfo.InvariantCulture;
+        
+        // Primeiro tenta o formato esperado: tempo,angulo
+        if (linha.Contains(",") && !linha.Contains(" "))
+        {
+            var partes = linha.Split(',');
+            if (partes.Length == 2 &&
+                double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double tempo) &&
+                double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double angulo))
+            {
+                var dado = new DadoEnsaio(tempo, angulo);
+                _dadosEnsaio.Add(dado);
+                DadoRecebido?.Invoke(dado);
+                Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}°");
+                return;
+            }
+        }
+
+        // Se não funcionou, tenta o formato que está chegando: angulo,tempo angulo,tempo
+        if (linha.Contains(",") && linha.Contains(" "))
+        {
+            // Separa por espaços para pegar múltiplos pares
+            var pares = linha.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var par in pares)
+            {
+                if (par.Contains(","))
+                {
+                    var partes = par.Split(',');
+                    if (partes.Length == 2 &&
+                        double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double angulo) &&
+                        double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double tempo))
+                    {
+                        var dado = new DadoEnsaio(tempo, angulo); // Note: tempo primeiro, angulo segundo no construtor
+                        _dadosEnsaio.Add(dado);
+                        DadoRecebido?.Invoke(dado);
+                        Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}°");
+                    }
+                }
+            }
+        }
     }
 
     public async Task EnviarComandoAsync(string comando)

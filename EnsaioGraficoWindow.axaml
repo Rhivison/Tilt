@@ -57,6 +57,8 @@
     <!-- Gráfico -->
     <Border Grid.Row="1" Margin="20" BorderBrush="#ccc" BorderThickness="1" CornerRadius="6">
       <lvc:CartesianChart x:Name="chart"
+                          XAxes="{Binding XAxes}"
+                          YAxes="{Binding YAxes}"
                           Series="{Binding ChartSeries}"
                           LegendPosition="Bottom"
                           Background="White"/>
