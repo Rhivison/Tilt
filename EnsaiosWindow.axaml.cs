@@ -75,8 +75,8 @@ namespace TiltMachine
                 Profundidade = EnsaioSelecionado.Profundidade,
                 AreaContato = EnsaioSelecionado.AreaContato,
                 TaxaInclinacao =  EnsaioSelecionado.TaxaInclinacao,
-                InclinacaoMaxima = EnsaioSelecionado.InclinacaoMaxima,
-                DeslocamentoMaximo = EnsaioSelecionado.DeslocamentoMaximo,
+                //InclinacaoMaxima = EnsaioSelecionado.InclinacaoMaxima,
+                //DeslocamentoMaximo = EnsaioSelecionado.DeslocamentoMaximo,
                 Observacoes = EnsaioSelecionado.Observacoes
                
             };

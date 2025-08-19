@@ -11,47 +11,70 @@
         WindowStartupLocation="CenterScreen">
 
   <Grid RowDefinitions="Auto,*,Auto">
+
     <!-- Cabeçalho -->
     <StackPanel Orientation="Vertical" Margin="20">
-      <TextBlock Text="Informações do Ensaio" FontSize="20" FontWeight="Bold" Margin="0 0 0 10"/>
-      <WrapPanel ItemWidth="300" Orientation="Horizontal">
-        <TextBlock Text="{Binding Ensaio.Amostra}" />
-        <TextBlock Text=" | Nº: " />
-        <TextBlock Text="{Binding Ensaio.AmostraNumero}" />
-        <TextBlock Text=" | Local: " />
-        <TextBlock Text="{Binding Ensaio.Local}" />
-        <TextBlock Text=" | Responsável: " />
-        <TextBlock Text="{Binding Ensaio.Responsavel}" />
-        <TextBlock Text=" | Data: " />
-        <TextBlock Text="{Binding Ensaio.DataEnsaio}" />
-      </WrapPanel>
+      
+      <!-- Título + Botão -->
+      <Grid ColumnDefinitions="*,Auto" Margin="0 0 0 10">
+        <TextBlock Text="Informações do Ensaio"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"/>
+        <Button Grid.Column="1"
+                Content="Exportar PDF"
+                Click="OnExportarPdfClick"
+                Margin="10,0,0,0"
+                Padding="10,5"
+                HorizontalAlignment="Right"/>
+      </Grid>
 
-      <WrapPanel Margin="0 10 0 0" Orientation="Horizontal">
-        <StackPanel Margin="0,0,20,0">
+      <!-- Linha principal de infos -->
+      <Grid ColumnDefinitions="2*,2*,2*,2*,2*"
+            Margin="0 0 0 10">
+        <TextBlock Grid.Column="0" Text="Amostra:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="0" Margin="70,0,0,0" Text="{Binding Ensaio.Amostra}"/>
+
+        <TextBlock Grid.Column="1" Text="Nº:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="1" Margin="30,0,0,0" Text="{Binding Ensaio.AmostraNumero}"/>
+
+        <TextBlock Grid.Column="2" Text="Local:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="2" Margin="60,0,0,0" Text="{Binding Ensaio.Local}"/>
+
+        <TextBlock Grid.Column="3" Text="Responsável:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="3" Margin="110,0,0,0" Text="{Binding Ensaio.Responsavel}"/>
+
+        <TextBlock Grid.Column="4" Text="Data:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="4" Margin="50,0,0,0" Text="{Binding Ensaio.DataEnsaio}"/>
+      </Grid>
+
+      <!-- Dados técnicos -->
+      <UniformGrid Columns="3" Rows="2" Margin="0 10 0 0">
+        <StackPanel>
           <TextBlock Text="Tipo de Rocha:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.TipoRocha}" />
+          <TextBlock Text="{Binding Ensaio.TipoRocha}"/>
         </StackPanel>
-        <StackPanel Margin="0,0,20,0">
+        <StackPanel>
           <TextBlock Text="Formato do Corpo de Prova:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.FormatoCorpoProva}" />
+          <TextBlock Text="{Binding Ensaio.FormatoCorpoProva}"/>
         </StackPanel>
-        <StackPanel Margin="0,0,20,0">
+        <StackPanel>
           <TextBlock Text="Altura:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.Altura}" />
+          <TextBlock Text="{Binding Ensaio.Altura}"/>
         </StackPanel>
-        <StackPanel Margin="0,0,20,0">
+        <StackPanel>
           <TextBlock Text="Largura:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.Largura}" />
+          <TextBlock Text="{Binding Ensaio.Largura}"/>
         </StackPanel>
-        <StackPanel Margin="0,0,20,0">
+        <StackPanel>
           <TextBlock Text="Profundidade:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.Profundidade}" />
+          <TextBlock Text="{Binding Ensaio.Profundidade}"/>
         </StackPanel>
-        <StackPanel Margin="0,0,20,0">
+        <StackPanel>
           <TextBlock Text="Área de Contato:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.AreaContato}" />
+          <TextBlock Text="{Binding Ensaio.AreaContato}"/>
         </StackPanel>
-      </WrapPanel>
+      </UniformGrid>
     </StackPanel>
 
     <!-- Gráfico -->
@@ -69,7 +92,6 @@
       <TextBlock Text="Observações" FontWeight="Bold"/>
       <TextBlock Text="{Binding Ensaio.Observacoes}" TextWrapping="Wrap"/>
     </StackPanel>
-    
-    <Button Content="Exportar PDF" Click="OnExportarPdfClick" HorizontalAlignment="Right" Margin="20"/>
+
   </Grid>
 </Window>

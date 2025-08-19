@@ -39,8 +39,8 @@ public partial class PropriedadesEnsaioWindow : Window
         if (txtProfundidade != null) txtProfundidade.Text = propriedades.Profundidade.ToString("F2");
         if (txtAreaContato != null) txtAreaContato.Text = propriedades.AreaContato.ToString("F2");
         if (txtTaxaInclinacao != null) txtTaxaInclinacao.Text = propriedades.TaxaInclinacao.ToString("F2");
-        if (txtInclinacaoMaxima != null) txtInclinacaoMaxima.Text = propriedades.InclinacaoMaxima.ToString("F2");
-        if (txtDeslocamentoMaximo != null) txtDeslocamentoMaximo.Text = propriedades.DeslocamentoMaximo.ToString("F2");
+        //if (txtInclinacaoMaxima != null) txtInclinacaoMaxima.Text = propriedades.InclinacaoMaxima.ToString("F2");
+       // if (txtDeslocamentoMaximo != null) txtDeslocamentoMaximo.Text = propriedades.DeslocamentoMaximo.ToString("F2");
         if (txtObservacoes != null) txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
 
         if (btnSalvar != null) btnSalvar.IsEnabled = false;
@@ -72,8 +72,8 @@ public partial class PropriedadesEnsaioWindow : Window
         txtProfundidade = this.FindControl<TextBox>("txtProfundidade");
         txtAreaContato = this.FindControl<TextBox>("txtAreaContato");
         txtTaxaInclinacao = this.FindControl<TextBox>("txtTaxaInclinacao");
-        txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
-        txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
+        //txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
+        //txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
         txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
         btnSalvar = this.FindControl<Button>("btnSalvar");
         btnCancelar = this.FindControl<Button>("btnCancelar");
@@ -110,8 +110,8 @@ public partial class PropriedadesEnsaioWindow : Window
                 Profundidade = ParseDouble(txtProfundidade?.Text),
                 AreaContato = ParseDouble(txtAreaContato?.Text),
                 TaxaInclinacao = ParseDouble(txtTaxaInclinacao?.Text),
-                InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima?.Text),
-                DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo?.Text),
+                //InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima?.Text),
+                //DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo?.Text),
                 Observacoes = txtObservacoes?.Text ?? string.Empty
             };
 
