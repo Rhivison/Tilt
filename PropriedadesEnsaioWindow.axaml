@@ -141,8 +141,13 @@
           
           <StackPanel Grid.Column="2">
             <TextBlock Text="Taxa de Inclinação (°/min):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtTaxaInclinacao" Text="0" HorizontalAlignment="Stretch"/>
+            <NumericUpDown x:Name="txtTaxaInclinacao"
+                           Minimum="1"
+                           Maximum="100"
+                           Value="1"
+                           HorizontalAlignment="Stretch" />
           </StackPanel>
+
         </Grid>
 
         <!-- Inclinação e Deslocamento -->

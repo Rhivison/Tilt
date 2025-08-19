@@ -71,7 +71,7 @@ public partial class PropriedadesEnsaioWindow : Window
         txtLargura = this.FindControl<TextBox>("txtLargura");
         txtProfundidade = this.FindControl<TextBox>("txtProfundidade");
         txtAreaContato = this.FindControl<TextBox>("txtAreaContato");
-        txtTaxaInclinacao = this.FindControl<TextBox>("txtTaxaInclinacao");
+        txtTaxaInclinacao = this.FindControl<NumericUpDown>("txtTaxaInclinacao");
         //txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
         //txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
         txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
@@ -109,7 +109,7 @@ public partial class PropriedadesEnsaioWindow : Window
                 Largura = ParseDouble(txtLargura?.Text),
                 Profundidade = ParseDouble(txtProfundidade?.Text),
                 AreaContato = ParseDouble(txtAreaContato?.Text),
-                TaxaInclinacao = ParseDouble(txtTaxaInclinacao?.Text),
+                TaxaInclinacao = Convert.ToDouble(txtTaxaInclinacao.Value ?? 10),
                 //InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima?.Text),
                 //DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo?.Text),
                 Observacoes = txtObservacoes?.Text ?? string.Empty
