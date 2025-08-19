@@ -69,5 +69,7 @@
       <TextBlock Text="Observações" FontWeight="Bold"/>
       <TextBlock Text="{Binding Ensaio.Observacoes}" TextWrapping="Wrap"/>
     </StackPanel>
+    
+    <Button Content="Exportar PDF" Click="OnExportarPdfClick" HorizontalAlignment="Right" Margin="20"/>
   </Grid>
 </Window>
