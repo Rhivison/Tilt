@@ -17,7 +17,7 @@ namespace TiltMachine
         private readonly DatabaseService _db = new();
 
         public ObservableCollection<PropriedadesEnsaio> Ensaios { get; set; } = new();
-
+        private ObservableCollection<PropriedadesEnsaio> _todosEnsaios = new();
         private PropriedadesEnsaio? _ensaioSelecionado;
         public PropriedadesEnsaio? EnsaioSelecionado
         {
@@ -28,6 +28,22 @@ namespace TiltMachine
                 OnPropertyChanged();
             }
         }
+        private string _termoBusca = "";
+        public string TermoBusca
+        {
+            get => _termoBusca;
+            set
+            {
+                _termoBusca = value;
+                OnPropertyChanged();
+                // Só filtra se já tiver dados carregados
+                if (_todosEnsaios.Count > 0)
+                {
+                    FiltrarEnsaios();
+                }
+            }
+        }
+
 
         public EnsaiosWindow()
         {
@@ -36,7 +52,28 @@ namespace TiltMachine
             DataContext = this;
             CarregarEnsaios();
         }
+        
+        
+        private void FiltrarEnsaios()
+        {
+            Ensaios.Clear();
 
+            foreach (var ensaio in _todosEnsaios)
+            {
+                // Se o termo de busca estiver vazio OU se a amostra contém o termo
+                if (string.IsNullOrWhiteSpace(TermoBusca) ||
+                    ensaio.Amostra.Contains(TermoBusca, StringComparison.OrdinalIgnoreCase) || ensaio.Local.Contains(TermoBusca, StringComparison.OrdinalIgnoreCase) ||
+                    ensaio.Responsavel.Contains(TermoBusca, StringComparison.OrdinalIgnoreCase))
+                {
+                    Ensaios.Add(ensaio);
+                }
+            }
+        }
+        
+        private void BuscarButton_Click(object sender, RoutedEventArgs e)
+        {
+            FiltrarEnsaios();
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -101,7 +138,8 @@ namespace TiltMachine
                 db.Inicializar();
                 db.Deletar(EnsaioSelecionado.Id);
 
-                Ensaios.Remove(EnsaioSelecionado);
+                // Recarregar os dados do banco após deletar
+                CarregarEnsaios(); // Isso já vai aplicar o filtro atual
                 EnsaioSelecionado = null;
 
                 await MostrarMensagemAsync("Sucesso", "Ensaio deletado com sucesso!");
@@ -119,9 +157,16 @@ namespace TiltMachine
         private void CarregarEnsaios()
         {
             Ensaios.Clear();
+            _todosEnsaios.Clear(); // Limpar a coleção completa também
+    
             var lista = _db.ObterTodos(); // método do DatabaseService
             foreach (var ensaio in lista)
-                Ensaios.Add(ensaio);
+            {
+                _todosEnsaios.Add(ensaio);  // Primeiro adiciona na coleção completa
+            }
+    
+            // Depois aplica o filtro (se houver) ou mostra todos
+            FiltrarEnsaios();
         }
         
         private async Task MostrarMensagemAsync(string titulo, string mensagem)
