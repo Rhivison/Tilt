@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using Avalonia.Media;
+using Avalonia.Threading;
 using TiltMachine;
 
 public abstract class BaseWindow : Window

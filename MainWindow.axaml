@@ -24,10 +24,10 @@
                     <TextBlock Text="Operação" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button Margin="5" Width="120" Height="50">
+            <Button Margin="5" Width="120" Height="50" Click="CalibracaoButton_OnClick">
                 <StackPanel>
                     <Image Source="avares://TiltMachine/Assets/config.png" Width="100" Height="20"/>
-                    <TextBlock Text="Configurações" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Calibração" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Margin="5" Width="120" Height="50">

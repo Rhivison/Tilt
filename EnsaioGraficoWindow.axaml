@@ -16,12 +16,20 @@
     <StackPanel Orientation="Vertical" Margin="20">
       
       <!-- Título + Botão -->
-      <Grid ColumnDefinitions="*,Auto" Margin="0 0 0 10">
+      <Grid ColumnDefinitions="*,Auto,Auto" Margin="0 0 0 10">
         <TextBlock Text="Informações do Ensaio"
                    FontSize="20"
                    FontWeight="Bold"
                    VerticalAlignment="Center"/>
+        
         <Button Grid.Column="1"
+                Content="Parar Ensaio"
+                Click="OnPararEnsaioClick"
+                Margin="0,0,10,0"
+                Padding="10,5"
+                HorizontalAlignment="Left"/>
+        
+        <Button Grid.Column="2"
                 Content="Exportar PDF"
                 Click="OnExportarPdfClick"
                 Margin="10,0,0,0"
@@ -60,7 +68,7 @@
         </StackPanel>
         <StackPanel>
           <TextBlock Text="Altura:" FontWeight="Bold"/>
-          <TextBlock Text="{Binding Ensaio.Altura}"/>
+          <TextBlock Text="{Binding Ensaio.Altura}"/>   
         </StackPanel>
         <StackPanel>
           <TextBlock Text="Largura:" FontWeight="Bold"/>
@@ -86,6 +94,19 @@
                           LegendPosition="Bottom"
                           Background="White"/>
     </Border>
+    
+    <StackPanel Grid.Row="2" Margin="20" Orientation="Vertical" Spacing="10">
+      <TextBlock Text="Observações" FontWeight="Bold"/>
+      <TextBlock Text="{Binding Ensaio.Observacoes}" TextWrapping="Wrap"/>
+
+      <!-- Novo bloco com resultados -->
+      <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="20">
+        <TextBlock Text="Ângulo final:" FontWeight="Bold"/>
+        <TextBlock Text="{Binding AnguloFinal, StringFormat={}{0:F2}°}"/>
+        <TextBlock Text="Coeficiente de atrito:" FontWeight="Bold" Margin="20,0,0,0"/>
+        <TextBlock Text="{Binding CoeficienteAtrito}"/>
+      </StackPanel>
+    </StackPanel>
 
     <!-- Rodapé -->
     <StackPanel Grid.Row="2" Margin="20" Orientation="Vertical" Spacing="10">

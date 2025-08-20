@@ -52,6 +52,19 @@ namespace TiltMachine
             }
         }
 
+        private void CalibracaoButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var calibracao = new CalibracaoView();
+                calibracao.Show();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+        }
         private void OperacaoButton_OnClick(object? sender, RoutedEventArgs e)
         {
             var operacaoWindow = new OperacaoWindow();

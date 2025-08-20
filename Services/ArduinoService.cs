@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using TiltMachine.Models;
 
 public class ArduinoService
@@ -17,16 +18,26 @@ public class ArduinoService
     private readonly int _port = 5000;
 
     private bool _ensaioAtivo = false;
+    private bool _calibracaoAtiva = false;
     private readonly List<DadoEnsaio> _dadosEnsaio = new();
 
     public event Action? EnsaioIniciado;
+    
     public event Action<List<DadoEnsaio>>? EnsaioFinalizado;
     public event Action<DadoEnsaio>? DadoRecebido;
+    
+    public event Action? CalibracaoIniciada;
+    public event Action? CalibracaoFinalizada;
+    public event Action<double, double>? DadoCalibracao; // entrada_sensor, saida_real
 
     public event Action<string>? LinhaRecebida;
     public event Action<bool>? StatusConexaoAlterado;
 
     public IReadOnlyList<DadoEnsaio> DadosEnsaio => _dadosEnsaio.AsReadOnly();
+    public bool CalibracaoAtiva => _calibracaoAtiva;
+    
+    private readonly List<(double entradaSensor, double saidaReal)> _dadosCalibracao = new();
+    public IReadOnlyList<(double entradaSensor, double saidaReal)> DadosCalibracao => _dadosCalibracao.AsReadOnly();
 
     private bool _conectado;
     public bool Conectado
@@ -76,6 +87,49 @@ public class ArduinoService
     {
         await ConnectAsync();
     }
+    public async Task IniciarCalibracaoAsync()
+    {
+        _calibracaoAtiva = true;
+        _dadosCalibracao.Clear();
+        CalibracaoIniciada?.Invoke();
+        await EnviarComandoAsync("CALIBRACAO_START"); // comando para Arduino
+    }
+    public async Task FinalizarCalibracaoAsync()
+    {
+        _calibracaoAtiva = false;
+        CalibracaoFinalizada?.Invoke();
+        await EnviarComandoAsync("CALIBRACAO_STOP"); // comando para Arduino
+    }
+    
+    public void AdicionarPontoCalibracao(double valorReferencia)
+    {
+        if (!_calibracaoAtiva) return;
+
+        // Aqui pega o último valor recebido do sensor (supondo que DadoCalibracao é invocado sempre)
+        if (_dadosCalibracao.Count > 0)
+        {
+            var ultimo = _dadosCalibracao.Last();
+            // Substitui o valor de saída real pelo valor de referência inserido
+            _dadosCalibracao[_dadosCalibracao.Count - 1] = (ultimo.entradaSensor, valorReferencia);
+            DadoCalibracao?.Invoke(ultimo.entradaSensor, valorReferencia);
+        }
+    }
+    public void AdicionarDadoCalibracao(double entradaSensor, double saidaReal)
+    {
+        _dadosCalibracao.Add((entradaSensor, saidaReal));
+        DadoCalibracao?.Invoke(entradaSensor, saidaReal);
+    }
+    
+    public void LimparCalibracao()
+    {
+        _dadosCalibracao.Clear();
+    }
+    
+    public void FinalizarCalibracao()
+    {
+        _calibracaoAtiva = false;
+        CalibracaoFinalizada?.Invoke();
+    }
 
     private async Task ListenAsync(CancellationToken ct)
     {
@@ -100,7 +154,26 @@ public class ArduinoService
                     if (string.IsNullOrWhiteSpace(linha)) continue;
 
                     LinhaRecebida?.Invoke(linha);
-                    
+                    if (linha == "CALIBRACAO_INICIADA")
+                    {
+                        _calibracaoAtiva = true;
+                        CalibracaoIniciada?.Invoke();
+                        Console.WriteLine("DEBUG: CALIBRAÇÃO INICIADA!");
+                    }
+                    else if (linha == "CALIBRACAO_FINALIZADA")
+                    {
+                        _calibracaoAtiva = false;
+                        CalibracaoFinalizada?.Invoke();
+                        Console.WriteLine("DEBUG: CALIBRAÇÃO FINALIZADA!");
+                    }
+                    else if (linha == "entrada_sensor,saida_real")
+                    {
+                        Console.WriteLine("DEBUG: Header de calibração recebido");
+                    }
+                    else if (_calibracaoAtiva)
+                    {
+                        ProcessarDadosCalibracaoServico(linha);
+                    }
                     // Verifica se é comando de controle
                     if (linha.Contains("tempo_ms,angulo_graus") || linha.Contains("ENSAIO_INICIADO"))
                     {
@@ -176,6 +249,24 @@ public class ArduinoService
         await ConnectAsync();
     }
 
+    private void ProcessarDadosCalibracaoServico(string linha)
+    {
+        var cultura = System.Globalization.CultureInfo.InvariantCulture;
+        if (linha.Contains(",") && !linha.Contains(" "))
+        {
+            var partes = linha.Split(',');
+            if (partes.Length == 2 &&
+                double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double entradaSensor) &&
+                double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double saidaReal))
+            {
+                // Armazena internamente
+                AdicionarDadoCalibracao(entradaSensor, saidaReal);
+                Console.WriteLine($"DEBUG: Calibração - Entrada: {entradaSensor:F3}, Saída: {saidaReal:F2}");
+                return;
+            }
+        }
+        Console.WriteLine($"DEBUG: Linha de calibração não processada: {linha}");
+    }
     private void ProcessarDadosEnsaio(string linha)
     {
         // Usa cultura invariante para parsing correto dos números

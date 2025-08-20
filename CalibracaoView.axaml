@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.CalibracaoView"
+        Title="Calibração do Sensor" Width="800" Height="600">
+    
+    <DockPanel Margin="20">
+        <!-- Status da conexão -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+            <TextBlock Text="Status: " FontWeight="Bold"/>
+            <TextBlock x:Name="StatusLabel" Text="Desconectado" Foreground="Red" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <!-- Cabeçalho -->
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+            <TextBlock Text="Calibração do Sensor" FontSize="24" FontWeight="Bold"/>
+            <TextBlock x:Name="txtStatus" Text="Pronto para calibrar" Foreground="Gray" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- Controles principais -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="25" Margin="0,0,0,20">
+            <Button x:Name="btnIniciar" Content="Iniciar Calibração" Width="180"/>
+            <Button x:Name="btnFinalizar" Content="Finalizar Calibração" Width="180" IsEnabled="False"/>
+            <Button x:Name="btnLimpar" Content="Limpar Calibração" Width="180"/>
+        </StackPanel>
+
+        <!-- Entrada de valor de referência -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
+            <TextBlock Text="Ângulo de Referência (°):" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtValorReferencia" Width="80" 
+                     VerticalAlignment="Center" TextAlignment="Right" Text="0"/>
+            <Button x:Name="btnAdicionarPonto" Content="Adicionar Ponto" Width="180" IsEnabled="False"/>
+            <Button x:Name="btnCalcularCurva" Content="Calcular Curva" Width="180"/>
+        </StackPanel>
+
+        <!-- Equação da curva -->
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20" x:Name="panelEquacao" IsVisible="False">
+            <TextBlock Text="Equação da Curva de Calibração:" FontWeight="Bold"/>
+            <TextBlock x:Name="txtEquacao" Margin="10,5,0,0" FontFamily="Consolas"/>
+        </StackPanel>
+
+        <!-- Lista de pontos -->
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+            <TextBlock Text="Pontos de Calibração:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <ScrollViewer Height="200">
+                <ItemsControl x:Name="itemsControlPontos">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+
+        <!-- Estatísticas -->
+        <StackPanel>
+            <TextBlock Text="Estatísticas:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="txtTotalPontos" Text="Total de pontos: 0"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

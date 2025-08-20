@@ -88,8 +88,8 @@
                     
                     <Slider Grid.Column="1" 
                             x:Name="SpeedSlider" 
-                            Minimum="0.1" 
-                            Maximum="300" 
+                            Minimum="1" 
+                            Maximum="100" 
                             Value="10"
                             TickFrequency="10" 
                             IsSnapToTickEnabled="True"
