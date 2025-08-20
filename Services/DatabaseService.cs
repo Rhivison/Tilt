@@ -36,8 +36,278 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                 );
             ";
             command.ExecuteNonQuery();
+            
+            var commandCalibracao = connection.CreateCommand();
+            commandCalibracao.CommandText =
+                @"
+                CREATE TABLE IF NOT EXISTS CoeficientesCalibracao (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    DataCalibracao TEXT NOT NULL,
+                    SensorIdentificador TEXT NOT NULL,
+                    CoeficienteA REAL NOT NULL,
+                    CoeficienteB REAL NOT NULL,
+                    CoeficienteC REAL NOT NULL,
+                    QuantidadePontos INTEGER NOT NULL,
+                    ErroMedioQuadratico REAL,
+                    Observacoes TEXT,
+                    Ativa INTEGER DEFAULT 0,
+                    DataCriacao TEXT DEFAULT CURRENT_TIMESTAMP,
+                    
+                    UNIQUE(SensorIdentificador, DataCalibracao)
+                );
+            ";
+            commandCalibracao.ExecuteNonQuery();
+
+            // Tabela de Pontos de Calibração (para histórico detalhado)
+            var commandPontosCalibracao = connection.CreateCommand();
+            commandPontosCalibracao.CommandText =
+                @"
+                CREATE TABLE IF NOT EXISTS PontosCalibracao (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    CoeficienteId INTEGER NOT NULL,
+                    LeituraSensor REAL NOT NULL,
+                    AnguloReferencia REAL NOT NULL,
+                    Timestamp TEXT NOT NULL,
+                    
+                    FOREIGN KEY (CoeficienteId) REFERENCES CoeficientesCalibracao(Id) ON DELETE CASCADE
+                );
+            ";
+            commandPontosCalibracao.ExecuteNonQuery();
+        }
+        #region Métodos para Coeficientes de Calibração
+        public int InserirCoeficiente(CoeficienteCalibracao coeficiente)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @"
+                INSERT INTO CoeficientesCalibracao (
+                    DataCalibracao, SensorIdentificador, CoeficienteA, CoeficienteB, CoeficienteC,
+                    QuantidadePontos, ErroMedioQuadratico, Observacoes, Ativa
+                )
+                VALUES (
+                    $dataCalibracao, $sensorId, $coefA, $coefB, $coefC,
+                    $quantidadePontos, $erroMedio, $observacoes, $ativa
+                );
+                SELECT last_insert_rowid();
+            ";
+            
+            command.Parameters.AddWithValue("$dataCalibracao", coeficiente.DataCalibracao.ToString("yyyy-MM-dd HH:mm:ss"));
+            command.Parameters.AddWithValue("$sensorId", coeficiente.SensorIdentificador);
+            command.Parameters.AddWithValue("$coefA", coeficiente.CoeficienteA);
+            command.Parameters.AddWithValue("$coefB", coeficiente.CoeficienteB);
+            command.Parameters.AddWithValue("$coefC", coeficiente.CoeficienteC);
+            command.Parameters.AddWithValue("$quantidadePontos", coeficiente.QuantidadePontos);
+            command.Parameters.AddWithValue("$erroMedio", coeficiente.ErroMedioQuadratico);
+            command.Parameters.AddWithValue("$observacoes", coeficiente.Observacoes);
+            command.Parameters.AddWithValue("$ativa", coeficiente.Ativa ? 1 : 0);
+            
+            var newId = Convert.ToInt32(command.ExecuteScalar());
+            return newId;
+        }
+        public void InserirPontosCalibracao(int coeficienteId, List<PontoCalibracaoDb> pontos)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            
+            using var transaction = connection.BeginTransaction();
+            
+            try
+            {
+                foreach (var ponto in pontos)
+                {
+                    var command = connection.CreateCommand();
+                    command.CommandText =
+                        @"
+                        INSERT INTO PontosCalibracao (
+                            CoeficienteId, LeituraSensor, AnguloReferencia, Timestamp
+                        )
+                        VALUES (
+                            $coefId, $leitura, $angulo, $timestamp
+                        )
+                    ";
+                    
+                    command.Parameters.AddWithValue("$coefId", coeficienteId);
+                    command.Parameters.AddWithValue("$leitura", ponto.LeituraSensor);
+                    command.Parameters.AddWithValue("$angulo", ponto.AnguloReferencia);
+                    command.Parameters.AddWithValue("$timestamp", ponto.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+                    
+                    command.ExecuteNonQuery();
+                }
+                
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+        public CoeficienteCalibracao ObterCoeficienteAtivo(string sensorIdentificador)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = 
+                @"SELECT * FROM CoeficientesCalibracao 
+                  WHERE SensorIdentificador = $sensorId AND Ativa = 1 
+                  ORDER BY DataCalibracao DESC LIMIT 1";
+            
+            command.Parameters.AddWithValue("$sensorId", sensorIdentificador);
+
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new CoeficienteCalibracao
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    DataCalibracao = DateTime.Parse(reader.GetString(reader.GetOrdinal("DataCalibracao"))),
+                    SensorIdentificador = reader.GetString(reader.GetOrdinal("SensorIdentificador")),
+                    CoeficienteA = reader.GetDouble(reader.GetOrdinal("CoeficienteA")),
+                    CoeficienteB = reader.GetDouble(reader.GetOrdinal("CoeficienteB")),
+                    CoeficienteC = reader.GetDouble(reader.GetOrdinal("CoeficienteC")),
+                    QuantidadePontos = reader.GetInt32(reader.GetOrdinal("QuantidadePontos")),
+                    ErroMedioQuadratico = reader.IsDBNull(reader.GetOrdinal("ErroMedioQuadratico")) ? 
+                        null : (double?)reader.GetDouble(reader.GetOrdinal("ErroMedioQuadratico")),
+                    Observacoes = reader.GetString(reader.GetOrdinal("Observacoes")),
+                    Ativa = reader.GetInt32(reader.GetOrdinal("Ativa")) == 1
+                };
+            }
+            
+            return null;
+        }
+        public List<CoeficienteCalibracao> ObterTodosCoeficientes(string sensorIdentificador = null)
+        {
+            var lista = new List<CoeficienteCalibracao>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            
+            if (string.IsNullOrEmpty(sensorIdentificador))
+            {
+                command.CommandText = "SELECT * FROM CoeficientesCalibracao ORDER BY DataCalibracao DESC";
+            }
+            else
+            {
+                command.CommandText = "SELECT * FROM CoeficientesCalibracao WHERE SensorIdentificador = $sensorId ORDER BY DataCalibracao DESC";
+                command.Parameters.AddWithValue("$sensorId", sensorIdentificador);
+            }
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new CoeficienteCalibracao
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    DataCalibracao = DateTime.Parse(reader.GetString(reader.GetOrdinal("DataCalibracao"))),
+                    SensorIdentificador = reader.GetString(reader.GetOrdinal("SensorIdentificador")),
+                    CoeficienteA = reader.GetDouble(reader.GetOrdinal("CoeficienteA")),
+                    CoeficienteB = reader.GetDouble(reader.GetOrdinal("CoeficienteB")),
+                    CoeficienteC = reader.GetDouble(reader.GetOrdinal("CoeficienteC")),
+                    QuantidadePontos = reader.GetInt32(reader.GetOrdinal("QuantidadePontos")),
+                    ErroMedioQuadratico = reader.IsDBNull(reader.GetOrdinal("ErroMedioQuadratico")) ? 
+                                         null : (double?)reader.GetDouble(reader.GetOrdinal("ErroMedioQuadratico")),
+                    Observacoes = reader.GetString(reader.GetOrdinal("Observacoes")),
+                    Ativa = reader.GetInt32(reader.GetOrdinal("Ativa")) == 1
+                });
+            }
+            return lista;
+        }
+        public List<PontoCalibracaoDb> ObterPontosCalibracao(int coeficienteId)
+        {
+            var lista = new List<PontoCalibracaoDb>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM PontosCalibracao WHERE CoeficienteId = $coefId ORDER BY Timestamp";
+            command.Parameters.AddWithValue("$coefId", coeficienteId);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new PontoCalibracaoDb
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    CoeficienteId = reader.GetInt32(reader.GetOrdinal("CoeficienteId")),
+                    LeituraSensor = reader.GetDouble(reader.GetOrdinal("LeituraSensor")),
+                    AnguloReferencia = reader.GetDouble(reader.GetOrdinal("AnguloReferencia")),
+                    Timestamp = DateTime.Parse(reader.GetString(reader.GetOrdinal("Timestamp")))
+                });
+            }
+            return lista;
+        }
+        public void AtualizarCoeficiente(int id, CoeficienteCalibracao coeficiente)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @"
+                UPDATE CoeficientesCalibracao SET
+                    DataCalibracao = $dataCalibracao,
+                    SensorIdentificador = $sensorId,
+                    CoeficienteA = $coefA,
+                    CoeficienteB = $coefB,
+                    CoeficienteC = $coefC,
+                    QuantidadePontos = $quantidadePontos,
+                    ErroMedioQuadratico = $erroMedio,
+                    Observacoes = $observacoes,
+                    Ativa = $ativa
+                WHERE Id = $id
+            ";
+            
+            command.Parameters.AddWithValue("$id", id);
+            command.Parameters.AddWithValue("$dataCalibracao", coeficiente.DataCalibracao.ToString("yyyy-MM-dd HH:mm:ss"));
+            command.Parameters.AddWithValue("$sensorId", coeficiente.SensorIdentificador);
+            command.Parameters.AddWithValue("$coefA", coeficiente.CoeficienteA);
+            command.Parameters.AddWithValue("$coefB", coeficiente.CoeficienteB);
+            command.Parameters.AddWithValue("$coefC", coeficiente.CoeficienteC);
+            command.Parameters.AddWithValue("$quantidadePontos", coeficiente.QuantidadePontos);
+            command.Parameters.AddWithValue("$erroMedio", coeficiente.ErroMedioQuadratico ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("$observacoes", coeficiente.Observacoes);
+            command.Parameters.AddWithValue("$ativa", coeficiente.Ativa ? 1 : 0);
+            
+            command.ExecuteNonQuery();
+        }
+        public void DesativarOutrosCoeficientes(string sensorIdentificador, int coeficienteIdAtivo)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @"
+                UPDATE CoeficientesCalibracao 
+                SET Ativa = 0 
+                WHERE SensorIdentificador = $sensorId AND Id != $idAtivo
+            ";
+            
+            command.Parameters.AddWithValue("$sensorId", sensorIdentificador);
+            command.Parameters.AddWithValue("$idAtivo", coeficienteIdAtivo);
+            
+            command.ExecuteNonQuery();
+        }
+        public void DeletarCoeficiente(int id)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            
+            var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM CoeficientesCalibracao WHERE Id = $id";
+            command.Parameters.AddWithValue("$id", id);
+            
+            command.ExecuteNonQuery();
         }
 
+        #endregion
         public void Inserir(PropriedadesEnsaio e)
         {
             using var connection = new SqliteConnection(_connectionString);
