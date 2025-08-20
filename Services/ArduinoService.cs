@@ -110,8 +110,8 @@ public class ArduinoService
         {
             var ultimo = _dadosCalibracao.Last();
             // Substitui o valor de saída real pelo valor de referência inserido
-            _dadosCalibracao[_dadosCalibracao.Count - 1] = (ultimo.entradaSensor, valorReferencia);
-            DadoCalibracao?.Invoke(ultimo.entradaSensor, valorReferencia);
+            _dadosCalibracao[_dadosCalibracao.Count - 1] = (ultimo.saidaReal, valorReferencia);
+            DadoCalibracao?.Invoke(ultimo.saidaReal, valorReferencia);
         }
     }
     public void AdicionarDadoCalibracao(double entradaSensor, double saidaReal)
@@ -175,7 +175,7 @@ public class ArduinoService
                         ProcessarDadosCalibracaoServico(linha);
                     }
                     // Verifica se é comando de controle
-                    if (linha.Contains("tempo_ms,angulo_graus") || linha.Contains("ENSAIO_INICIADO"))
+                    if (linha.Contains("tempo_ms,angulo_graus,mA") || linha.Contains("ENSAIO_INICIADO"))
                     {
                         if (!_ensaioAtivo) // Só inicia se não estiver já ativo
                         {
@@ -190,10 +190,12 @@ public class ArduinoService
                     else if (!_ensaioAtivo && linha.Contains(",") && !linha.Contains(" "))
                     {
                         var partes = linha.Split(',');
-                        if (partes.Length == 2 &&
+                        if (partes.Length == 3 &&
                             double.TryParse(partes[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double tempo) &&
                             double.TryParse(partes[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double angulo) &&
-                            tempo > 1000) // tempo em ms deve ser > 1000 para ser válido
+                            tempo > 1000 &&
+                            double.TryParse(partes[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double corrente_mA)
+                            ) // tempo em ms deve ser > 1000 para ser válido
                         {
                             _ensaioAtivo = true;
                             _dadosEnsaio.Clear();
@@ -201,7 +203,7 @@ public class ArduinoService
                             Console.WriteLine("DEBUG: ENSAIO AUTO-INICIADO pelos dados!");
                             
                             // Processa este primeiro dado
-                            var dado = new DadoEnsaio(tempo, angulo);
+                            var dado = new DadoEnsaio(tempo, angulo, corrente_mA);
                             _dadosEnsaio.Add(dado);
                             DadoRecebido?.Invoke(dado);
                         }
@@ -260,7 +262,7 @@ public class ArduinoService
                 double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double saidaReal))
             {
                 // Armazena internamente
-                AdicionarDadoCalibracao(entradaSensor, saidaReal);
+                AdicionarDadoCalibracao(entradaSensor, saidaReal * -1);
                 Console.WriteLine($"DEBUG: Calibração - Entrada: {entradaSensor:F3}, Saída: {saidaReal:F2}");
                 return;
             }
@@ -276,14 +278,15 @@ public class ArduinoService
         if (linha.Contains(",") && !linha.Contains(" "))
         {
             var partes = linha.Split(',');
-            if (partes.Length == 2 &&
+            if (partes.Length == 3 &&
                 double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double tempo) &&
-                double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double angulo))
+                double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double angulo) &&
+                double.TryParse(partes[2], System.Globalization.NumberStyles.Float, cultura, out double corrente_mA))
             {
-                var dado = new DadoEnsaio(tempo, angulo);
+                var dado = new DadoEnsaio(tempo, angulo, corrente_mA);
                 _dadosEnsaio.Add(dado);
                 DadoRecebido?.Invoke(dado);
-                Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}°");
+                Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}° - Corrente: {corrente_mA:F2} mA");
                 return;
             }
         }
@@ -299,14 +302,15 @@ public class ArduinoService
                 if (par.Contains(","))
                 {
                     var partes = par.Split(',');
-                    if (partes.Length == 2 &&
+                    if (partes.Length == 3 &&
                         double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double angulo) &&
-                        double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double tempo))
+                        double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double tempo) && 
+                        double.TryParse(partes[3] , System.Globalization.NumberStyles.Float, cultura, out double corrente_mA))
                     {
-                        var dado = new DadoEnsaio(tempo, angulo); // Note: tempo primeiro, angulo segundo no construtor
+                        var dado = new DadoEnsaio(tempo, angulo, corrente_mA); // Note: tempo primeiro, angulo segundo no construtor
                         _dadosEnsaio.Add(dado);
                         DadoRecebido?.Invoke(dado);
-                        Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}°");
+                        Console.WriteLine($"DEBUG: Processado - Tempo: {tempo}ms, Ângulo: {angulo:F2}° - Corrente: {corrente_mA:F2} mA");
                     }
                 }
             }
