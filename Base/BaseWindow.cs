@@ -7,12 +7,45 @@ using TiltMachine;
 public abstract class BaseWindow : Window
 {
     protected TextBlock? StatusLabel;
+    private bool _eventosInscritos = false;
     
     public BaseWindow()
     {
-        // Inscrever nos eventos do Arduino
-        App.Arduino.StatusConexaoAlterado += OnStatusConexaoAlterado;
-        App.Arduino.LinhaRecebida += OnLinhaRecebida;
+        // Não inscrever eventos no construtor - fazer depois que a janela carregar
+        this.Opened += BaseWindow_Opened;
+    }
+    
+    private void BaseWindow_Opened(object? sender, EventArgs e)
+    {
+        // Agora que a janela está aberta, inscrever nos eventos do Arduino
+        InscreverEventosArduino();
+    }
+    
+    private void InscreverEventosArduino()
+    {
+        if (App.Arduino != null && !_eventosInscritos)
+        {
+            App.Arduino.StatusConexaoAlterado += OnStatusConexaoAlterado;
+            App.Arduino.LinhaRecebida += OnLinhaRecebida;
+            _eventosInscritos = true;
+            
+            // Atualizar status inicial se possível
+            AtualizarStatusConexaoInicial();
+        }
+    }
+    
+    private void AtualizarStatusConexaoInicial()
+    {
+        // Verifica se há uma propriedade para obter o status atual
+        // Você pode implementar isso no ArduinoService se necessário
+        try
+        {
+            // Exemplo: AtualizarStatusConexao(App.Arduino.EstaConectado);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao obter status inicial: {ex.Message}");
+        }
     }
     
     private void OnStatusConexaoAlterado(bool conectado)
@@ -48,14 +81,27 @@ public abstract class BaseWindow : Window
     
     protected async void EnviarComando(string comando)
     {
-        await App.Arduino.EnviarComandoAsync(comando);
+        if (App.Arduino != null)
+        {
+            await App.Arduino.EnviarComandoAsync(comando);
+        }
+        else
+        {
+            Console.WriteLine("Arduino não disponível para envio de comando");
+        }
     }
     
     protected override void OnClosed(EventArgs e)
     {
-        // Desinscrever dos eventos
-        App.Arduino.StatusConexaoAlterado -= OnStatusConexaoAlterado;
-        App.Arduino.LinhaRecebida -= OnLinhaRecebida;
+        // Desinscrever dos eventos apenas se foram inscritos
+        if (App.Arduino != null && _eventosInscritos)
+        {
+            App.Arduino.StatusConexaoAlterado -= OnStatusConexaoAlterado;
+            App.Arduino.LinhaRecebida -= OnLinhaRecebida;
+            _eventosInscritos = false;
+        }
+        
+        this.Opened -= BaseWindow_Opened;
         base.OnClosed(e);
     }
 }

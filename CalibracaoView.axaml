@@ -2,12 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.CalibracaoView"
         Title="Calibração do Sensor" Width="800" Height="600">
-    
+
     <DockPanel Margin="20">
         <!-- Status da conexão -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
             <TextBlock Text="Status: " FontWeight="Bold"/>
-            <TextBlock x:Name="StatusLabel" Text="Desconectado" Foreground="Red" Margin="5,0,0,0"/>
+            <TextBlock x:Name="l" Text="Desconectado" Foreground="Red" Margin="5,0,0,0"/>
         </StackPanel>
 
         <!-- Cabeçalho -->
@@ -18,18 +18,22 @@
 
         <!-- Controles principais -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="25" Margin="0,0,0,20">
-            <Button x:Name="btnIniciar" Content="Iniciar Calibração" Width="180"/>
-            <Button x:Name="btnFinalizar" Content="Finalizar Calibração" Width="180" IsEnabled="False"/>
-            <Button x:Name="btnLimpar" Content="Limpar Calibração" Width="180"/>
+            <Button x:Name="btnIniciar" Content="Iniciar Calibração" Width="180" Click="BtnIniciar_Click"/>
+            <Button x:Name="btnFinalizar" Content="Finalizar Calibração" Width="180" IsEnabled="False" Click="BtnFinalizar_Click"/>
+            <Button x:Name="btnLimpar" Content="Limpar Calibração" Width="180" Click="BtnLimpar_Click"/>
         </StackPanel>
 
         <!-- Entrada de valor de referência -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
             <TextBlock Text="Ângulo de Referência (°):" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtValorReferencia" Width="80" 
+            <TextBox x:Name="txtValorReferencia" Width="80"
                      VerticalAlignment="Center" TextAlignment="Right" Text="0"/>
-            <Button x:Name="btnAdicionarPonto" Content="Adicionar Ponto" Width="180" IsEnabled="False"/>
-            <Button x:Name="btnCalcularCurva" Content="Calcular Curva" Width="180"/>
+            <Button x:Name="btnAdicionarPonto" Content="Adicionar Ponto" Width="180" IsEnabled="False" Click="BtnAdicionarPonto_Click"/>
+            <ComboBox x:Name="comboTipoCurva" Width="150" SelectedIndex="0" VerticalAlignment="Center">
+                <ComboBoxItem Content="Linear"/>
+                <ComboBoxItem Content="Quadrática"/>
+            </ComboBox>
+            <Button x:Name="btnCalcularCurva" Content="Calcular Curva" Width="180" Click="BtnCalcularCurva_Click"/>
         </StackPanel>
 
         <!-- Equação da curva -->
@@ -45,7 +49,7 @@
                 <ItemsControl x:Name="itemsControlPontos">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}"/>
+                            <TextBlock Text="{Binding}" Margin="0,2"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

@@ -28,15 +28,13 @@ public class ArduinoService
     
     public event Action? CalibracaoIniciada;
     public event Action? CalibracaoFinalizada;
-    public event Action<double, double>? DadoCalibracao; // entrada_sensor, saida_real
-
     public event Action<string>? LinhaRecebida;
     public event Action<bool>? StatusConexaoAlterado;
 
     public IReadOnlyList<DadoEnsaio> DadosEnsaio => _dadosEnsaio.AsReadOnly();
     public bool CalibracaoAtiva => _calibracaoAtiva;
     
-    private readonly List<(double entradaSensor, double saidaReal)> _dadosCalibracao = new();
+    public List<(double entradaSensor, double saidaReal)> _dadosCalibracao = new();
     public IReadOnlyList<(double entradaSensor, double saidaReal)> DadosCalibracao => _dadosCalibracao.AsReadOnly();
 
     private bool _conectado;
@@ -101,25 +99,6 @@ public class ArduinoService
         await EnviarComandoAsync("CALIBRACAO_STOP"); // comando para Arduino
     }
     
-    public void AdicionarPontoCalibracao(double valorReferencia)
-    {
-        if (!_calibracaoAtiva) return;
-
-        // Aqui pega o último valor recebido do sensor (supondo que DadoCalibracao é invocado sempre)
-        if (_dadosCalibracao.Count > 0)
-        {
-            var ultimo = _dadosCalibracao.Last();
-            // Substitui o valor de saída real pelo valor de referência inserido
-            _dadosCalibracao[_dadosCalibracao.Count - 1] = (ultimo.saidaReal, valorReferencia);
-            DadoCalibracao?.Invoke(ultimo.saidaReal, valorReferencia);
-        }
-    }
-    public void AdicionarDadoCalibracao(double entradaSensor, double saidaReal)
-    {
-        _dadosCalibracao.Add((entradaSensor, saidaReal));
-        DadoCalibracao?.Invoke(entradaSensor, saidaReal);
-    }
-    
     public void LimparCalibracao()
     {
         _dadosCalibracao.Clear();
@@ -154,7 +133,7 @@ public class ArduinoService
                     if (string.IsNullOrWhiteSpace(linha)) continue;
 
                     LinhaRecebida?.Invoke(linha);
-                    if (linha == "CALIBRACAO_INICIADA")
+                    if (linha == "CALIBRACAO_INICIADA" || linha == "entrada_sensor,saida_real")
                     {
                         _calibracaoAtiva = true;
                         CalibracaoIniciada?.Invoke();
@@ -252,22 +231,25 @@ public class ArduinoService
     }
 
     private void ProcessarDadosCalibracaoServico(string linha)
-    {
+    {   
         var cultura = System.Globalization.CultureInfo.InvariantCulture;
+    
         if (linha.Contains(",") && !linha.Contains(" "))
         {
             var partes = linha.Split(',');
-            if (partes.Length == 2 &&
+            if (partes.Length == 2 && 
                 double.TryParse(partes[0], System.Globalization.NumberStyles.Float, cultura, out double entradaSensor) &&
                 double.TryParse(partes[1], System.Globalization.NumberStyles.Float, cultura, out double saidaReal))
             {
-                // Armazena internamente
-                AdicionarDadoCalibracao(entradaSensor, saidaReal * -1);
-                Console.WriteLine($"DEBUG: Calibração - Entrada: {entradaSensor:F3}, Saída: {saidaReal:F2}");
+                Console.WriteLine($"DEBUG: Processando calibração - Entrada: {entradaSensor:F3}, Saída: {saidaReal:F2}");
+                
+                // Também adicionar à lista interna
+                _dadosCalibracao.Add((entradaSensor, saidaReal));
                 return;
             }
         }
         Console.WriteLine($"DEBUG: Linha de calibração não processada: {linha}");
+    
     }
     private void ProcessarDadosEnsaio(string linha)
     {
@@ -316,7 +298,8 @@ public class ArduinoService
             }
         }
     }
-
+    
+    
     public async Task EnviarComandoAsync(string comando)
     {
         if (!Conectado || _stream == null) return;

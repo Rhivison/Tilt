@@ -77,9 +77,11 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
         #region Métodos para Coeficientes de Calibração
         public int InserirCoeficiente(CoeficienteCalibracao coeficiente)
         {
+           
+    
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
-            
+    
             var command = connection.CreateCommand();
             command.CommandText =
                 @"
@@ -93,17 +95,27 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                 );
                 SELECT last_insert_rowid();
             ";
-            
+    
             command.Parameters.AddWithValue("$dataCalibracao", coeficiente.DataCalibracao.ToString("yyyy-MM-dd HH:mm:ss"));
             command.Parameters.AddWithValue("$sensorId", coeficiente.SensorIdentificador);
             command.Parameters.AddWithValue("$coefA", coeficiente.CoeficienteA);
             command.Parameters.AddWithValue("$coefB", coeficiente.CoeficienteB);
             command.Parameters.AddWithValue("$coefC", coeficiente.CoeficienteC);
             command.Parameters.AddWithValue("$quantidadePontos", coeficiente.QuantidadePontos);
-            command.Parameters.AddWithValue("$erroMedio", coeficiente.ErroMedioQuadratico);
-            command.Parameters.AddWithValue("$observacoes", coeficiente.Observacoes);
+    
+            // CORREÇÃO: Tratamento correto para valores NULL
+            if (coeficiente.ErroMedioQuadratico.HasValue)
+            {
+                command.Parameters.AddWithValue("$erroMedio", coeficiente.ErroMedioQuadratico.Value);
+            }
+            else
+            {
+                command.Parameters.AddWithValue("$erroMedio", DBNull.Value);
+            }
+    
+            command.Parameters.AddWithValue("$observacoes", coeficiente.Observacoes ?? string.Empty); // Garante não ser null
             command.Parameters.AddWithValue("$ativa", coeficiente.Ativa ? 1 : 0);
-            
+    
             var newId = Convert.ToInt32(command.ExecuteScalar());
             return newId;
         }

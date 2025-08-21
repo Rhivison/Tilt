@@ -13,6 +13,7 @@ namespace TiltMachine
         {
             AvaloniaXamlLoader.Load(this);
             Arduino = new ArduinoService();
+           
         }
 
         public override void OnFrameworkInitializationCompleted()

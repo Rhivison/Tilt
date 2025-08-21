@@ -8,10 +8,13 @@ namespace TiltMachine
 {   
     public partial class MainWindow : Window
     {   
+        private readonly DatabaseService _db = new();
+        
         private ArduinoService _arduinoService;
         public MainWindow()
         {
             InitializeComponent();
+            _db.Inicializar();
             App.Arduino.StatusConexaoAlterado += conectado =>
             {
                 Dispatcher.UIThread.Post(() =>
