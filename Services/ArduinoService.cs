@@ -33,7 +33,6 @@ public class ArduinoService
 
     public IReadOnlyList<DadoEnsaio> DadosEnsaio => _dadosEnsaio.AsReadOnly();
     public bool CalibracaoAtiva => _calibracaoAtiva;
-    
     public List<(double entradaSensor, double saidaReal)> _dadosCalibracao = new();
     public IReadOnlyList<(double entradaSensor, double saidaReal)> DadosCalibracao => _dadosCalibracao.AsReadOnly();
 
