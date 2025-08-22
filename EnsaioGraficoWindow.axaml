@@ -8,7 +8,8 @@
         Width="1000"
         Height="700"
         Icon="/Assets/chart-icon.png"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#D3D3D3">
 
   <Grid RowDefinitions="Auto,*,Auto">
 

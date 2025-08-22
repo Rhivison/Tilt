@@ -1,65 +1,152 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.CalibracaoView"
-        Title="Calibração do Sensor" Width="800" Height="600">
+        Title="Calibração do Sensor" Width="900" Height="650"
+        Background="#F8F9FA">
 
-    <DockPanel Margin="20">
-        <!-- Status da conexão -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
-            <TextBlock Text="Status: " FontWeight="Bold"/>
-            <TextBlock x:Name="l" Text="Desconectado" Foreground="Red" Margin="5,0,0,0"/>
-        </StackPanel>
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!-- Cabeçalho -->
-        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
-            <TextBlock Text="Calibração do Sensor" FontSize="24" FontWeight="Bold"/>
-            <TextBlock x:Name="txtStatus" Text="Pronto para calibrar" Foreground="Gray" Margin="0,5,0,0"/>
-        </StackPanel>
+        <!-- Header com Status -->
+        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
+                BoxShadow="0 2 10 0 #10000000">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Calibração do Sensor" FontSize="28" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                    <TextBlock x:Name="txtStatus" Text="Pronto para calibrar" FontSize="14" Foreground="#7F8C8D" Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="12" Height="12" Fill="Red" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="lblStatus" Text="Desconectado" FontWeight="Medium" Foreground="#E74C3C"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-        <!-- Controles principais -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="25" Margin="0,0,0,20">
-            <Button x:Name="btnIniciar" Content="Iniciar Calibração" Width="180" Click="BtnIniciar_Click"/>
-            <Button x:Name="btnFinalizar" Content="Finalizar Calibração" Width="180" IsEnabled="False" Click="BtnFinalizar_Click"/>
-            <Button x:Name="btnLimpar" Content="Limpar Calibração" Width="180" Click="BtnLimpar_Click"/>
-        </StackPanel>
+        <!-- Controles Principais -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
+                BoxShadow="0 2 10 0 #10000000">
+            <UniformGrid Rows="1" Columns="3">
+                <Button x:Name="btnIniciar" Content="🚀 Iniciar" Height="45" Margin="0,0,10,0"
+                        Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
+                        CornerRadius="8" Click="BtnIniciar_Click"/>
+                <Button x:Name="btnFinalizar" Content="✅ Finalizar" Height="45" Margin="5,0,5,0"
+                        Background="#27AE60" Foreground="White" FontWeight="Medium" FontSize="14"
+                        CornerRadius="8" IsEnabled="False" Click="BtnFinalizar_Click"/>
+                <Button x:Name="btnLimpar" Content="🗑️ Limpar" Height="45" Margin="10,0,0,0"
+                        Background="#E67E22" Foreground="White" FontWeight="Medium" FontSize="14"
+                        CornerRadius="8" Click="BtnLimpar_Click"/>
+            </UniformGrid>
+        </Border>
 
-        <!-- Entrada de valor de referência -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
-            <TextBlock Text="Ângulo de Referência (°):" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtValorReferencia" Width="80"
-                     VerticalAlignment="Center" TextAlignment="Right" Text="0"/>
-            <Button x:Name="btnAdicionarPonto" Content="Adicionar Ponto" Width="180" IsEnabled="False" Click="BtnAdicionarPonto_Click"/>
-            <ComboBox x:Name="comboTipoCurva" Width="150" SelectedIndex="0" VerticalAlignment="Center">
-                <ComboBoxItem Content="Linear"/>
-                <ComboBoxItem Content="Quadrática"/>
-            </ComboBox>
-            <Button x:Name="btnCalcularCurva" Content="Calcular Curva" Width="180" Click="BtnCalcularCurva_Click"/>
-        </StackPanel>
+        <!-- Entrada de Dados -->
+        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
+                BoxShadow="0 2 10 0 #10000000">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" Text="Configuração do Ponto" FontSize="16" FontWeight="SemiBold" 
+                          Foreground="#2C3E50" Margin="0,0,0,15"/>
+                
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Text="Ângulo (°):" VerticalAlignment="Center" 
+                              FontWeight="Medium" Margin="0,0,10,0"/>
+                    <TextBox Grid.Column="1" x:Name="txtValorReferencia" Height="35" Text="0"
+                             TextAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                             CornerRadius="6" Margin="0,0,15,0"/>
+                    
+                    <Button Grid.Column="2" x:Name="btnAdicionarPonto" Content="📍 Adicionar Ponto" 
+                            Height="35" Background="#9B59B6" Foreground="White" FontWeight="Medium"
+                            CornerRadius="6" IsEnabled="False" Click="BtnAdicionarPonto_Click" Margin="0,0,15,0"/>
+                    
+                    <ComboBox Grid.Column="3" x:Name="comboTipoCurva" Height="35" SelectedIndex="0"
+                              FontSize="14" CornerRadius="6" Margin="0,0,15,0">
+                        <ComboBoxItem Content="📈 Linear"/>
+                        <ComboBoxItem Content="📊 Quadrática"/>
+                    </ComboBox>
+                    
+                    <Button Grid.Column="4" x:Name="btnCalcularCurva" Content="🧮 Calcular Curva" 
+                            Height="35" Background="#1ABC9C" Foreground="White" FontWeight="Medium"
+                            CornerRadius="6" Click="BtnCalcularCurva_Click"/>
+                </Grid>
+            </Grid>
+        </Border>
 
-        <!-- Equação da curva -->
-        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20" x:Name="panelEquacao" IsVisible="False">
-            <TextBlock Text="Equação da Curva de Calibração:" FontWeight="Bold"/>
-            <TextBlock x:Name="txtEquacao" Margin="10,5,0,0" FontFamily="Consolas"/>
-        </StackPanel>
+        <!-- Equação da Curva -->
+        <Border Grid.Row="3" x:Name="panelEquacao" Background="#ECF0F1" CornerRadius="12" 
+                Padding="20" Margin="0,0,0,20" IsVisible="False">
+            <StackPanel>
+                <TextBlock Text="📐 Equação da Curva de Calibração" FontSize="16" FontWeight="SemiBold" 
+                          Foreground="#2C3E50" Margin="0,0,0,10"/>
+                <Border Background="White" CornerRadius="6" Padding="10">
+                    <TextBlock x:Name="txtEquacao" FontFamily="Consolas" FontSize="14" 
+                              Foreground="#34495E"/>
+                </Border>
+            </StackPanel>
+        </Border>
 
-        <!-- Lista de pontos -->
-        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
-            <TextBlock Text="Pontos de Calibração:" FontWeight="Bold" Margin="0,0,0,10"/>
-            <ScrollViewer Height="200">
-                <ItemsControl x:Name="itemsControlPontos">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Margin="0,2"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </StackPanel>
-
-        <!-- Estatísticas -->
-        <StackPanel>
-            <TextBlock Text="Estatísticas:" FontWeight="Bold" Margin="0,0,0,10"/>
-            <TextBlock x:Name="txtTotalPontos" Text="Total de pontos: 0"/>
-        </StackPanel>
-    </DockPanel>
+        <!-- Lista de Pontos e Estatísticas -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Lista de Pontos -->
+            <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" Margin="0,0,10,0"
+                    BoxShadow="0 2 10 0 #10000000">
+                <StackPanel>
+                    <TextBlock Text="📋 Pontos de Calibração" FontSize="16" FontWeight="SemiBold" 
+                              Foreground="#2C3E50" Margin="0,0,0,15"/>
+                    <ScrollViewer Height="250" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="itemsControlPontos">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#F8F9FA" CornerRadius="6" Margin="0,0,0,5" Padding="10">
+                                        <TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="13"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+            
+            <!-- Estatísticas -->
+            <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="20" Margin="10,0,0,0"
+                    BoxShadow="0 2 10 0 #10000000">
+                <StackPanel>
+                    <TextBlock Text="📊 Estatísticas" FontSize="16" FontWeight="SemiBold" 
+                              Foreground="#2C3E50" Margin="0,0,0,15"/>
+                    <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
+                        <TextBlock x:Name="txtTotalPontos" Text="Total de pontos: 0" 
+                                  FontSize="14" FontWeight="Medium" Foreground="#27AE60"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
 </Window>
