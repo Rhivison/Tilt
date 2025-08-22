@@ -85,7 +85,6 @@
                     <ComboBox Grid.Column="3" x:Name="comboTipoCurva" Height="35" SelectedIndex="0"
                               FontSize="14" CornerRadius="6" Margin="0,0,15,0">
                         <ComboBoxItem Content="📈 Linear"/>
-                        <ComboBoxItem Content="📊 Quadrática"/>
                     </ComboBox>
                     
                     <Button Grid.Column="4" x:Name="btnCalcularCurva" Content="🧮 Calcular Curva" 
