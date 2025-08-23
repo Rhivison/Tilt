@@ -1,0 +1,222 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.OperacaoWindow"
+        Title="Operação da Máquina"
+        Width="800" Height="1200"
+        MinWidth="600" MinHeight="500"
+        Background="#F8F9FA"
+        CanResize="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menu Superior -->
+        <!--<Border Grid.Row="0" Background="White" BoxShadow="0 2 8 0 #15000000">
+            <Menu Background="Transparent" Padding="15,10">
+                <MenuItem Header="Voltar" Click="VoltarButton_Click" FontSize="14"/>
+            </Menu>
+        </Border>-->
+
+        <!-- Header com Título -->
+        <Border Grid.Row="1" Background="White" Margin="30,20,30,10" CornerRadius="16" 
+                BoxShadow="0 4 20 0 #10000000" Padding="40">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Operação da Máquina" FontSize="28" FontWeight="SemiBold" 
+                              Foreground="#2C3E50"/>
+                </StackPanel>
+                
+                <Border Grid.Column="1" Background="#ECF0F1" CornerRadius="25" Padding="15,10">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse x:Name="StatusIndicator" Width="14" Height="14" Fill="#E74C3C" Margin="0,0,10,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Status" FontSize="12" Foreground="#7F8C8D" FontWeight="Medium"/>
+                            <TextBlock x:Name="StatusLabel" Text="Desconectado" FontSize="14" 
+                                       FontWeight="SemiBold" Foreground="#E74C3C"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Área Principal com Botões -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="30,0,30,20">
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="20">
+
+                <!-- Botão Conectar -->
+                <Border Background="White" CornerRadius="12" BoxShadow="0 4 20 0 #10000000">
+                    <Button x:Name="ConectarButton" Background="Transparent" BorderThickness="0" Padding="20" 
+                            Click="Conectar_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                            <Border Background="#E3F2FD" CornerRadius="25" Width="40" Height="40">
+                                <TextBlock Text="🔌" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Conectar" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                        </StackPanel>
+                    </Button>
+                </Border>
+
+                <!-- Botões de comando -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- START1 -->
+                    <Border Grid.Row="0" Background="White" CornerRadius="12" Margin="0,0,0,10" BoxShadow="0 4 20 0 #10000000">
+                        <Button x:Name="Start1Button" Background="Transparent" BorderThickness="0" Padding="20" 
+                                Click="Start1_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                <Border Background="#E8F5E8" CornerRadius="25" Width="40" Height="40">
+                                    <TextBlock Text="✅" Background="Green" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="START1" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    
+                    <!-- START2 -->
+                    <Border Grid.Row="1" Background="White" CornerRadius="12" Margin="0,0,0,10" BoxShadow="0 4 20 0 #10000000">
+                        <Button x:Name="Start2Button" Background="Transparent" BorderThickness="0" Padding="20" 
+                                Click="Start2_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                <Border Background="#E8F5E8" CornerRadius="25" Width="40" Height="40">
+                                    <TextBlock Text="✅" FontSize="16" Background="Red" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="START2" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    
+                    <!-- STOP -->
+                    <Border Grid.Row="2" Background="White" CornerRadius="12" Margin="0,0,0,10" BoxShadow="0 4 20 0 #10000000">
+                        <Button x:Name="StopButton" Background="Transparent" BorderThickness="0" Padding="20" 
+                                Click="Stop_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                <Border Background="#FFEBEE" CornerRadius="25" Width="40" Height="40">
+                                    <TextBlock Text="🛑" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="STOP" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    
+                    <!-- MANUAL -->
+                    <Border Grid.Row="3" Background="White" CornerRadius="12" Margin="0,0,0,10" BoxShadow="0 4 20 0 #10000000">
+                        <Button x:Name="ManualButton" Background="Transparent" BorderThickness="0" Padding="20" 
+                                Click="Manual_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                <Border Background="#FFF3E0" CornerRadius="25" Width="40" Height="40">
+                                    <TextBlock Text="⚙️" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="MANUAL" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    
+                    <!-- REPOSICIONAR -->
+                    <Border Grid.Row="4" Background="White" CornerRadius="12" BoxShadow="0 4 20 0 #10000000">
+                        <Button x:Name="ReposicionarButton" Background="Transparent" BorderThickness="0" Padding="20" 
+                                Click="Reposicionar_Click" CornerRadius="12" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                <Border Background="#E3F2FD" CornerRadius="25" Width="40" Height="40">
+                                    <TextBlock Text="↩️" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="REPOSICIONAR" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Controle de Velocidade -->
+        <Border Grid.Row="3" Background="White" Margin="30,0,30,20" CornerRadius="16" 
+                BoxShadow="0 4 20 0 #10000000" Padding="25">
+            <StackPanel Spacing="20">
+                <TextBlock Text="Controle de Velocidade" FontSize="18" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                
+                <!-- Slider e valor numérico -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Text="Velocidade:" VerticalAlignment="Center" 
+                               Margin="0,0,15,0" Foreground="#2C3E50"/>
+                    
+                    <Slider Grid.Column="1" x:Name="SpeedSlider" Minimum="1" Maximum="100" 
+                            Value="10" TickFrequency="10" IsSnapToTickEnabled="True"
+                            ValueChanged="SpeedSlider_ValueChanged" IsEnabled="False"
+                            Margin="0,0,15,0"/>
+                    
+                    <TextBox Grid.Column="2" x:Name="SpeedTextBox" Text="10.0" Width="70"
+                             KeyDown="SpeedTextBox_KeyDown" IsEnabled="False"
+                             Margin="0,0,10,0"/>
+                    
+                    <TextBlock Grid.Column="3" Text="graus/min" VerticalAlignment="Center" 
+                               Foreground="#7F8C8D"/>
+                </Grid>
+                
+                <!-- Botões de velocidade -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                    <Button x:Name="Speed1Button" Content="1°" Click="Speed1Button_Click" 
+                            IsEnabled="False" MinWidth="60" CornerRadius="20"
+                            Background="#ECF0F1" Foreground="#2C3E50"/>
+                    
+                    <Button x:Name="Speed10Button" Content="10°" Click="Speed10Button_Click" 
+                            IsEnabled="False" MinWidth="60" CornerRadius="20"
+                            Background="#ECF0F1" Foreground="#2C3E50"/>
+                    
+                    <Button x:Name="Speed30Button" Content="30°" Click="Speed30Button_Click" 
+                            IsEnabled="False" MinWidth="60" CornerRadius="20"
+                            Background="#ECF0F1" Foreground="#2C3E50"/>
+                    
+                    <Button x:Name="SpeedMinusButton" Content="-5" Click="SpeedMinusButton_Click" 
+                            IsEnabled="False" MinWidth="50" CornerRadius="20"
+                            Background="#ECF0F1" Foreground="#2C3E50"/>
+                    
+                    <Button x:Name="SpeedPlusButton" Content="+5" Click="SpeedPlusButton_Click" 
+                            IsEnabled="False" MinWidth="50" CornerRadius="20"
+                            Background="#ECF0F1" Foreground="#2C3E50"/>
+                    
+                    <Button x:Name="SetSpeedButton" Content="Definir" Click="SetSpeedButton_Click" 
+                            IsEnabled="False" MinWidth="70" CornerRadius="20"
+                            Background="#3498DB" Foreground="White" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Rodapé -->
+        <!--<Border Grid.Row="4" Background="#2C3E50" Height="50">
+            <Grid Margin="30,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="© 2025 Software Tilting Table" Foreground="#BDC3C7" 
+                              FontSize="13"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" 
+                           HorizontalAlignment="Right">
+                    <TextBlock Text="Desenvolvido por BLZ Serviços" Foreground="#BDC3C7" FontSize="13"/>
+                </StackPanel>
+            </Grid>
+        </Border>-->
+    </Grid>
+</Window>

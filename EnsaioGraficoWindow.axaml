@@ -1,0 +1,270 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:local="clr-namespace:TiltMachine"
+        x:Class="TiltMachine.EnsaioGraficoWindow"
+        x:DataType="local:EnsaioGraficoWindow"
+        Title="Detalhes do Ensaio"
+        Width="1300"
+        Height="1100"
+        Icon="/Assets/chart-icon.png"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="#F8F9FA">
+
+  <Grid Margin="25">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="70"/>    <!-- Header -->
+      <RowDefinition Height="150"/>   <!-- Dados da Amostra -->
+      <RowDefinition Height="*"/>     <!-- Gráfico -->
+      <RowDefinition Height="Auto"/>  <!-- Observações + Resultados -->
+    </Grid.RowDefinitions>
+
+    <!-- Header Principal - Mínimo -->
+    <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="12" Margin="0,0,0,10"
+            BoxShadow="0 2 10 0 #10000000">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Grid.Column="0" Background="#1ABC9C" CornerRadius="25" Width="35" Height="35" 
+               Margin="0,0,12,0">
+          <TextBlock Text="📊" FontSize="18" HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"/>
+        </Border>
+        
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <TextBlock Text="Dashboard do Ensaio" FontSize="18" FontWeight="SemiBold" 
+                    Foreground="#2C3E50"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button Content="⏸️ Parar" Width="80" Height="35"
+                  Background="#E74C3C" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnPararEnsaioClick"/>
+          
+          <Button Content="🔄 Reposicionar" Width="130" Height="35"
+                  Background="#3498DB" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnReposicionarClick"/>
+          
+          <Button Content="📋 PDF" Width="70" Height="35"
+                  Background="#8E44AD" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnExportarPdfClick"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Informações da Amostra - Otimizado -->
+    <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="18" Margin="0,0,0,150"
+            BoxShadow="0 2 10 0 #10000000">
+      <StackPanel>
+        <TextBlock Text="📋 Dados da Amostra" FontSize="16" FontWeight="SemiBold" 
+                  Foreground="#2C3E50" Margin="0,0,0,15"/>
+        
+        <!-- Linha principal de informações -->
+        <Grid Margin="0,0,0,12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="Amostra" FontWeight="Medium" FontSize="11" 
+                      Foreground="#7F8C8D" Margin="0,0,0,3"/>
+            <TextBlock Text="{Binding Ensaio.Amostra}" FontSize="14" FontWeight="SemiBold" 
+                      Foreground="#2C3E50"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="1">
+            <TextBlock Text="Número" FontWeight="Medium" FontSize="11" 
+                      Foreground="#7F8C8D" Margin="0,0,0,3"/>
+            <Border Background="#E3F2FD" CornerRadius="12" Padding="6,3" HorizontalAlignment="Left">
+              <TextBlock Text="{Binding Ensaio.AmostraNumero}" FontSize="14" FontWeight="Bold" 
+                        Foreground="#3498DB"/>
+            </Border>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Local" FontWeight="Medium" FontSize="11" 
+                      Foreground="#7F8C8D" Margin="0,0,0,3"/>
+            <TextBlock Text="{Binding Ensaio.Local}" FontSize="14" FontWeight="SemiBold" 
+                      Foreground="#2C3E50"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="3">
+            <TextBlock Text="Responsável" FontWeight="Medium" FontSize="11" 
+                      Foreground="#7F8C8D" Margin="0,0,0,3"/>
+            <TextBlock Text="{Binding Ensaio.Responsavel}" FontSize="14" FontWeight="SemiBold" 
+                      Foreground="#2C3E50"/>
+          </StackPanel>
+          
+          <StackPanel Grid.Column="4">
+            <TextBlock Text="Data" FontWeight="Medium" FontSize="11" 
+                      Foreground="#7F8C8D" Margin="0,0,0,3"/>
+            <TextBlock Text="{Binding Ensaio.DataEnsaio}" FontSize="14" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" FontFamily="Consolas"/>
+          </StackPanel>
+        </Grid>
+        
+        <!-- Dados técnicos em cards - Compactos -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <Border Grid.Column="0" Background="#FFF8E1" CornerRadius="6" Padding="8" Margin="0,0,6,0">
+            <StackPanel>
+              <TextBlock Text="Tipo de Rocha" FontWeight="Medium" FontSize="10" 
+                        Foreground="#FF8F00" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.TipoRocha}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#E65100" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Column="1" Background="#F3E5F5" CornerRadius="6" Padding="8" Margin="3,0">
+            <StackPanel>
+              <TextBlock Text="Formato" FontWeight="Medium" FontSize="10" 
+                        Foreground="#8E24AA" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.FormatoCorpoProva}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#6A1B9A" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Column="2" Background="#E8F5E8" CornerRadius="6" Padding="8" Margin="3,0">
+            <StackPanel>
+              <TextBlock Text="Altura" FontWeight="Medium" FontSize="10" 
+                        Foreground="#4CAF50" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.Altura}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#2E7D32" FontFamily="Consolas"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Column="3" Background="#E1F5FE" CornerRadius="6" Padding="8" Margin="3,0">
+            <StackPanel>
+              <TextBlock Text="Largura" FontWeight="Medium" FontSize="10" 
+                        Foreground="#0288D1" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.Largura}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#01579B" FontFamily="Consolas"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Column="4" Background="#FFF3E0" CornerRadius="6" Padding="8" Margin="3,0">
+            <StackPanel>
+              <TextBlock Text="Profundidade" FontWeight="Medium" FontSize="10" 
+                        Foreground="#FF9800" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.Profundidade}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#E65100" FontFamily="Consolas"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Column="5" Background="#FFEBEE" CornerRadius="6" Padding="8" Margin="6,0,0,0">
+            <StackPanel>
+              <TextBlock Text="Área Contato" FontWeight="Medium" FontSize="10" 
+                        Foreground="#F44336" Margin="0,0,0,3"/>
+              <TextBlock Text="{Binding Ensaio.AreaContato}" FontSize="12" FontWeight="SemiBold" 
+                        Foreground="#C62828" FontFamily="Consolas"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <!-- Área do Gráfico - EXPANDIDA -->
+    <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15"
+            BoxShadow="0 2 10 0 #10000000">
+      <StackPanel>
+        <Grid Margin="0,0,0,15">
+          <TextBlock Text="📈 Gráfico do Ensaio" FontSize="18" FontWeight="SemiBold" 
+                    Foreground="#2C3E50" HorizontalAlignment="Left"/>
+          
+          <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+          </StackPanel>
+        </Grid>
+        
+        <Border BorderBrush="#E8E8E8" BorderThickness="2" CornerRadius="10" 
+               Background="#FAFBFC" MinHeight="450">
+          <lvc:CartesianChart x:Name="chart"
+                              XAxes="{Binding XAxes}"
+                              YAxes="{Binding YAxes}"
+                              Series="{Binding ChartSeries}"
+                              LegendPosition="Bottom"
+                              Background="White"
+                              Margin="10"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- Resultados e Observações - Compacto -->
+    <Grid Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      
+      <!-- Observações -->
+      <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="18" Margin="0,0,10,0"
+              BoxShadow="0 2 10 0 #10000000">
+        <StackPanel>
+          <TextBlock Text="📝 Observações do Ensaio" FontSize="15" FontWeight="SemiBold" 
+                    Foreground="#2C3E50" Margin="0,0,0,12"/>
+          
+          <Border Background="#F8F9FA" CornerRadius="8" Padding="12" Height="90">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <TextBlock Text="{Binding Ensaio.Observacoes}" TextWrapping="Wrap" 
+                        FontSize="13" Foreground="#34495E" LineHeight="18"/>
+            </ScrollViewer>
+          </Border>
+        </StackPanel>
+      </Border>
+      
+      <!-- Resultados Finais -->
+      <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="18" Margin="10,0,0,0"
+              BoxShadow="0 2 10 0 #10000000">
+        <StackPanel>
+          <TextBlock Text="🎯 Resultados Finais" FontSize="15" FontWeight="SemiBold" 
+                    Foreground="#2C3E50" Margin="0,0,0,15"/>
+          
+          <StackPanel Spacing="8">
+            <Border Background="#E8F8F5" CornerRadius="8" Padding="10">
+              <StackPanel>
+                <Grid>
+                  <TextBlock Text="🔄" FontSize="14" HorizontalAlignment="Left"/>
+                  <TextBlock Text="Ângulo Final" FontWeight="SemiBold" FontSize="11" 
+                            Foreground="#16A085" HorizontalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding AnguloFinal, StringFormat={}{0:F2}°}" 
+                          FontSize="16" FontWeight="Bold" Foreground="#16A085" 
+                          HorizontalAlignment="Center" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+            
+            <Border Background="#EBF3FD" CornerRadius="8" Padding="10">
+              <StackPanel>
+                <Grid>
+                  <TextBlock Text="⚖️" FontSize="14" HorizontalAlignment="Left"/>
+                  <TextBlock Text="Coeficiente de Atrito" FontWeight="SemiBold" FontSize="11" 
+                            Foreground="#2E86AB" HorizontalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding CoeficienteAtrito}" 
+                          FontSize="16" FontWeight="Bold" Foreground="#2E86AB" 
+                          HorizontalAlignment="Center" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
+
+  </Grid>
+</Window>

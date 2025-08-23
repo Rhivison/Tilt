@@ -2,220 +2,270 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.PropriedadesEnsaioWindow"
         Title="Propriedades do Ensaio"
-        Width="600"
-        Height="450"
-        MinWidth="500"
-        MinHeight="400"
-        WindowStartupLocation="CenterScreen">
+        Width="750"
+        Height="650"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8F9FA">
 
-  <Grid Margin="10">
+  <Grid Margin="30">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <!-- Header com ícone e título -->
-    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-      <Border Background="#4CAF50" 
-              CornerRadius="15" 
-              Width="30" 
-              Height="30"
-              Margin="0,0,10,0">
-        <TextBlock Text="+" 
-                   Foreground="White" 
-                   FontSize="18" 
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-      </Border>
-      <TextBlock Text="Propriedades do Ensaio" 
-                 FontSize="16" 
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"/>
-    </StackPanel>
+    <!-- Header -->
+    <Border Grid.Row="0" Background="White" CornerRadius="16" Padding="25" Margin="0,0,0,20"
+            BoxShadow="0 4 20 0 #10000000">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Grid.Column="0" Background="#27AE60" CornerRadius="50" Width="50" Height="50" 
+               Margin="0,0,20,0">
+          <TextBlock Text="📋" FontSize="24" HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"/>
+        </Border>
+        
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <TextBlock Text="Propriedades do Ensaio" FontSize="24" FontWeight="SemiBold" 
+                    Foreground="#2C3E50"/>
+          <TextBlock Text="Configure os parâmetros do ensaio antes de iniciar" FontSize="14" 
+                    Foreground="#7F8C8D" Margin="0,5,0,0"/>
+        </StackPanel>
+      </Grid>
+    </Border>
 
     <!-- Conteúdo principal -->
-    <ScrollViewer Grid.Row="1">
-      <StackPanel Spacing="15">
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="20">
         
-        <!-- Primeira linha: Amostra e Local -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Amostra:" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtAmostra" Watermark="Digite a amostra"/>
+        <!-- Seção: Identificação -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BoxShadow="0 2 10 0 #10000000">
+          <StackPanel>
+            <TextBlock Text="🏷️ Identificação" FontSize="16" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" Margin="0,0,0,15"/>
+            
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="150"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+              
+              <StackPanel Grid.Column="0" Grid.Row="0">
+                <TextBlock Text="Nome da Amostra" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtAmostra" Height="40" CornerRadius="8" 
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" 
+                         Watermark="Digite o nome da amostra"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="2" Grid.Row="0">
+                <TextBlock Text="Número" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtAmostraNum" Text="0" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Center"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="0" Grid.Row="2">
+                <TextBlock Text="Local do Ensaio" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtLocal" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" 
+                         Watermark="Digite o local do ensaio"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="2" Grid.Row="2">
+                <TextBlock Text="Responsável" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtResponsavel" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" 
+                         Watermark="Nome do responsável"/>
+              </StackPanel>
+            </Grid>
           </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Amostra N°:" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtAmostraNum" Text="0" Width="80" HorizontalAlignment="Left"/>
-          </StackPanel>
-        </Grid>
+        </Border>
 
-        <!-- Segunda linha: Local e Responsável -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Local:" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtLocal" Watermark="Digite o local"/>
+        <!-- Seção: Características da Amostra -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BoxShadow="0 2 10 0 #10000000">
+          <StackPanel>
+            <TextBlock Text="🧪 Características da Amostra" FontSize="16" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" Margin="0,0,0,15"/>
+            
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="Tipo de Rocha" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtTipoRocha" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" 
+                         Watermark="Ex: Granito, Basalto, etc."/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Formato do Corpo de Prova" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <ComboBox x:Name="cmbFormato" SelectedIndex="0" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14">
+                  <ComboBoxItem Content="Prismático"/>
+                  <ComboBoxItem Content="Cilíndrico"/>
+                  <ComboBoxItem Content="Cúbico"/>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
           </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Responsável:" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtResponsavel" Watermark="Digite o responsável"/>
-          </StackPanel>
-        </Grid>
+        </Border>
 
-        <!-- Terceira linha: Tipo de Rocha e Formato -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Tipo de Rocha:" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtTipoRocha" Watermark="Digite o tipo de rocha"/>
+        <!-- Seção: Dimensões -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BoxShadow="0 2 10 0 #10000000">
+          <StackPanel>
+            <TextBlock Text="📏 Dimensões (mm)" FontSize="16" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" Margin="0,0,0,15"/>
+            
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="Altura" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtAltura" Text="0,00" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Right"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Largura" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtLargura" Text="0,00" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Right"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="4">
+                <TextBlock Text="Profundidade" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtProfundidade" Text="0,00" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Right"/>
+              </StackPanel>
+            </Grid>
           </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Formato do Corpo de Prova:" Margin="0,0,0,5"/>
-            <ComboBox x:Name="cmbFormato" SelectedIndex="0">
-              <ComboBoxItem Content="Prismático"/>
-              <ComboBoxItem Content="Cilíndrico"/>
-              <ComboBoxItem Content="Cúbico"/>
-            </ComboBox>
-          </StackPanel>
-        </Grid>
+        </Border>
 
-        <!-- Dimensões -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Altura (mm):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtAltura" Text="0,00" HorizontalAlignment="Stretch"/>
+        <!-- Seção: Parâmetros do Ensaio -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BoxShadow="0 2 10 0 #10000000">
+          <StackPanel>
+            <TextBlock Text="⚙️ Parâmetros do Ensaio" FontSize="16" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" Margin="0,0,0,15"/>
+            
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="Área de Contato (cm²)" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <TextBox x:Name="txtAreaContato" Text="0" Height="40" CornerRadius="8"
+                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Right"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Taxa de Inclinação (°/min)" FontWeight="Medium" Margin="0,0,0,8" 
+                          Foreground="#34495E"/>
+                <Border Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2" 
+                       CornerRadius="8" Height="40">
+                  <NumericUpDown x:Name="txtTaxaInclinacao" Minimum="1" Maximum="100" Value="1"
+                                Background="Transparent" BorderThickness="0" 
+                                Padding="12,0" FontSize="14"/>
+                </Border>
+              </StackPanel>
+            </Grid>
           </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Largura (mm):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtLargura" Text="0,00" HorizontalAlignment="Stretch"/>
-          </StackPanel>
-          
-          <StackPanel Grid.Column="4">
-            <TextBlock Text="Profundidade (mm):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtProfundidade" Text="0,00" HorizontalAlignment="Stretch"/>
-          </StackPanel>
-        </Grid>
+        </Border>
 
-        <!-- Área e Taxa de Inclinação -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Área de Contato (cm²):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtAreaContato" Text="0" HorizontalAlignment="Stretch"/>
+        <!-- Seção: Observações -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BoxShadow="0 2 10 0 #10000000">
+          <StackPanel>
+            <TextBlock Text="📝 Observações" FontSize="16" FontWeight="SemiBold" 
+                      Foreground="#2C3E50" Margin="0,0,0,15"/>
+            
+            <TextBox x:Name="txtObservacoes" Height="100" CornerRadius="8"
+                     Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
+                     Padding="12" FontSize="14" TextWrapping="Wrap" AcceptsReturn="True"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     Watermark="Digite suas observações sobre o ensaio..."/>
           </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Taxa de Inclinação (°/min):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtTaxaInclinacao" Text="0" HorizontalAlignment="Stretch"/>
-          </StackPanel>
-        </Grid>
-
-        <!-- Inclinação e Deslocamento -->
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="Inclinação Máxima (°):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtInclinacaoMaxima" Text="0" HorizontalAlignment="Stretch"/>
-          </StackPanel>
-          
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="Deslocamento Máximo (mm):" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtDeslocamentoMaximo" Text="0" HorizontalAlignment="Stretch"/>
-          </StackPanel>
-        </Grid>
-
-        <!-- Observações -->
-        <StackPanel>
-          <TextBlock Text="Observações:" Margin="0,0,0,5"/>
-          <TextBox x:Name="txtObservacoes" 
-                   Height="80" 
-                   TextWrapping="Wrap" 
-                   AcceptsReturn="True"
-                   ScrollViewer.VerticalScrollBarVisibility="Auto"
-                   Watermark="Digite suas observações aqui..."/>
-        </StackPanel>
+        </Border>
 
       </StackPanel>
     </ScrollViewer>
 
-    <!-- Botões -->
-    <StackPanel Grid.Row="2" 
-                Orientation="Horizontal" 
-                HorizontalAlignment="Right" 
-                Spacing="10"
-                Margin="0,15,0,0">
-      
-      <Button x:Name="btnSalvar" 
-              Content="Salvar" 
-              Background="#4CAF50" 
-              Foreground="White"
-              Padding="20,8"
-              CornerRadius="4"
-              FontWeight="SemiBold"
-              Click="OnSalvarClick">
-        <Button.Styles>
-          <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#45a049"/>
-          </Style>
-        </Button.Styles>
-      </Button>
-      
-      <Button x:Name="btnCancelar" 
-              Content="Cancelar" 
-              Background="#f44336" 
-              Foreground="White"
-              Padding="20,8"
-              CornerRadius="4"
-              FontWeight="SemiBold"
-              Click="OnCancelarClick">
-        <Button.Styles>
-          <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#da190b"/>
-          </Style>
-        </Button.Styles>
-      </Button>
-      
-    </StackPanel>
+    <!-- Botões de Ação -->
+    <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" Margin="0,20,0,0"
+            BoxShadow="0 2 10 0 #10000000">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Info do lado esquerdo -->
+        <!--<StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock Text="💡 Dica: Verifique todos os dados antes de iniciar o ensaio" 
+                    FontSize="13" Foreground="#7F8C8D" FontStyle="Italic"/>
+        </StackPanel>-->
+        
+        <!-- Botões do lado direito -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+          <Button x:Name="btnEnsaiar" Content="🚀 Ensaiar" Width="120" Height="45"
+                  Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
+                  CornerRadius="8" Click="OnEnsaiarClick"/>
+          
+          <Button x:Name="btnSalvar" Content="💾 Salvar" Width="120" Height="45"
+                  Background="#27AE60" Foreground="White" FontWeight="Medium" FontSize="14"
+                  CornerRadius="8" Click="OnSalvarClick"/>
+          
+          <Button x:Name="btnCancelar" Content="❌ Cancelar" Width="120" Height="45"
+                  Background="#E74C3C" Foreground="White" FontWeight="Medium" FontSize="14"
+                  CornerRadius="8" Click="OnCancelarClick"/>
+        </StackPanel>
+      </Grid>
+    </Border>
 
   </Grid>
 </Window>

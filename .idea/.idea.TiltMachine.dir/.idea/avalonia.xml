@@ -4,10 +4,17 @@
     <option name="projectPerEditor">
       <map>
         <entry key="App.axaml" value="TiltMachine.csproj" />
+        <entry key="CalibracaoView.axaml" value="TiltMachine.csproj" />
+        <entry key="CalibracaoWindow.axaml" value="TiltMachine.csproj" />
         <entry key="ConfiguracoesWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="EnsaioGraficoWindow.axaml" value="TiltMachine.csproj" />
         <entry key="EnsaiosWindow.axaml" value="TiltMachine.csproj" />
         <entry key="MainWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="OperacaoWindow.axaml" value="TiltMachine.csproj" />
         <entry key="PropriedadesEnsaioWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="SensorCalibration.axaml" value="TiltMachine.csproj" />
+        <entry key="SensorCalibrationWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="Services/EnsaioGraficoWindow.axaml" value="TiltMachine.csproj" />
       </map>
     </option>
   </component>

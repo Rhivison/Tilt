@@ -7,10 +7,13 @@ using Avalonia.Themes.Fluent;
 namespace TiltMachine
 {
     public partial class App : Application
-    {
+    {   
+        public static ArduinoService Arduino { get; private set; }
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+            Arduino = new ArduinoService();
+           
         }
 
         public override void OnFrameworkInitializationCompleted()
