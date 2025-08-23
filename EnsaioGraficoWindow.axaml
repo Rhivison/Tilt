@@ -61,7 +61,7 @@
     <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="18" Margin="0,0,0,150"
             BoxShadow="0 2 10 0 #10000000">
       <StackPanel>
-        <TextBlock Text="📋 Dados da Amostra" FontSize="16" FontWeight="SemiBold" 
+        <TextBlock Text="📋 Dados da Amostra" FontSize="12" FontWeight="SemiBold" 
                   Foreground="#2C3E50" Margin="0,0,0,15"/>
         
         <!-- Linha principal de informações -->
