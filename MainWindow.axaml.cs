@@ -21,11 +21,12 @@ namespace TiltMachine
                 {
                     StatusLabel.Text = conectado ? "Conectado" : "Desconectado";
                     StatusLabel.Foreground = conectado ? Brushes.Green : Brushes.Red;
+                    StatusIndicator.Fill = conectado ? Brushes.Green : Brushes.Red;
                 });
             };
             
         }
-
+    
         private void AmostraButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -41,7 +42,7 @@ namespace TiltMachine
                 // Avalonia.Controls.MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow("Erro", ex.Message).Show();
             }
         }
-
+        
         private void EnsaiosButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -72,6 +73,11 @@ namespace TiltMachine
         {
             var operacaoWindow = new OperacaoWindow();
             operacaoWindow.Show();
+        }
+
+        private void Sair_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close(false);
         }
     }
 }

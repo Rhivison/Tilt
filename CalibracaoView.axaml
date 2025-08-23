@@ -29,7 +29,7 @@
                 </StackPanel>
                 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="12" Height="12" Fill="Red" Margin="0,0,8,0"/>
+                    <Ellipse x:Name="StatusIndicator" Width="12" Height="12" Fill="Red" Margin="0,0,8,0"/>
                     <TextBlock x:Name="lblStatus" Text="Desconectado" FontWeight="Medium" Foreground="#E74C3C"/>
                 </StackPanel>
             </Grid>

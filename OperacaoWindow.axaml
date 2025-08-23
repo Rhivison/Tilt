@@ -5,7 +5,7 @@
         Width="800" Height="1200"
         MinWidth="600" MinHeight="500"
         Background="#F8F9FA"
-        CanResize="True">
+        CanResize="False">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -42,7 +42,7 @@
                         <StackPanel>
                             <TextBlock Text="Status" FontSize="12" Foreground="#7F8C8D" FontWeight="Medium"/>
                             <TextBlock x:Name="StatusLabel" Text="Desconectado" FontSize="14" 
-                                      FontWeight="SemiBold" Foreground="#E74C3C"/>
+                                       FontWeight="SemiBold" Foreground="#E74C3C"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

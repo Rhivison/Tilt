@@ -3,8 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using TiltMachine.Models;
 using TiltMachine.Services;
 
@@ -21,41 +24,95 @@ public partial class PropriedadesEnsaioWindow : Window
     }
 
     public PropriedadesEnsaioWindow(PropriedadesEnsaio propriedades) : this()
-    {   
-       
-        if (txtAmostra != null) txtAmostra.Text = propriedades.Amostra ?? string.Empty;
-        if (txtAmostraNum != null) txtAmostraNum.Text = propriedades.AmostraNumero.ToString();
-        if (txtLocal != null) txtLocal.Text = propriedades.Local ?? string.Empty;
-        if (txtResponsavel != null) txtResponsavel.Text = propriedades.Responsavel ?? string.Empty;
-        if (txtTipoRocha != null) txtTipoRocha.Text = propriedades.TipoRocha ?? string.Empty;
+    {
+
+        if (txtAmostra != null)
+        {
+            txtAmostra.Text = propriedades.Amostra ?? string.Empty;
+            txtAmostra.IsEnabled = false;
+        }
+
+        if (txtAmostraNum != null)
+        {
+            txtAmostraNum.Text = propriedades.AmostraNumero.ToString();
+            txtAmostraNum.IsEnabled = false;
+        }
+
+        if (txtLocal != null)
+        {
+            txtLocal.Text = propriedades.Local ?? string.Empty;
+            txtLocal.IsEnabled = false;
+        }
+
+        if (txtResponsavel != null)
+        {
+            txtResponsavel.Text = propriedades.Responsavel ?? string.Empty;
+            txtResponsavel.IsEnabled = false;
+        }
+
+        if (txtTipoRocha != null)
+        {
+            txtTipoRocha.Text = propriedades.TipoRocha ?? string.Empty;
+            txtTipoRocha.IsEnabled = false;
+            
+        }
         
         if (cmbFormato != null)
         {
             cmbFormato.SelectedItem = EncontrarItemPorTexto(cmbFormato, propriedades.FormatoCorpoProva);
+            cmbFormato.IsEnabled = false;
         }
-        
-        if (txtAltura != null) txtAltura.Text = propriedades.Altura.ToString("F2");
-        if (txtLargura != null) txtLargura.Text = propriedades.Largura.ToString("F2");
-        if (txtProfundidade != null) txtProfundidade.Text = propriedades.Profundidade.ToString("F2");
-        if (txtAreaContato != null) txtAreaContato.Text = propriedades.AreaContato.ToString("F2");
-        if (txtTaxaInclinacao != null) txtTaxaInclinacao.Text = propriedades.TaxaInclinacao.ToString("F2");
+
+        if (txtAltura != null)
+        {
+            txtAltura.Text = propriedades.Altura.ToString("F2");
+            txtAltura.IsEnabled = false;
+        }
+
+        if (txtLargura != null)
+        {
+            txtLargura.Text = propriedades.Largura.ToString("F2");
+            txtLargura.IsEnabled = false;
+        }
+
+        if (txtProfundidade != null)
+        {
+            txtProfundidade.Text = propriedades.Profundidade.ToString("F2");
+            txtProfundidade.IsEnabled = false;
+
+        }
+
+        if (txtAreaContato != null)
+        {
+            txtAreaContato.Text = propriedades.AreaContato.ToString("F2");
+            txtAreaContato.IsEnabled = false;
+            
+        }
+
+        if (txtTaxaInclinacao != null)
+        {
+            txtTaxaInclinacao.Text = propriedades.TaxaInclinacao.ToString("F2");
+            txtTaxaInclinacao.IsEnabled = false;
+        }
         //if (txtInclinacaoMaxima != null) txtInclinacaoMaxima.Text = propriedades.InclinacaoMaxima.ToString("F2");
        // if (txtDeslocamentoMaximo != null) txtDeslocamentoMaximo.Text = propriedades.DeslocamentoMaximo.ToString("F2");
-        if (txtObservacoes != null) txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
+       if (txtObservacoes != null)
+       {
+           txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
+           txtObservacoes.IsEnabled = false;
+       }
 
         if (btnSalvar != null) btnSalvar.IsEnabled = false;
         if (btnEnsaiar != null) btnEnsaiar.IsEnabled = true;
         _ensaioPropriedades = propriedades;
     }
-    
     private ComboBoxItem? EncontrarItemPorTexto(ComboBox combo, string texto)
     {
         if (string.IsNullOrEmpty(texto)) return null;
         
         return combo.Items.OfType<ComboBoxItem>()
-            .FirstOrDefault(item => item.Content?.ToString() == texto);
+            .FirstOrDefault(item => item.Content?.ToString()?.Contains(texto) == true);
     }
-
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
@@ -80,7 +137,6 @@ public partial class PropriedadesEnsaioWindow : Window
         btnEnsaiar = this.FindControl<Button>("btnEnsaiar");
         if (btnEnsaiar != null) btnEnsaiar.IsEnabled = false;
     }
-
     // Evento do botão Salvar
     private async void OnSalvarClick(object sender, RoutedEventArgs e)
     {
@@ -89,7 +145,7 @@ public partial class PropriedadesEnsaioWindow : Window
             // Validar campos obrigatórios
             if (string.IsNullOrWhiteSpace(txtAmostra?.Text))
             {
-                await ShowMessageAsync("Erro", "O campo 'Amostra' é obrigatório.");
+                await ShowErrorAsync("Erro", "O campo 'Amostra' é obrigatório.");
                 return;
             }
             
@@ -120,12 +176,12 @@ public partial class PropriedadesEnsaioWindow : Window
             // Salvar as propriedades
             await SalvarPropriedades(propriedades);
             
-            await ShowMessageAsync("Sucesso", "Propriedades salvas com sucesso!");
+            await ShowSuccessAsync("Sucesso", "Propriedades salvas com sucesso!");
             
         }
         catch (Exception ex)
         {
-            await ShowMessageAsync("Erro", $"Erro ao salvar: {ex.Message}");
+            await ShowErrorAsync("Erro", $"Erro ao salvar: {ex.Message}");
         }
     }
 
@@ -149,43 +205,161 @@ public partial class PropriedadesEnsaioWindow : Window
     }
 
     // Método para mostrar mensagens
-    private async Task ShowMessageAsync(string title, string message)
+    private async Task ShowMessageAsync(string title, string message, string icon = "ℹ️")
     {
         var messageBox = new Window
         {
             Title = title,
-            Width = 350,
-            Height = 150,
+            Width = 400,
+            Height = 200,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            CanResize = false
+            CanResize = false,
+            Background = new SolidColorBrush(Color.Parse("#F8F9FA")),
+            SystemDecorations = SystemDecorations.Full
         };
 
-        var panel = new StackPanel
+        // Container principal
+        var mainBorder = new Border
         {
-            Margin = new Thickness(20),
-            Spacing = 15
+            Background = new SolidColorBrush(Colors.White),
+            CornerRadius = new CornerRadius(16),
+            Margin = new Thickness(15),
+            BoxShadow = new BoxShadows(BoxShadow.Parse("0 8 32 0 #20000000"))
         };
 
-        panel.Children.Add(new TextBlock
+        var mainPanel = new StackPanel
+        {
+            Margin = new Thickness(25),
+            Spacing = 20
+        };
+
+        // Header com ícone e título
+        var headerPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 15,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        // Ícone
+        var iconBorder = new Border
+        {
+            Background = GetIconBackground(icon),
+            CornerRadius = new CornerRadius(25),
+            Width = 50,
+            Height = 50
+        };
+
+        var iconText = new TextBlock
+        {
+            Text = icon,
+            FontSize = 24,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        iconBorder.Child = iconText;
+        headerPanel.Children.Add(iconBorder);
+
+        // Título
+        var titleText = new TextBlock
+        {
+            Text = title,
+            FontSize = 18,
+            FontWeight = FontWeight.SemiBold,
+            Foreground = new SolidColorBrush(Color.Parse("#2C3E50")),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        headerPanel.Children.Add(titleText);
+        mainPanel.Children.Add(headerPanel);
+
+        // Mensagem
+        var messageText = new TextBlock
         {
             Text = message,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
-        });
+            TextWrapping = TextWrapping.Wrap,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextAlignment = TextAlignment.Center,
+            FontSize = 14,
+            Foreground = new SolidColorBrush(Color.Parse("#34495E")),
+            LineHeight = 20,
+            MaxWidth = 320
+        };
 
+        mainPanel.Children.Add(messageText);
+
+        // Botão moderno
         var button = new Button
         {
-            Content = "OK",
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Padding = new Thickness(20, 5)
+            Content = "Entendi",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Padding = new Thickness(30, 12),
+            Background = new SolidColorBrush(Color.Parse("#3498DB")),
+            Foreground = new SolidColorBrush(Colors.White),
+            FontWeight = FontWeight.SemiBold,
+            FontSize = 14,
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(0),
+            Cursor = new Cursor(StandardCursorType.Hand)
+        };
+
+        // Efeito hover no botão
+        button.PointerEntered += (s, e) => 
+        {
+            button.Background = new SolidColorBrush(Color.Parse("#2980B9"));
+            button.RenderTransform = new ScaleTransform(1.05, 1.05);
+        };
+
+        button.PointerExited += (s, e) => 
+        {
+            button.Background = new SolidColorBrush(Color.Parse("#3498DB"));
+            button.RenderTransform = new ScaleTransform(1.0, 1.0);
         };
 
         button.Click += (s, e) => messageBox.Close();
-        panel.Children.Add(button);
 
-        messageBox.Content = panel;
+        mainPanel.Children.Add(button);
+        mainBorder.Child = mainPanel;
+        messageBox.Content = mainBorder;
+
         await messageBox.ShowDialog(this);
     }
+
+    // Método auxiliar para cores dos ícones
+    private IBrush GetIconBackground(string icon)
+    {
+        return icon switch
+        {
+            "✅" or "✔️" => new SolidColorBrush(Color.Parse("#E8F8F5")), // Verde - Sucesso
+            "❌" or "❗" or "⚠️" => new SolidColorBrush(Color.Parse("#FFEBEE")), // Vermelho - Erro/Aviso
+            "📋" or "📊" => new SolidColorBrush(Color.Parse("#E3F2FD")), // Azul - Informação
+            "⏸️" or "🔄" => new SolidColorBrush(Color.Parse("#FFF3E0")), // Laranja - Ação
+            _ => new SolidColorBrush(Color.Parse("#F0F4F8")) // Cinza - Padrão
+        };
+    }
+
+    // Métodos de conveniência para diferentes tipos de mensagem
+    private async Task ShowSuccessAsync(string title, string message)
+    {
+        await ShowMessageAsync(title, message, "✅");
+    }
+
+    private async Task ShowErrorAsync(string title, string message)
+    {
+        await ShowMessageAsync(title, message, "❌");
+    }
+
+    private async Task ShowWarningAsync(string title, string message)
+    {
+        await ShowMessageAsync(title, message, "⚠️");
+    }
+
+    private async Task ShowInfoAsync(string title, string message)
+    {
+        await ShowMessageAsync(title, message, "ℹ️");
+    }
+    
 
     // Método para salvar as propriedades
     private async Task SalvarPropriedades(PropriedadesEnsaio propriedades)
