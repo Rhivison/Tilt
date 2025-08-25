@@ -129,9 +129,9 @@
                 <ComboBox x:Name="cmbFormato" SelectedIndex="0" Height="40" CornerRadius="8"
                          Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
                          Padding="12,0" FontSize="14">
+                  <ComboBoxItem Content="Cúbico"/>
                   <ComboBoxItem Content="Prismático"/>
                   <ComboBoxItem Content="Cilíndrico"/>
-                  <ComboBoxItem Content="Cúbico"/>
                 </ComboBox>
               </StackPanel>
             </Grid>

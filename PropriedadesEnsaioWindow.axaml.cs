@@ -19,6 +19,7 @@ public partial class PropriedadesEnsaioWindow : Window
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
+        cmbFormato.SelectionChanged += CmbFormato_SelectionChanged;
         this.DataContext = this;
         
     }
@@ -383,5 +384,18 @@ public partial class PropriedadesEnsaioWindow : Window
     {   
         var janela = new EnsaioGraficoWindow(_ensaioPropriedades);
         janela.Show();
+    }
+
+    private void CmbFormato_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (cmbFormato.SelectedItem is ComboBoxItem selectedItem)
+        {
+            string formato = selectedItem.Content.ToString();
+            if (formato == "Cilíndrico")
+            {
+                
+            }
+            
+        }
     }
 }
