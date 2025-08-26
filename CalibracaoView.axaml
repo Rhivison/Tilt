@@ -28,10 +28,10 @@
                     <TextBlock x:Name="txtStatus" Text="Pronto para calibrar" FontSize="14" Foreground="#7F8C8D" Margin="0,5,0,0"/>
                 </StackPanel>
                 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <!--<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse x:Name="StatusIndicator" Width="12" Height="12" Fill="Red" Margin="0,0,8,0"/>
                     <TextBlock x:Name="lblStatus" Text="Desconectado" FontWeight="Medium" Foreground="#E74C3C"/>
-                </StackPanel>
+                </StackPanel>-->
             </Grid>
         </Border>
 

@@ -77,6 +77,7 @@ namespace TiltMachine
 
         private void Sair_OnClick(object sender, RoutedEventArgs e)
         {
+            App.Arduino.Dispose();
             this.Close(false);
         }
     }

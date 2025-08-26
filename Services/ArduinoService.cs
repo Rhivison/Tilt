@@ -72,11 +72,13 @@ public class ArduinoService
             _cts = new CancellationTokenSource();
             _ = Task.Run(() => ListenAsync(_cts.Token));
         }
-        catch
-        {
+        catch(Exception ex)
+        {   
+            Console.WriteLine(ex.Message);
             Conectado = false;
             await Task.Delay(5000);
             _ = ConnectAsync();
+            
         }
     }
 
