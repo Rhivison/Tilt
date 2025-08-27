@@ -40,7 +40,7 @@
         <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
             <UniformGrid Rows="1" Columns="4">
-                <Button x:Name="btnIniciar" Content="🚀 Iniciar" Height="45" Margin="0,0,10,0"
+                <Button x:Name="btnIniciar" Content="🚀 Iniciar Calibração" Height="45" Margin="0,0,10,0"
                         Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="BtnIniciar_Click"/>
                 <Button x:Name="btnFinalizar" Content="✅ Finalizar" Height="45" Margin="5,0,5,0"

@@ -7,6 +7,7 @@
     Width="1400" Height="900"
     WindowStartupLocation="CenterScreen"
     x:DataType="local:EnsaiosWindow"
+    CanResize="False"
     Background="#A9A9A9">
 
     <Grid Margin="30">

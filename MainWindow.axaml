@@ -3,6 +3,7 @@
         x:Class="TiltMachine.MainWindow"
         Title="Software Tilting Table Test"
         Width="1000" Height="700"
+        CanResize="False"
         Background="#A9A9A9">
     
     <Grid>
