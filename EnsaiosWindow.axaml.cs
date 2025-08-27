@@ -85,6 +85,10 @@ namespace TiltMachine
             try
             {
                 var propriedadeEnsaioWindow = new PropriedadesEnsaioWindow();
+                propriedadeEnsaioWindow.EnsaioSalvo += () =>
+                {
+                    CarregarEnsaios(); // Recarrega a lista quando salvar
+                };
                 propriedadeEnsaioWindow.Show();
             }
             catch (Exception ex)
@@ -162,6 +166,8 @@ namespace TiltMachine
             _todosEnsaios.Clear(); // Limpar a coleção completa também
     
             var lista = _db.ObterTodos(); // método do DatabaseService
+            //Transformando dados para ficarem visíveis:
+            
             foreach (var ensaio in lista)
             {
                 _todosEnsaios.Add(ensaio);  // Primeiro adiciona na coleção completa

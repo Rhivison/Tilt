@@ -19,5 +19,7 @@ public class PropriedadesEnsaio
     public double TaxaInclinacao { get; set; }
     public double InclinacaoMaxima { get; set; }
     public double DeslocamentoMaximo { get; set; }
+
+    public string EnsaioRealizado { get; set; } = "Não";
     public string Observacoes { get; set; } = string.Empty;
 }

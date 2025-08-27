@@ -6,7 +6,7 @@
         Height="650"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
-        Background="#F8F9FA">
+        Background="#A9A9A9">
 
   <Grid Margin="30">
     <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
     </Grid.RowDefinitions>
 
     <!-- Header -->
-    <Border Grid.Row="0" Background="White" CornerRadius="16" Padding="25" Margin="0,0,0,20"
+    <Border Grid.Row="0" Background="#D3D3D3" CornerRadius="16" Padding="25" Margin="0,0,0,20"
             BoxShadow="0 4 20 0 #10000000">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -44,7 +44,7 @@
       <StackPanel Spacing="20">
         
         <!-- Seção: Identificação -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="🏷️ Identificação" FontSize="16" FontWeight="SemiBold" 
@@ -101,7 +101,7 @@
         </Border>
 
         <!-- Seção: Características da Amostra -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="🧪 Características da Amostra" FontSize="16" FontWeight="SemiBold" 
@@ -139,7 +139,7 @@
         </Border>
 
         <!-- Seção: Dimensões -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="📏 Dimensões (mm)" FontSize="16" FontWeight="SemiBold" 
@@ -182,7 +182,7 @@
         </Border>
 
         <!-- Seção: Parâmetros do Ensaio -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="⚙️ Parâmetros do Ensaio" FontSize="16" FontWeight="SemiBold" 
@@ -218,7 +218,7 @@
         </Border>
 
         <!-- Seção: Observações -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="📝 Observações" FontSize="16" FontWeight="SemiBold" 
@@ -236,7 +236,7 @@
     </ScrollViewer>
 
     <!-- Botões de Ação -->
-    <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" Margin="0,20,0,0"
+    <Border Grid.Row="2" Background="#D3D3D3" CornerRadius="12" Padding="20" Margin="0,20,0,0"
             BoxShadow="0 2 10 0 #10000000">
       <Grid>
         <Grid.ColumnDefinitions>

@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.CalibracaoView"
         Title="Calibração do Sensor" Width="900" Height="650"
-        Background="#F8F9FA">
+        CanResize="False"
+        Background="#D3D3D3">
 
     <Grid Margin="30">
         <Grid.RowDefinitions>
@@ -38,16 +39,19 @@
         <!-- Controles Principais -->
         <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
-            <UniformGrid Rows="1" Columns="3">
+            <UniformGrid Rows="1" Columns="4">
                 <Button x:Name="btnIniciar" Content="🚀 Iniciar" Height="45" Margin="0,0,10,0"
                         Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="BtnIniciar_Click"/>
                 <Button x:Name="btnFinalizar" Content="✅ Finalizar" Height="45" Margin="5,0,5,0"
                         Background="#27AE60" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" IsEnabled="False" Click="BtnFinalizar_Click"/>
-                <Button x:Name="btnLimpar" Content="🗑️ Limpar" Height="45" Margin="10,0,0,0"
+                <Button x:Name="btnLimpar" Content="🗑️ Reiniciar " Height="45" Margin="10,0,0,0"
                         Background="#E67E22" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="BtnLimpar_Click"/>
+                <Button x:Name="BtnSair" Content="🚪 Sair" Height="45" Margin="10,0,0,0"
+                        Background="#E74C3C" Foreground="White" FontWeight="Medium" FontSize="14"
+                        CornerRadius="8" Click="OnSairCalibracaoClick"/>
             </UniformGrid>
         </Border>
 

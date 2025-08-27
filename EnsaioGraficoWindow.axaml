@@ -10,7 +10,7 @@
         Icon="/Assets/chart-icon.png"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Background="#F8F9FA">
+        Background="#A9A9A9">
 
   <Grid Margin="25">
     <Grid.RowDefinitions>
@@ -21,7 +21,7 @@
     </Grid.RowDefinitions>
 
     <!-- Header Principal - Mínimo -->
-    <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="12" Margin="0,0,0,10"
+    <Border Grid.Row="0" Background="#D3D3D3" CornerRadius="12" Padding="12" Margin="0,0,0,10"
             BoxShadow="0 2 10 0 #10000000">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -42,23 +42,31 @@
         </StackPanel>
         
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
-          <Button Content="⏸️ Parar" Width="80" Height="35"
+          <Button x:Name="BtnIniciar" Content="▶️ Iniciar" Width="90" Height="35"
+                  Background="#27AE60" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnIniciarEnsaioClick"/>
+          
+          <Button x:Name="BtnParar" IsEnabled="{Binding IsBtnPararEnabled}" Content="⏸️ Parar" Width="80" Height="35"
                   Background="#E74C3C" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnPararEnsaioClick"/>
           
-          <Button Content="🔄 Reposicionar" Width="130" Height="35"
+          <Button x:Name="BtnReposicionar"  IsEnabled="{Binding IsBtnReposicionarEnabled}" Content="🔄 Reposicionar" Width="130" Height="35"
                   Background="#3498DB" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnReposicionarClick"/>
           
-          <Button Content="📋 PDF" Width="70" Height="35"
+          <Button x:Name="BtnExportarPdf" IsEnabled="{Binding IsBtnExportarEnabled}" Content="📋 PDF" Width="70" Height="35"
                   Background="#8E44AD" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnExportarPdfClick"/>
+          
+          <Button x:Name="BtnSair" Content="🚪 Sair" Width="90" Height="35"
+                  Background="#95A5A6" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnSairEnsaioClick"/>
         </StackPanel>
       </Grid>
     </Border>
 
     <!-- Informações da Amostra - Otimizado -->
-    <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="18" Margin="0,0,0,150"
+    <Border Grid.Row="1" Background="#D3D3D3" CornerRadius="12" Padding="18" Margin="0,0,0,150"
             BoxShadow="0 2 10 0 #10000000">
       <StackPanel>
         <TextBlock Text="📋 Dados da Amostra" FontSize="12" FontWeight="SemiBold" 
@@ -181,7 +189,7 @@
     </Border>
 
     <!-- Área do Gráfico - EXPANDIDA -->
-    <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15"
+    <Border Grid.Row="2" Background="#D3D3D3" CornerRadius="12" Padding="20" Margin="0,0,0,15"
             BoxShadow="0 2 10 0 #10000000">
       <StackPanel>
         <Grid Margin="0,0,0,15">
@@ -199,7 +207,7 @@
                               YAxes="{Binding YAxes}"
                               Series="{Binding ChartSeries}"
                               LegendPosition="Bottom"
-                              Background="White"
+                              Background="#D3D3D3"
                               Margin="10"/>
         </Border>
       </StackPanel>
@@ -213,7 +221,7 @@
       </Grid.ColumnDefinitions>
       
       <!-- Observações -->
-      <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="18" Margin="0,0,10,0"
+      <Border Grid.Column="0" Background="#D3D3D3" CornerRadius="12" Padding="18" Margin="0,0,10,0"
               BoxShadow="0 2 10 0 #10000000">
         <StackPanel>
           <TextBlock Text="📝 Observações do Ensaio" FontSize="15" FontWeight="SemiBold" 
@@ -229,7 +237,7 @@
       </Border>
       
       <!-- Resultados Finais -->
-      <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="18" Margin="10,0,0,0"
+      <Border Grid.Column="1" Background="#D3D3D3" CornerRadius="12" Padding="18" Margin="10,0,0,0"
               BoxShadow="0 2 10 0 #10000000">
         <StackPanel>
           <TextBlock Text="🎯 Resultados Finais" FontSize="15" FontWeight="SemiBold" 

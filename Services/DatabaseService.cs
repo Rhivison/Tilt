@@ -1,18 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Data.Sqlite;
 using TiltMachine.Models;
 namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
 {
     public class DatabaseService
     {
-        private readonly string _connectionString = "Data Source=meu_banco.db";
-
+        private readonly string _connectionString = "Data Source=meu_banco.db;Mode=ReadWriteCreate;";
+        // Use esta string de conexão para garantir modo leitura/escrita
+        //string connectionString = "Data Source=database.db;Mode=ReadWriteCreate;";
+        //private string _connectionString;
+        
+        
         public void Inicializar()
-        {
+        {   
+            //string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            //string appFolder = Path.Combine(appDataPath, "Software Tilting Table Test");
+            //Directory.CreateDirectory(appFolder);
+            //var dbPath = Path.Combine(appFolder, "meu_banco.db");
+            //_connectionString = $"Data Source={dbPath}";
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
-
+            
+            
             var command = connection.CreateCommand();
             command.CommandText =
                 @"
@@ -32,6 +43,8 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                     TaxaInclinacao REAL,
                     InclinacaoMaxima REAL,
                     DeslocamentoMaximo REAL,
+                    EnsaioRealizado BOOLEAN,
+                    DataEnsasio TEXT,
                     Observacoes TEXT
                 );
             ";
@@ -331,12 +344,12 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                 INSERT INTO PropriedadesEnsaio (
                     Amostra, AmostraNumero, Local, Responsavel, DataEnsaio,
                     TipoRocha, FormatoCorpoProva, Altura, Largura, Profundidade,
-                    AreaContato, TaxaInclinacao, InclinacaoMaxima, DeslocamentoMaximo, Observacoes
+                    AreaContato, TaxaInclinacao, InclinacaoMaxima, DeslocamentoMaximo, EnsaioRealizado, DataEnsasio, Observacoes
                 )
                 VALUES (
                     $amostra, $numero, $local, $resp, $data,
                     $tipo, $formato, $altura, $largura, $profundidade,
-                    $area, $taxa, $inclinacao, $deslocamento, $obs
+                    $area, $taxa, $inclinacao, $deslocamento, $ensaioRealizado, $dataEnsaio, $obs
                 )
             ";
             
@@ -354,6 +367,8 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
             command.Parameters.AddWithValue("$taxa", e.TaxaInclinacao);
             command.Parameters.AddWithValue("$inclinacao", e.InclinacaoMaxima);
             command.Parameters.AddWithValue("$deslocamento", e.DeslocamentoMaximo);
+            command.Parameters.AddWithValue("$ensaioRealizado", e.EnsaioRealizado);
+            command.Parameters.AddWithValue("dataEnsaio", e.DataEnsaio);
             command.Parameters.AddWithValue("$obs", e.Observacoes);
             
             command.ExecuteNonQuery();
@@ -416,6 +431,8 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                     TaxaInclinacao = $taxa,
                     InclinacaoMaxima = $inclinacao,
                     DeslocamentoMaximo = $deslocamento,
+                    EnsaioRealizado = $ensaioRealizado,
+                    DataEnsaio = $dataEnsaio,
                     Observacoes = $obs
                 WHERE Id = $id
             ";
@@ -434,6 +451,8 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
             command.Parameters.AddWithValue("$taxa", e.TaxaInclinacao);
             command.Parameters.AddWithValue("$inclinacao", e.InclinacaoMaxima);
             command.Parameters.AddWithValue("$deslocamento", e.DeslocamentoMaximo);
+            command.Parameters.AddWithValue("$ensaioRealizado", e.EnsaioRealizado);
+            command.Parameters.AddWithValue("dataEnsaio", e.DataEnsaio);
             command.Parameters.AddWithValue("$obs", e.Observacoes);
             command.ExecuteNonQuery();
         }

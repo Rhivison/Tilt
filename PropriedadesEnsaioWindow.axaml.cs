@@ -16,6 +16,7 @@ namespace TiltMachine;
 public partial class PropriedadesEnsaioWindow : Window
 {
     public PropriedadesEnsaio _ensaioPropriedades = new PropriedadesEnsaio();
+    public event Action? EnsaioSalvo;
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
@@ -176,8 +177,9 @@ public partial class PropriedadesEnsaioWindow : Window
 
             // Salvar as propriedades
             await SalvarPropriedades(propriedades);
-            
             await ShowSuccessAsync("Sucesso", "Propriedades salvas com sucesso!");
+            EnsaioSalvo?.Invoke();
+            
             
         }
         catch (Exception ex)
@@ -385,7 +387,6 @@ public partial class PropriedadesEnsaioWindow : Window
         var janela = new EnsaioGraficoWindow(_ensaioPropriedades);
         janela.Show();
     }
-
     private void CmbFormato_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (cmbFormato.SelectedItem is ComboBoxItem selectedItem)
