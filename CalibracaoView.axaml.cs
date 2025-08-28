@@ -104,9 +104,19 @@ namespace TiltMachine
                     Console.WriteLine($"DEBUG: Eventos configurados. CalibracaoAtiva no Arduino: {App.Arduino.CalibracaoAtiva}");
                     Console.WriteLine($"DEBUG: Dados existentes no Arduino: {App.Arduino.DadosCalibracao.Count}");
                     var ultimaCalibração = dadosUltimaCalibracao.OrderBy(x => x.Id).ToList().First();
-                    string initialText =
-                        $"Equipamento conectado - Data da última Calibração: {ultimaCalibração.DataCalibracao.ToString()}";
-                    AtualizarStatus(initialText);
+                    if (ultimaCalibração != null)
+                    {
+                        string initialText =
+                            $"Equipamento conectado - Data da última Calibração: {ultimaCalibração.DataCalibracao.ToString()}";
+                        AtualizarStatus(initialText);
+                    }
+                    else
+                    {
+                        string initialText =
+                            $"Equipamento conectado pronto para calibrar";
+                        AtualizarStatus(initialText);
+                    }
+                    
                 }
                 else
                 {
