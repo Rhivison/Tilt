@@ -3,7 +3,6 @@ bin/
 obj/
 
 # Avalonia XAML-generated files
-*.axaml.cs
 *.g.cs
 *.g.i.cs
 *.xaml.cs
