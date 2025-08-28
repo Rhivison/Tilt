@@ -1,9 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.MainWindow"
-        Title="Software Tilting Table"
+        Title="Software Tilting Table Test"
         Width="1000" Height="700"
-        Background="#F8F9FA">
+        CanResize="False"
+        Background="#A9A9A9">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -14,14 +15,14 @@
         </Grid.RowDefinitions>
 
         <!-- Menu Superior -->
-        <Border Grid.Row="0" Background="White" BoxShadow="0 2 8 0 #15000000">
+        <Border Grid.Row="0" Background="#D3D3D3" BoxShadow="0 2 8 0 #15000000">
             <Menu Background="Transparent" Padding="15,10">
                 <!--<MenuItem Header="_Ensaios" Click="EnsaiosButton_Click" FontSize="14"/>-->
             </Menu>
         </Border>
 
         <!-- Header com Título e Status -->
-        <Border Grid.Row="1" Background="White" Margin="30,20,30,0" CornerRadius="16" 
+        <Border Grid.Row="1" Background="#D3D3D3" Margin="30,20,30,0" CornerRadius="16" 
                 BoxShadow="0 4 20 0 #10000000" Padding="40">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -30,13 +31,13 @@
                 </Grid.ColumnDefinitions>
                 
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="Software Tilting Table" FontSize="32" FontWeight="SemiBold" 
+                    <TextBlock Text="Software Tilting Table Test" FontSize="32" FontWeight="SemiBold" 
                               Foreground="#2C3E50"/>
                     <!--<TextBlock Text="Sistema de controle para mesa basculante" FontSize="16" 
                               Foreground="#7F8C8D" Margin="0,5,0,0"/>-->
                 </StackPanel>
                 
-                <Border Grid.Column="1" Background="#ECF0F1" CornerRadius="25" Padding="15,10">
+                <Border Grid.Column="1" Background="#D3D3D3" CornerRadius="25" Padding="15,10">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse x:Name="StatusIndicator" Width="14" Height="14" Fill="#E74C3C" Margin="0,0,10,0"/>
                         <StackPanel>
@@ -70,7 +71,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Card Amostras -->
-                <Border Grid.Column="0" Background="White" CornerRadius="16" Margin="10"
+                <Border Grid.Column="0" Background="#D3D3D3" CornerRadius="16" Margin="10"
                         BoxShadow="0 4 20 0 #10000000" Cursor="Hand">
                     <Button Background="Transparent" BorderThickness="0" Padding="0" 
                             Click="AmostraButton_Click" CornerRadius="16">
@@ -89,7 +90,7 @@
                 </Border>
 
                 <!-- Card Operação -->
-                <Border Grid.Column="1" Background="White" CornerRadius="16" Margin="10"
+                <Border Grid.Column="1" Background="#D3D3D3" CornerRadius="16" Margin="10"
                         BoxShadow="0 4 20 0 #10000000" Cursor="Hand">
                     <Button Background="Transparent" BorderThickness="0" Padding="0" 
                             Click="OperacaoButton_OnClick" CornerRadius="16">
@@ -108,7 +109,7 @@
                 </Border>
 
                 <!-- Card Calibração -->
-                <Border Grid.Column="2" Background="White" CornerRadius="16" Margin="10"
+                <Border Grid.Column="2" Background="#D3D3D3" CornerRadius="16" Margin="10"
                         BoxShadow="0 4 20 0 #10000000" Cursor="Hand">
                     <Button Background="Transparent" BorderThickness="0" Padding="0" 
                             Click="CalibracaoButton_OnClick" CornerRadius="16">
@@ -127,7 +128,7 @@
                 </Border>
 
                 <!-- Card Sair -->
-                <Border Grid.Column="3" Background="White" CornerRadius="16" Margin="10"
+                <Border Grid.Column="3" Background="#D3D3D3" CornerRadius="16" Margin="10"
                         BoxShadow="0 4 20 0 #10000000" Cursor="Hand">
                     <Button Background="Transparent" BorderThickness="0" Padding="0" Click="Sair_OnClick" CornerRadius="16">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="25">
@@ -146,7 +147,7 @@
             </Grid>
 
             <!-- Área de informações adicionais -->
-            <Border Grid.Row="1" Background="White" CornerRadius="12" Margin="10,20,10,0" 
+            <Border Grid.Row="1" Background="#D3D3D3" CornerRadius="12" Margin="10,20,10,0" 
                     Padding="20" BoxShadow="0 2 10 0 #10000000">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -155,9 +156,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center"
+                                Cursor="Hand"
+                                PointerPressed="OnSobreClick">
                         <TextBlock Text="🔧" FontSize="20" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Sistema" FontWeight="SemiBold" HorizontalAlignment="Center" 
+                        <TextBlock Text=" Sobre o Sistema" FontWeight="SemiBold" HorizontalAlignment="Center" 
                                   Margin="0,5,0,0"/>
                         <TextBlock Text="v1.0.0" FontSize="12" Foreground="#7F8C8D" 
                                   HorizontalAlignment="Center"/>

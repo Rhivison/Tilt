@@ -6,7 +6,7 @@
         Height="650"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
-        Background="#F8F9FA">
+        Background="#A9A9A9">
 
   <Grid Margin="30">
     <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
     </Grid.RowDefinitions>
 
     <!-- Header -->
-    <Border Grid.Row="0" Background="White" CornerRadius="16" Padding="25" Margin="0,0,0,20"
+    <Border Grid.Row="0" Background="#D3D3D3" CornerRadius="16" Padding="25" Margin="0,0,0,20"
             BoxShadow="0 4 20 0 #10000000">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -44,7 +44,7 @@
       <StackPanel Spacing="20">
         
         <!-- Seção: Identificação -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="🏷️ Identificação" FontSize="16" FontWeight="SemiBold" 
@@ -101,7 +101,7 @@
         </Border>
 
         <!-- Seção: Características da Amostra -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="🧪 Características da Amostra" FontSize="16" FontWeight="SemiBold" 
@@ -129,9 +129,9 @@
                 <ComboBox x:Name="cmbFormato" SelectedIndex="0" Height="40" CornerRadius="8"
                          Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
                          Padding="12,0" FontSize="14">
+                  <ComboBoxItem Content="Cúbico"/>
                   <ComboBoxItem Content="Prismático"/>
                   <ComboBoxItem Content="Cilíndrico"/>
-                  <ComboBoxItem Content="Cúbico"/>
                 </ComboBox>
               </StackPanel>
             </Grid>
@@ -139,7 +139,7 @@
         </Border>
 
         <!-- Seção: Dimensões -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="📏 Dimensões (mm)" FontSize="16" FontWeight="SemiBold" 
@@ -155,7 +155,7 @@
               </Grid.ColumnDefinitions>
               
               <StackPanel Grid.Column="0">
-                <TextBlock Text="Altura" FontWeight="Medium" Margin="0,0,0,8" 
+                <TextBlock x:Name="lblAltura" Text="Altura" FontWeight="Medium" Margin="0,0,0,8" 
                           Foreground="#34495E"/>
                 <TextBox x:Name="txtAltura" Text="0,00" Height="40" CornerRadius="8"
                          Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
@@ -163,7 +163,7 @@
               </StackPanel>
               
               <StackPanel Grid.Column="2">
-                <TextBlock Text="Largura" FontWeight="Medium" Margin="0,0,0,8" 
+                <TextBlock x:Name="lblLargura" Text="Largura" FontWeight="Medium" Margin="0,0,0,8" 
                           Foreground="#34495E"/>
                 <TextBox x:Name="txtLargura" Text="0,00" Height="40" CornerRadius="8"
                          Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
@@ -171,7 +171,7 @@
               </StackPanel>
               
               <StackPanel Grid.Column="4">
-                <TextBlock Text="Profundidade" FontWeight="Medium" Margin="0,0,0,8" 
+                <TextBlock x:Name="lblProfundidade" Text="Profundidade" FontWeight="Medium" Margin="0,0,0,8" 
                           Foreground="#34495E"/>
                 <TextBox x:Name="txtProfundidade" Text="0,00" Height="40" CornerRadius="8"
                          Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
@@ -182,7 +182,7 @@
         </Border>
 
         <!-- Seção: Parâmetros do Ensaio -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="⚙️ Parâmetros do Ensaio" FontSize="16" FontWeight="SemiBold" 
@@ -196,11 +196,24 @@
               </Grid.ColumnDefinitions>
               
               <StackPanel Grid.Column="0">
-                <TextBlock Text="Área de Contato (cm²)" FontWeight="Medium" Margin="0,0,0,8" 
-                          Foreground="#34495E"/>
-                <TextBox x:Name="txtAreaContato" Text="0" Height="40" CornerRadius="8"
-                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2"
-                         Padding="12,0" FontSize="14" TextAlignment="Right"/>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
+                  
+                  <TextBlock Grid.Column="0" Text="Área de Contato (cm²)" FontWeight="Medium" Margin="0,0,0,8" 
+                            Foreground="#34495E"/>
+                  
+                  <Border Grid.Column="1" Background="#3498DB" CornerRadius="10" Padding="4,2" Margin="8,0,0,8">
+                    <TextBlock Text="AUTO" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                  </Border>
+                </Grid>
+                
+                <TextBox x:Name="txtAreaContato" Text="0,00" Height="40" CornerRadius="8"
+                         Background="#E8F4FD" BorderBrush="#3498DB" BorderThickness="2"
+                         Padding="12,0" FontSize="14" TextAlignment="Right" IsReadOnly="True"
+                         Foreground="#2C3E50" FontWeight="Medium"/>
               </StackPanel>
               
               <StackPanel Grid.Column="2">
@@ -218,7 +231,7 @@
         </Border>
 
         <!-- Seção: Observações -->
-        <Border Background="White" CornerRadius="12" Padding="20" 
+        <Border Background="#D3D3D3" CornerRadius="12" Padding="20" 
                 BoxShadow="0 2 10 0 #10000000">
           <StackPanel>
             <TextBlock Text="📝 Observações" FontSize="16" FontWeight="SemiBold" 
@@ -236,7 +249,7 @@
     </ScrollViewer>
 
     <!-- Botões de Ação -->
-    <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" Margin="0,20,0,0"
+    <Border Grid.Row="2" Background="#D3D3D3" CornerRadius="12" Padding="20" Margin="0,20,0,0"
             BoxShadow="0 2 10 0 #10000000">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -245,10 +258,10 @@
         </Grid.ColumnDefinitions>
         
         <!-- Info do lado esquerdo -->
-        <!--<StackPanel Grid.Column="0" VerticalAlignment="Center">
-          <TextBlock Text="💡 Dica: Verifique todos os dados antes de iniciar o ensaio" 
-                    FontSize="13" Foreground="#7F8C8D" FontStyle="Italic"/>
-        </StackPanel>-->
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock Text="💡 A área calculada automaticamente" 
+                    FontSize="12" Foreground="#7F8C8D" FontStyle="Italic"/>
+        </StackPanel>
         
         <!-- Botões do lado direito -->
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">

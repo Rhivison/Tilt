@@ -16,16 +16,22 @@ namespace TiltMachine;
 public partial class PropriedadesEnsaioWindow : Window
 {
     public PropriedadesEnsaio _ensaioPropriedades = new PropriedadesEnsaio();
+    public event Action? EnsaioSalvo;
+    
     public PropriedadesEnsaioWindow()
     {
         InitializeComponent();
-        this.DataContext = this;
+        cmbFormato.SelectionChanged += CmbFormato_SelectionChanged;
         
+        // Adicionar eventos para recalcular área automaticamente
+        AdicionarEventosDimensoes();
+        AtualizarRotulosDimensoes("cúbico");
+        this.DataContext = this;
     }
 
     public PropriedadesEnsaioWindow(PropriedadesEnsaio propriedades) : this()
-    {
-
+    {   
+        AtualizarRotulosDimensoes(propriedades.FormatoCorpoProva);
         if (txtAmostra != null)
         {
             txtAmostra.Text = propriedades.Amostra ?? string.Empty;
@@ -54,7 +60,6 @@ public partial class PropriedadesEnsaioWindow : Window
         {
             txtTipoRocha.Text = propriedades.TipoRocha ?? string.Empty;
             txtTipoRocha.IsEnabled = false;
-            
         }
         
         if (cmbFormato != null)
@@ -79,14 +84,12 @@ public partial class PropriedadesEnsaioWindow : Window
         {
             txtProfundidade.Text = propriedades.Profundidade.ToString("F2");
             txtProfundidade.IsEnabled = false;
-
         }
 
         if (txtAreaContato != null)
         {
             txtAreaContato.Text = propriedades.AreaContato.ToString("F2");
             txtAreaContato.IsEnabled = false;
-            
         }
 
         if (txtTaxaInclinacao != null)
@@ -94,18 +97,18 @@ public partial class PropriedadesEnsaioWindow : Window
             txtTaxaInclinacao.Text = propriedades.TaxaInclinacao.ToString("F2");
             txtTaxaInclinacao.IsEnabled = false;
         }
-        //if (txtInclinacaoMaxima != null) txtInclinacaoMaxima.Text = propriedades.InclinacaoMaxima.ToString("F2");
-       // if (txtDeslocamentoMaximo != null) txtDeslocamentoMaximo.Text = propriedades.DeslocamentoMaximo.ToString("F2");
-       if (txtObservacoes != null)
-       {
-           txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
-           txtObservacoes.IsEnabled = false;
-       }
+
+        if (txtObservacoes != null)
+        {
+            txtObservacoes.Text = propriedades.Observacoes ?? string.Empty;
+            txtObservacoes.IsEnabled = false;
+        }
 
         if (btnSalvar != null) btnSalvar.IsEnabled = false;
         if (btnEnsaiar != null) btnEnsaiar.IsEnabled = true;
         _ensaioPropriedades = propriedades;
     }
+
     private ComboBoxItem? EncontrarItemPorTexto(ComboBox combo, string texto)
     {
         if (string.IsNullOrEmpty(texto)) return null;
@@ -113,6 +116,7 @@ public partial class PropriedadesEnsaioWindow : Window
         return combo.Items.OfType<ComboBoxItem>()
             .FirstOrDefault(item => item.Content?.ToString()?.Contains(texto) == true);
     }
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
@@ -129,14 +133,189 @@ public partial class PropriedadesEnsaioWindow : Window
         txtProfundidade = this.FindControl<TextBox>("txtProfundidade");
         txtAreaContato = this.FindControl<TextBox>("txtAreaContato");
         txtTaxaInclinacao = this.FindControl<NumericUpDown>("txtTaxaInclinacao");
-        //txtInclinacaoMaxima = this.FindControl<TextBox>("txtInclinacaoMaxima");
-        //txtDeslocamentoMaximo = this.FindControl<TextBox>("txtDeslocamentoMaximo");
         txtObservacoes = this.FindControl<TextBox>("txtObservacoes");
         btnSalvar = this.FindControl<Button>("btnSalvar");
         btnCancelar = this.FindControl<Button>("btnCancelar");
         btnEnsaiar = this.FindControl<Button>("btnEnsaiar");
+        
         if (btnEnsaiar != null) btnEnsaiar.IsEnabled = false;
     }
+
+    /// <summary>
+    /// Adiciona eventos aos campos de dimensão para recalcular a área automaticamente
+    /// </summary>
+    private void AdicionarEventosDimensoes()
+    {
+        if (txtAltura != null)
+            txtAltura.TextChanged += OnDimensaoChanged;
+            
+        if (txtLargura != null)
+            txtLargura.TextChanged += OnDimensaoChanged;
+            
+        if (txtProfundidade != null)
+            txtProfundidade.TextChanged += OnDimensaoChanged;
+    }
+
+    /// <summary>
+    /// Evento disparado quando qualquer dimensão é alterada
+    /// </summary>
+    private void OnDimensaoChanged(object sender, TextChangedEventArgs e)
+    {
+        CalcularAreaContato();
+    }
+
+    /// <summary>
+    /// Calcula automaticamente a área de contato baseada no formato e dimensões
+    /// </summary>
+    private void CalcularAreaContato()
+    {
+        try
+        {
+            if (txtAreaContato == null || !txtAreaContato.IsEnabled) return;
+
+            var formato = GetFormatoSelecionado();
+            var altura = ParseDouble(txtAltura?.Text);
+            var largura = ParseDouble(txtLargura?.Text);
+            var profundidade = ParseDouble(txtProfundidade?.Text);
+
+            double areaContato = 0;
+
+            switch (formato.ToLower())
+            {
+                case "cúbico":
+                    // Para cubo, assumimos que a área de contato é uma das faces (largura x profundidade)
+                    areaContato = largura * profundidade;
+                    break;
+
+                case "prismático":
+                    // Para prisma retangular, área de contato é largura x profundidade
+                    areaContato = largura * profundidade;
+                    break;
+
+                case "cilíndrico":
+                    // Para cilindro, área de contato é πr² (assumindo que largura = diâmetro)
+                    var raio = largura / 2.0;
+                    areaContato = Math.PI * raio * raio;
+                    break;
+
+                default:
+                    // Formato desconhecido, usar cálculo retangular como padrão
+                    areaContato = largura * profundidade;
+                    break;
+            }
+
+            // Converter de mm² para cm² (dividir por 100)
+            areaContato = areaContato / 100.0;
+
+            // Atualizar o campo com o valor calculado
+            if (areaContato > 0)
+            {
+                txtAreaContato.Text = areaContato.ToString("F2");
+            }
+            else
+            {
+                txtAreaContato.Text = "0,00";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao calcular área de contato: {ex.Message}");
+            // Em caso de erro, não alterar o campo
+        }
+    }
+
+    /// <summary>
+    /// Obtém o formato atualmente selecionado no ComboBox
+    /// </summary>
+    private string GetFormatoSelecionado()
+    {
+        if (cmbFormato?.SelectedItem is ComboBoxItem selectedItem)
+        {
+            return selectedItem.Content?.ToString() ?? "Prismático";
+        }
+        return "Prismático";
+    }
+
+    /// <summary>
+    /// Atualiza os rótulos das dimensões baseado no formato selecionado
+    /// </summary>
+    private void AtualizarRotulosDimensoes(string formato)
+    {
+        // Encontrar os TextBlocks dos rótulos
+        var lblAltura = this.FindControl<TextBlock>("lblAltura");
+        var lblLargura = this.FindControl<TextBlock>("lblLargura");
+        var lblProfundidade = this.FindControl<TextBlock>("lblProfundidade");
+
+        switch (formato.ToLower())
+        {
+            case "cúbico":
+                // Para cubo, todas as dimensões são iguais
+                if (lblAltura != null) lblAltura.Text = "Lado (mm)";
+                if (lblLargura != null) lblLargura.Text = "Lado (mm)";
+                if (lblProfundidade != null) lblProfundidade.Text = "Lado (mm)";
+                break;
+
+            case "cilíndrico":
+                // Para cilindro
+                if (lblAltura != null) lblAltura.Text = "Altura (mm)";
+                if (lblLargura != null) lblLargura.Text = "Diâmetro (mm)";
+                if (lblProfundidade != null) lblProfundidade.Text = "Diâmetro (mm)";
+                
+                // Para cilindro, profundidade = largura (diâmetro)
+                if (txtLargura != null && txtProfundidade != null)
+                {
+                    txtProfundidade.Text = txtLargura.Text;
+                    txtProfundidade.IsEnabled = false; // Desabilitar para evitar confusão
+                }
+                break;
+
+            case "prismático":
+            default:
+                // Para prisma retangular (padrão)
+                if (lblAltura != null) lblAltura.Text = "Altura (mm)";
+                if (lblLargura != null) lblLargura.Text = "Largura (mm)";
+                if (lblProfundidade != null) lblProfundidade.Text = "Profundidade (mm)";
+                
+                if (txtProfundidade != null)
+                    txtProfundidade.IsEnabled = true;
+                break;
+        }
+    }
+
+    private void CmbFormato_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (cmbFormato.SelectedItem is ComboBoxItem selectedItem)
+        {
+            string formato = selectedItem.Content.ToString();
+            
+            // Atualizar rótulos baseado no formato
+            AtualizarRotulosDimensoes(formato);
+            
+            // Recalcular área de contato
+            CalcularAreaContato();
+            
+            // Lógica específica para formato cilíndrico
+            if (formato == "Cilíndrico")
+            {
+                // Sincronizar largura e profundidade para cilindro
+                if (txtLargura != null && txtProfundidade != null)
+                {
+                    txtProfundidade.Text = txtLargura.Text;
+                    txtProfundidade.IsEnabled = false;
+                    
+                    // Adicionar evento para sincronizar quando largura mudar
+                    txtLargura.TextChanged += (s, args) =>
+                    {
+                        if (GetFormatoSelecionado().ToLower() == "cilíndrico")
+                        {
+                            txtProfundidade.Text = txtLargura.Text;
+                        }
+                    };
+                }
+            }
+        }
+    }
+
     // Evento do botão Salvar
     private async void OnSalvarClick(object sender, RoutedEventArgs e)
     {
@@ -166,8 +345,6 @@ public partial class PropriedadesEnsaioWindow : Window
                 Profundidade = ParseDouble(txtProfundidade?.Text),
                 AreaContato = ParseDouble(txtAreaContato?.Text),
                 TaxaInclinacao = Convert.ToDouble(txtTaxaInclinacao.Value ?? 10),
-                //InclinacaoMaxima = ParseDouble(txtInclinacaoMaxima?.Text),
-                //DeslocamentoMaximo = ParseDouble(txtDeslocamentoMaximo?.Text),
                 Observacoes = txtObservacoes?.Text ?? string.Empty
             };
 
@@ -175,8 +352,8 @@ public partial class PropriedadesEnsaioWindow : Window
 
             // Salvar as propriedades
             await SalvarPropriedades(propriedades);
-            
             await ShowSuccessAsync("Sucesso", "Propriedades salvas com sucesso!");
+            EnsaioSalvo?.Invoke();
             
         }
         catch (Exception ex)
@@ -359,7 +536,6 @@ public partial class PropriedadesEnsaioWindow : Window
     {
         await ShowMessageAsync(title, message, "ℹ️");
     }
-    
 
     // Método para salvar as propriedades
     private async Task SalvarPropriedades(PropriedadesEnsaio propriedades)

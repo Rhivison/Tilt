@@ -15,6 +15,7 @@
         <entry key="SensorCalibration.axaml" value="TiltMachine.csproj" />
         <entry key="SensorCalibrationWindow.axaml" value="TiltMachine.csproj" />
         <entry key="Services/EnsaioGraficoWindow.axaml" value="TiltMachine.csproj" />
+        <entry key="SobreWindow.axaml" value="TiltMachine.csproj" />
       </map>
     </option>
   </component>

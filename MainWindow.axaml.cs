@@ -77,7 +77,20 @@ namespace TiltMachine
 
         private void Sair_OnClick(object sender, RoutedEventArgs e)
         {
+            App.Arduino.Dispose();
             this.Close(false);
+        }
+        private void OnSobreClick(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            try
+            {
+                var sobreWindow = new SobreWindow(); // sua janela de "Sobre"
+                sobreWindow.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao abrir página Sobre: {ex.Message}");
+            }
         }
     }
 }

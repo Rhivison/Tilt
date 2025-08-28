@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TiltMachine.SobreWindow"
+        Title="Sobre"
+        Width="800" Height="600"
+        CanResize="False"
+        Background="#A9A9A9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#D3D3D3" Margin="30,20,30,0" CornerRadius="16"
+                BoxShadow="0 4 20 0 #10000000" Padding="30">
+            <TextBlock Text="Sobre o Software" FontSize="28" FontWeight="SemiBold" 
+                       Foreground="#2C3E50"/>
+        </Border>
+
+        <!-- Conteúdo Principal -->
+        <Border Grid.Row="1" Background="#D3D3D3" Margin="30,20,30,20" CornerRadius="16"
+                BoxShadow="0 4 20 0 #10000000" Padding="40">
+            <StackPanel Spacing="15">
+                <TextBlock Text="Informações da Empresa" FontSize="20" FontWeight="SemiBold" Foreground="#2C3E50"/>
+
+                <StackPanel>
+                    <TextBlock Text="Nome:" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                    <TextBlock Text="BLZ Máquinas e Serviços LTDA" FontSize="14" Foreground="#7F8C8D"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="CNPJ:" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                    <TextBlock Text="55.024.612/0001-06" FontSize="14" Foreground="#7F8C8D"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="E-mail:" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                    <TextBlock Text="maquinasblz@gmail.com" FontSize="14" Foreground="#7F8C8D"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Telefone para contato:" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                    <TextBlock Text="+553198636-9155 // +553198848-9155" FontSize="14" Foreground="#7F8C8D"/>
+                </StackPanel>
+
+                <Separator Margin="0,15"/>
+
+                <TextBlock Text="Este software faz uso de bibliotecas open source" 
+                           FontSize="14" Foreground="#2C3E50"/>
+                <TextBlock Text="Todos os direitos reservados © 2025" 
+                           FontSize="14" Foreground="#2C3E50"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Rodapé -->
+        <Border Grid.Row="2" Background="#2C3E50" Height="50">
+            <Grid Margin="30,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="© 2025 Software Tilting Table" Foreground="#BDC3C7" 
+                               FontSize="13"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" 
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="Desenvolvido por BLZ Máquinas e Serviços" Foreground="#BDC3C7" FontSize="13"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

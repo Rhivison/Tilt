@@ -7,7 +7,8 @@
     Width="1400" Height="900"
     WindowStartupLocation="CenterScreen"
     x:DataType="local:EnsaiosWindow"
-    Background="#F8F9FA">
+    CanResize="False"
+    Background="#A9A9A9">
 
     <Grid Margin="30">
         <Grid.RowDefinitions>
@@ -18,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="White" CornerRadius="16" Padding="30" Margin="0,0,0,25"
+        <Border Grid.Row="0" Background="#D3D3D3" CornerRadius="16" Padding="30" Margin="0,0,0,25"
                 BoxShadow="0 4 20 0 #10000000">
             <StackPanel>
                 <TextBlock Text="📊 Gerenciamento de Ensaios" FontSize="28" FontWeight="SemiBold" 
@@ -29,7 +30,7 @@
         </Border>
 
         <!-- Área de Busca -->
-        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
+        <Border Grid.Row="1" Background="#D3D3D3" CornerRadius="12" Padding="25" Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -54,7 +55,7 @@
         </Border>
 
         <!-- Tabela de Ensaios -->
-        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="0" Margin="0,0,0,20"
+        <Border Grid.Row="2" Background="#D3D3D3" CornerRadius="12" Padding="0" Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
             <Grid>
                 <Grid.RowDefinitions>
@@ -64,7 +65,7 @@
 
                 <!-- Cabeçalho da Tabela -->
                 <Border Grid.Row="0" Background="#ECF0F1" CornerRadius="12,12,0,0" Padding="20">
-                    <Grid ColumnDefinitions="120,200,150,180,120,120">
+                    <Grid ColumnDefinitions="120,200,150,180,120,120,120">
                         <TextBlock Text="Nº Amostra" FontWeight="SemiBold" Grid.Column="0" 
                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
                         <TextBlock Text="Nome da Amostra" FontWeight="SemiBold" Grid.Column="1" 
@@ -77,6 +78,8 @@
                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
                         <TextBlock Text="Formato" FontWeight="SemiBold" Grid.Column="5" 
                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Ensaio Realizado" FontWeight="SemiBold" Grid.Column="6" 
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
                     </Grid>
                 </Border>
 
@@ -95,26 +98,35 @@
                                             <Setter Property="Background" Value="#F8F9FA"/>
                                         </Style>
                                     </Border.Styles>
-                                    <Grid ColumnDefinitions="120,200,150,180,120,120">
+                                    <Grid ColumnDefinitions="120,200,150,180,120,120,120">
                                         <TextBlock Text="{Binding AmostraNumero}" Grid.Column="0" 
                                                   VerticalAlignment="Center" FontWeight="Medium" 
                                                   Foreground="#3498DB"/>
+                                        
                                         <TextBlock Text="{Binding Amostra}" Grid.Column="1" 
                                                   VerticalAlignment="Center" Foreground="#2C3E50"
                                                   TextTrimming="CharacterEllipsis"/>
+                                        
                                         <TextBlock Text="{Binding Local}" Grid.Column="2" 
                                                   VerticalAlignment="Center" Foreground="#7F8C8D"/>
+                                        
                                         <TextBlock Text="{Binding Responsavel}" Grid.Column="3" 
                                                   VerticalAlignment="Center" Foreground="#7F8C8D"/>
+                                        
                                         <TextBlock Text="{Binding DataEnsaio, StringFormat='{}{0:dd/MM/yyyy}'}" 
                                                   Grid.Column="4" VerticalAlignment="Center" 
                                                   FontFamily="Consolas" Foreground="#34495E"/>
+                                        
                                         <Border Grid.Column="5" Background="#E8F5E8" CornerRadius="12" 
                                                Padding="8,4" HorizontalAlignment="Left">
                                             <TextBlock Text="{Binding FormatoCorpoProva}" 
                                                       FontSize="12" FontWeight="Medium" 
                                                       Foreground="#27AE60"/>
+                                            
                                         </Border>
+                                        <TextBlock Text="{Binding EnsaioRealizado}" 
+                                                   Grid.Column="6" VerticalAlignment="Center" 
+                                                   FontFamily="Consolas" Foreground="#34495E"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -125,7 +137,7 @@
         </Border>
 
         <!-- Botões de Ação -->
-        <Border Grid.Row="3" Background="White" CornerRadius="12" Padding="25"
+        <Border Grid.Row="3" Background="#D3D3D3" CornerRadius="12" Padding="25"
                 BoxShadow="0 2 10 0 #10000000">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -153,7 +165,7 @@
                             Background="#27AE60" Foreground="White" FontWeight="Medium" FontSize="14"
                             CornerRadius="8" Click="NovoEnsaioButton_Click"/>
                     
-                    <Button Content="📂 Abrir Ensaio" Width="140" Height="45" Margin="0,0,10,0"
+                    <Button Content="📂 Abrir" Width="140" Height="45" Margin="0,0,10,0"
                             Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
                             CornerRadius="8" Click="AbrirEnsaioButton_Click"/>
                     
