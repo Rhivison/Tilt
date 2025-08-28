@@ -113,7 +113,7 @@ namespace TiltMachine
                     else
                     {
                         string initialText =
-                            $"Equipamento conectado pronto para calibrar";
+                            $"Equipamento conectado e  pronto para calibrar";
                         AtualizarStatus(initialText);
                     }
                     
