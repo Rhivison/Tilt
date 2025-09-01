@@ -105,7 +105,8 @@ namespace TiltMachine
                 return;
             }
             var propriedades = new PropriedadesEnsaio
-            {
+            {   
+                Id = EnsaioSelecionado.Id,
                 Amostra = EnsaioSelecionado.Amostra,
                 AmostraNumero = EnsaioSelecionado.AmostraNumero,
                 Local = EnsaioSelecionado.Local,

@@ -6,6 +6,7 @@
         Height="650"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
+        Icon="/Assets/blzIcone_no_background.ico"
         Background="#A9A9A9">
 
   <Grid Margin="30">

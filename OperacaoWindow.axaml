@@ -2,9 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TiltMachine.OperacaoWindow"
         Title="Operação da Máquina"
-        Width="800" Height="1200"
+        Width="800" Height="980"
         MinWidth="600" MinHeight="500"
         Background="#A9A9A9"
+        Icon="/Assets/blzIcone_no_background.ico"
         CanResize="False">
 
     <Grid>

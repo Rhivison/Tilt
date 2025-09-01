@@ -4,6 +4,7 @@
         Title="Sobre"
         Width="800" Height="600"
         CanResize="False"
+        Icon="/Assets/blzIcone_no_background.ico"
         Background="#A9A9A9">
 
     <Grid>

@@ -8,6 +8,7 @@
     WindowStartupLocation="CenterScreen"
     x:DataType="local:EnsaiosWindow"
     CanResize="False"
+    Icon="/Assets/blzIcone_no_background.ico"
     Background="#A9A9A9">
 
     <Grid Margin="30">

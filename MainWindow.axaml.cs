@@ -14,6 +14,7 @@ namespace TiltMachine
         public MainWindow()
         {
             InitializeComponent();
+            //this.Icon = new WindowIcon("avares://TiltMachine/Assets/blzIcone_no_background.ico");
             _db.Inicializar();
             App.Arduino.StatusConexaoAlterado += conectado =>
             {

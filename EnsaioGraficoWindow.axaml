@@ -7,9 +7,10 @@
         Title="Detalhes do Ensaio"
         Width="1300"
         Height="1100"
-        Icon="/Assets/chart-icon.png"
+        Icon="/Assets/blzIcone_no_background.ico"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
+        
         Background="#A9A9A9">
 
   <Grid Margin="25">

@@ -34,6 +34,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
     private double? _anguloFinal;
     private CoeficienteCalibracao _coeficienteCalibracao;
     DatabaseService _service = new DatabaseService();
+    public event Action? EnsaioSalvo;
     
     private bool _isBtnPararEnabled;
     public bool IsBtnPararEnabled
@@ -177,6 +178,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
     public EnsaioGraficoWindow(PropriedadesEnsaio _propriedades) : this()
     {
         Ensaio = _propriedades;
+        _ensaio = _propriedades;
         ObterCoeficienteAtivo(); // Comentei temporariamente para testar
         OnPropertyChanged(nameof(Ensaio));
     
@@ -275,6 +277,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
             _ensaio.EnsaioRealizado = "Sim";
             _ensaio.DataEnsaio = DateTime.Today;
             _service.Atualizar(_ensaio.Id, _ensaio);
+            EnsaioSalvo?.Invoke();
         }
         catch (Exception ex)
         {

@@ -34,7 +34,6 @@ namespace TiltMachine
                 itemsControl.ItemsSource = _pontosDisplay;
                 // IMPORTANTE: Configurar eventos IMEDIATAMENTE após InitializeComponent
                 ConfigurarEventosArduino();
-                dadosUltimaCalibracao = databaseService.ObterTodosCoeficientes();
                 this.AttachedToVisualTree += OnAttachedToVisualTree;
             }
             catch (Exception ex)
@@ -103,12 +102,16 @@ namespace TiltMachine
                     
                     Console.WriteLine($"DEBUG: Eventos configurados. CalibracaoAtiva no Arduino: {App.Arduino.CalibracaoAtiva}");
                     Console.WriteLine($"DEBUG: Dados existentes no Arduino: {App.Arduino.DadosCalibracao.Count}");
-                    var ultimaCalibração = dadosUltimaCalibracao.OrderBy(x => x.Id).ToList().First();
-                    if (ultimaCalibração != null)
-                    {
-                        string initialText =
-                            $"Equipamento conectado - Data da última Calibração: {ultimaCalibração.DataCalibracao.ToString()}";
-                        AtualizarStatus(initialText);
+                    dadosUltimaCalibracao = databaseService.ObterTodosCoeficientes();
+                    if (dadosUltimaCalibracao.Count != 0)
+                    {   
+                        var ultimaCalibração = dadosUltimaCalibracao.OrderBy(x => x.Id).ToList().First();
+                        if (ultimaCalibração != null)
+                        {
+                            string initialText =
+                                $"Equipamento conectado - Data da última Calibração: {ultimaCalibração.DataCalibracao.ToString()}";
+                            AtualizarStatus(initialText);
+                        }
                     }
                     else
                     {
@@ -128,7 +131,7 @@ namespace TiltMachine
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao configurar eventos Arduino: {ex.Message}");
+                Console.WriteLine($"Erro ao configurar eventos Arduino: {ex.Message} - {ex.StackTrace}");
                 AtualizarStatus("Erro ao conectar com Arduino");
                 DesabilitarControlesArduino();
                 _eventosConfigurados = false;

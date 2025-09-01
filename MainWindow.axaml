@@ -4,6 +4,7 @@
         Title="Software Tilting Table Test"
         Width="1000" Height="700"
         CanResize="False"
+        Icon="/Assets/blzIcone_no_background.ico"
         Background="#A9A9A9">
     
     <Grid>
@@ -195,7 +196,7 @@
                 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" 
                            HorizontalAlignment="Right">
-                    <TextBlock Text="Desenvolvido por BLZ Serviços" Foreground="#BDC3C7" FontSize="13"/>
+                    <TextBlock Text="Desenvolvido por BLZ Máquinas e Serviços LTDA" Foreground="#BDC3C7" FontSize="13"/>
                 </StackPanel>
             </Grid>
         </Border>

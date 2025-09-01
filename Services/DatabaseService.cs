@@ -403,6 +403,7 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                     TaxaInclinacao = reader.GetDouble(reader.GetOrdinal("TaxaInclinacao")),
                     InclinacaoMaxima = reader.GetDouble(reader.GetOrdinal("InclinacaoMaxima")),
                     DeslocamentoMaximo = reader.GetDouble(reader.GetOrdinal("DeslocamentoMaximo")),
+                    EnsaioRealizado = reader.GetString(reader.GetOrdinal("EnsaioRealizado")),
                     Observacoes = reader.GetString(reader.GetOrdinal("Observacoes"))
                 });
             }
