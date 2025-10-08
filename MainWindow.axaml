@@ -5,7 +5,8 @@
         Width="1000" Height="700"
         CanResize="False"
         Icon="/Assets/blzIcone_no_background.ico"
-        Background="#A9A9A9">
+        Background="#A9A9A9"
+        WindowState="Maximized">
     
     <Grid>
         <Grid.RowDefinitions>

@@ -5,6 +5,7 @@ namespace TiltMachine.Models;
 public class CoeficienteCalibracao
 {
     public int Id { get; set; }
+    public string Ip {get; set;}
     public DateTime DataCalibracao { get; set; }
     public string SensorIdentificador { get; set; }
     public double CoeficienteA { get; set; }

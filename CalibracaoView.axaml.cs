@@ -23,7 +23,7 @@ namespace TiltMachine
         private (double a, double b, double c, double rmse) _coeficientes = (0, 0, 0, 0);
         private DatabaseService databaseService = new DatabaseService();
         private List<CoeficienteCalibracao> dadosUltimaCalibracao = new List<CoeficienteCalibracao>();
-        
+        private string Ip = String.Empty;
 
         public CalibracaoView()
         {
@@ -90,6 +90,7 @@ namespace TiltMachine
                 
                 if (App.Arduino != null && App.Arduino.Conectado)
                 {
+                    Ip = App.Arduino.IpConectado;
                     // IMPORTANTE: Remover eventos existentes antes de adicionar (evita duplicação)
                     App.Arduino.CalibracaoIniciada -= OnCalibracaoIniciada;
                     App.Arduino.CalibracaoFinalizada -= OnCalibracaoFinalizada;
@@ -105,7 +106,7 @@ namespace TiltMachine
                     dadosUltimaCalibracao = databaseService.ObterTodosCoeficientes();
                     if (dadosUltimaCalibracao.Count != 0)
                     {   
-                        var ultimaCalibração = dadosUltimaCalibracao.OrderBy(x => x.Id).ToList().First();
+                        var ultimaCalibração = dadosUltimaCalibracao.OrderBy(x => x.DataCalibracao).ToList().First();
                         if (ultimaCalibração != null)
                         {
                             string initialText =
@@ -514,7 +515,8 @@ namespace TiltMachine
                 //double? erroMedioQuadratico = CalcularErroMedioQuadratico();
 
                 var coeficiente = new CoeficienteCalibracao
-                {
+                {   
+                    Ip = Ip,
                     DataCalibracao = DateTime.Now,
                     SensorIdentificador = "SensorPrincipal",
                     CoeficienteA = _coeficientes.a,
@@ -529,7 +531,8 @@ namespace TiltMachine
                 int coeficienteId = databaseService.InserirCoeficiente(coeficiente);
 
                 var pontosDb = _pontosCalibracao.Select(p => new PontoCalibracaoDb
-                {
+                {   
+                    
                     CoeficienteId = coeficienteId,
                     LeituraSensor = p.LeituraSensor,
                     AnguloReferencia = p.ValorReferencia,
@@ -541,6 +544,17 @@ namespace TiltMachine
                 
                 Console.WriteLine("Coeficientes salvos com sucesso no banco de dados");
                 AtualizarStatus("Coeficientes salvos com sucesso!");
+                try
+                {
+                    string caminhoArquivo = databaseService.ExportarCalibracaoParaCsv(coeficienteId);
+                    AtualizarStatus($"Calibração salva e exportada com sucesso em: {caminhoArquivo}");
+                    _ = AbrirPastaDoArquivoAsync(caminhoArquivo);
+                }
+                catch (Exception exExport)
+                {
+                    Console.WriteLine($"Erro ao exportar arquivo CSV: {exExport.Message}");
+                    AtualizarStatus($"Coeficientes salvos, mas erro ao exportar: {exExport.Message}");
+                }
             }
             catch (Exception ex)
             {
@@ -548,6 +562,169 @@ namespace TiltMachine
                 AtualizarStatus($"Erro ao salvar: {ex.Message}");
             }
         }
+
+        private async Task AbrirPastaDoArquivoAsync(string caminhoCompleto)
+        {
+            try
+            {
+                string diretorio = System.IO.Path.GetDirectoryName(caminhoCompleto);
+        
+                if (OperatingSystem.IsWindows())
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{caminhoCompleto}\"");
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    System.Diagnostics.Process.Start("xdg-open", diretorio);
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    System.Diagnostics.Process.Start("open", diretorio);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Não foi possível abrir a pasta: {ex.Message}");
+            }
+    
+            await Task.CompletedTask;
+        }
+
+        private async void BtnImportarCsv_Click(object? sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new OpenFileDialog
+                {
+                    Title = "Selecione o arquivo de calibração CSV",
+                    Filters = new List<FileDialogFilter>
+                    {
+                        new FileDialogFilter { Name = "Arquivos CSV", Extensions = { "csv" } }
+                    },
+                    AllowMultiple = false
+                };
+
+                var result = await dialog.ShowAsync(this);
+                if (result == null || result.Length == 0) return;
+
+                string caminhoCsv = result[0];
+                if (!System.IO.File.Exists(caminhoCsv))
+                {
+                    await MostrarMensagemAsync("Erro", "Arquivo não encontrado.");
+                    return;
+                }
+
+                ImportarCalibracaoDeCsv(caminhoCsv);
+                AtualizarStatus($"Calibração importada com sucesso de {System.IO.Path.GetFileName(caminhoCsv)}");
+            }
+            catch (Exception ex)
+            {
+                await MostrarMensagemAsync("Erro", $"Falha ao importar calibração: {ex.Message}");
+            }
+        }
+
+       private async void ImportarCalibracaoDeCsv(string caminho)
+        {
+            try
+            {
+                var linhas = System.IO.File.ReadAllLines(caminho);
+                _pontosCalibracao.Clear();
+
+                bool lendoPontos = false;
+                string ipEquipamento = "";
+                CoeficienteCalibracao coef = new();
+
+                foreach (var linha in linhas)
+                {
+                    var partes = linha.Split(',', StringSplitOptions.TrimEntries);
+                    if (partes.Length < 2 && !linha.Contains("DADOS")) continue;
+
+                    // Cabeçalhos
+                    if (linha.StartsWith("IP do Equipamento", StringComparison.OrdinalIgnoreCase))
+                        ipEquipamento = partes[1];
+                    else if (linha.StartsWith("Coeficiente A", StringComparison.OrdinalIgnoreCase))
+                        coef.CoeficienteA = double.Parse(partes[1], System.Globalization.CultureInfo.InvariantCulture);
+                    else if (linha.StartsWith("Coeficiente B", StringComparison.OrdinalIgnoreCase))
+                        coef.CoeficienteB = double.Parse(partes[1], System.Globalization.CultureInfo.InvariantCulture);
+                    else if (linha.StartsWith("Coeficiente C", StringComparison.OrdinalIgnoreCase))
+                        coef.CoeficienteC = double.Parse(partes[1], System.Globalization.CultureInfo.InvariantCulture);
+                    else if (linha.StartsWith("RMSE", StringComparison.OrdinalIgnoreCase))
+                        coef.ErroMedioQuadratico = double.Parse(partes[1], System.Globalization.CultureInfo.InvariantCulture);
+                    else if (linha.StartsWith("DADOS DOS PONTOS", StringComparison.OrdinalIgnoreCase))
+                        lendoPontos = true;
+                    else if (lendoPontos)
+                    {
+                        if (linha.StartsWith("Timestamp") || string.IsNullOrWhiteSpace(linha)) continue;
+
+                        // Timestamp,Leitura do Sensor,Ângulo de Referência (°),Erro (°)
+                        if (partes.Length >= 3)
+                        {
+                            DateTime.TryParse(partes[0], out DateTime timestamp);
+                            double leitura = double.Parse(partes[1], System.Globalization.CultureInfo.InvariantCulture);
+                            double referencia = double.Parse(partes[2], System.Globalization.CultureInfo.InvariantCulture);
+
+                            _pontosCalibracao.Add(new PontoCalibracao
+                            {
+                                Timestamp = timestamp,
+                                LeituraSensor = leitura,
+                                ValorReferencia = referencia
+                            });
+                        }
+                    }
+                }
+
+                // Atualiza display
+                
+                Ip = ipEquipamento;
+                AtualizarDisplayPontos();
+                AtualizarTotalPontos();
+
+                var txtEquacao = this.FindControl<TextBlock>("txtEquacao");
+                var panelEquacao = this.FindControl<Border>("panelEquacao");
+                if (panelEquacao != null && txtEquacao != null)
+                {
+                    panelEquacao.IsVisible = true;
+                    txtEquacao.Text = $"y = {coef.CoeficienteA:F6}x² + {coef.CoeficienteB:F6}x + {coef.CoeficienteC:F6}\nRMSE = {coef.ErroMedioQuadratico:F6}";
+                }
+
+                // 🧱 Inserir na base de dados
+                if (_pontosCalibracao.Count > 0)
+                {
+                    
+                    coef.DataCalibracao = DateTime.Now;
+                    coef.SensorIdentificador = "SensorPrincipal";
+                    coef.QuantidadePontos = _pontosCalibracao.Count;
+                    coef.Ip = ipEquipamento;
+                    coef.Ativa = true;
+                    coef.Observacoes = "Calibração Importada";
+                    int coeficienteId = databaseService.InserirCoeficiente(coef);
+                    var pontosDb = _pontosCalibracao.Select(p => new PontoCalibracaoDb
+                    {   
+                    
+                        CoeficienteId = coeficienteId,
+                        LeituraSensor = p.LeituraSensor,
+                        AnguloReferencia = p.ValorReferencia,
+                        Timestamp = p.Timestamp
+                    }).ToList();
+                    databaseService.InserirPontosCalibracao(coeficienteId, pontosDb);
+                    databaseService.DesativarOutrosCoeficientes(coef.SensorIdentificador, coeficienteId);
+
+                    await MostrarMensagemAsync("Sucesso", $"Calibração importada e salva no banco de dados com sucesso.\n" +
+                                                          $"Total de pontos: {_pontosCalibracao.Count}");
+                }
+                else
+                {
+                    await MostrarMensagemAsync("Aviso", "Nenhum ponto de calibração encontrado no arquivo.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await MostrarMensagemAsync("Erro", $"Falha ao importar e salvar calibração: {ex.Message}");
+            }
+        }
+
+
+
         private (double a, double b, double c, double rmse) CalcularCurvaQuadratica(List<PontoCalibracao> pontos)
         {
             int n = pontos.Count;

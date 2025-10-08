@@ -123,9 +123,9 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
         }
     }
 
-    private void ObterCoeficienteAtivo(string sensorIdentificador = "SensorPrincipal")
+    private void ObterCoeficienteAtivo(string ip)
     {
-        _coeficienteCalibracao = _service.ObterCoeficienteAtivo(sensorIdentificador);
+        _coeficienteCalibracao = _service.ObterCoeficienteAtivo(ip);
 
     }
 
@@ -179,11 +179,11 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
     {
         Ensaio = _propriedades;
         _ensaio = _propriedades;
-        ObterCoeficienteAtivo(); // Comentei temporariamente para testar
         OnPropertyChanged(nameof(Ensaio));
     
         if (App.Arduino != null)
-        {
+        {   
+            ObterCoeficienteAtivo(App.Arduino.IpConectado);
             App.Arduino.EnsaioFinalizado += OnEnsaioFinalizado;
         }
 

@@ -9,7 +9,8 @@
     x:DataType="local:EnsaiosWindow"
     CanResize="False"
     Icon="/Assets/blzIcone_no_background.ico"
-    Background="#A9A9A9">
+    Background="#A9A9A9"
+    WindowState="Maximized">
 
     <Grid Margin="30">
         <Grid.RowDefinitions>
@@ -20,18 +21,30 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="#D3D3D3" CornerRadius="16" Padding="30" Margin="0,0,0,25"
+        <Border Grid.Row="0"
+                Background="#D3D3D3"
+                CornerRadius="16"
+                Padding="30"
+                Margin="0,0,0,25"
                 BoxShadow="0 4 20 0 #10000000">
             <StackPanel>
-                <TextBlock Text="📊 Gerenciamento de Ensaios" FontSize="28" FontWeight="SemiBold" 
-                          Foreground="#2C3E50"/>
-                <TextBlock Text="Visualize, crie e gerencie ensaios do sistema" FontSize="16" 
-                          Foreground="#7F8C8D" Margin="0,8,0,0"/>
+                <TextBlock Text="📊 Gerenciamento de Ensaios"
+                           FontSize="28"
+                           FontWeight="SemiBold"
+                           Foreground="#2C3E50"/>
+                <TextBlock Text="Visualize, crie e gerencie ensaios do sistema"
+                           FontSize="16"
+                           Foreground="#7F8C8D"
+                           Margin="0,8,0,0"/>
             </StackPanel>
         </Border>
 
         <!-- Área de Busca -->
-        <Border Grid.Row="1" Background="#D3D3D3" CornerRadius="12" Padding="25" Margin="0,0,0,20"
+        <Border Grid.Row="1"
+                Background="#D3D3D3"
+                CornerRadius="12"
+                Padding="25"
+                Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -40,105 +53,147 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="🔍" FontSize="20" VerticalAlignment="Center" 
-                          Margin="0,0,15,0"/>
-                
-                <TextBox Grid.Column="1" Height="40" 
-                         Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2" 
-                         CornerRadius="8" Padding="15,0" FontSize="14"
+                <TextBlock Grid.Column="0"
+                           Text="🔍"
+                           FontSize="20"
+                           VerticalAlignment="Center"
+                           Margin="0,0,15,0"/>
+
+                <TextBox Grid.Column="1"
+                         Height="40"
+                         Background="#F8F9FA"
+                         BorderBrush="#E0E0E0"
+                         BorderThickness="2"
+                         CornerRadius="8"
+                         Padding="15,0"
+                         FontSize="14"
                          Text="{Binding TermoBusca, UpdateSourceTrigger=PropertyChanged}"
                          Watermark="Digite para pesquisar ensaios..."/>
 
-                <Button Grid.Column="2" Content="🔎 Buscar" Width="120" Height="40" Margin="15,0,0,0"
-                        Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
-                        CornerRadius="8" Click="BuscarButton_Click"/>
+                <Button Grid.Column="2"
+                        Content="🔎 Buscar"
+                        Width="120"
+                        Height="40"
+                        Margin="15,0,0,0"
+                        Background="#3498DB"
+                        Foreground="White"
+                        FontWeight="Medium"
+                        FontSize="14"
+                        CornerRadius="8"
+                        Click="BuscarButton_Click"/>
             </Grid>
         </Border>
 
-        <!-- Tabela de Ensaios -->
-        <Border Grid.Row="2" Background="#D3D3D3" CornerRadius="12" Padding="0" Margin="0,0,0,20"
+        <!-- Tabela de Ensaios com scroll corrigido -->
+        <Border Grid.Row="2"
+                Background="#D3D3D3"
+                CornerRadius="12"
+                Padding="0"
+                Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
 
-                <!-- Cabeçalho da Tabela -->
-                <Border Grid.Row="0" Background="#ECF0F1" CornerRadius="12,12,0,0" Padding="20">
+            <!-- DockPanel mantém o cabeçalho fixo e a lista rolável -->
+            <DockPanel LastChildFill="True">
+
+                <!-- Cabeçalho fixo -->
+                <Border DockPanel.Dock="Top"
+                        Background="#ECF0F1"
+                        CornerRadius="12,12,0,0"
+                        Padding="20">
                     <Grid ColumnDefinitions="120,200,150,180,120,120,120">
-                        <TextBlock Text="Nº Amostra" FontWeight="SemiBold" Grid.Column="0" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Nome da Amostra" FontWeight="SemiBold" Grid.Column="1" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Local" FontWeight="SemiBold" Grid.Column="2" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Responsável" FontWeight="SemiBold" Grid.Column="3" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Data Ensaio" FontWeight="SemiBold" Grid.Column="4" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Formato" FontWeight="SemiBold" Grid.Column="5" 
-                                  VerticalAlignment="Center" Foreground="#2C3E50"/>
-                        <TextBlock Text="Ensaio Realizado" FontWeight="SemiBold" Grid.Column="6" 
+                        <TextBlock Text="Nº Amostra" FontWeight="SemiBold" Grid.Column="0"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Nome da Amostra" FontWeight="SemiBold" Grid.Column="1"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Local" FontWeight="SemiBold" Grid.Column="2"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Responsável" FontWeight="SemiBold" Grid.Column="3"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Data Ensaio" FontWeight="SemiBold" Grid.Column="4"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Formato" FontWeight="SemiBold" Grid.Column="5"
+                                   VerticalAlignment="Center" Foreground="#2C3E50"/>
+                        <TextBlock Text="Ensaio Realizado" FontWeight="SemiBold" Grid.Column="6"
                                    VerticalAlignment="Center" Foreground="#2C3E50"/>
                     </Grid>
                 </Border>
 
-                <!-- Lista de Dados -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10,20,20">
+                <!-- Lista rolável -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Padding="20,10,20,20"
+                              HorizontalScrollBarVisibility="Disabled">
                     <ListBox ItemsSource="{Binding Ensaios}"
                              SelectedItem="{Binding EnsaioSelecionado, Mode=TwoWay}"
                              BorderThickness="0"
                              Background="Transparent">
+
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="Transparent" Padding="0,8" 
-                                       BorderBrush="#E8E8E8" BorderThickness="0,0,0,1">
+                                <Border Background="Transparent"
+                                        Padding="0,8"
+                                        BorderBrush="#E8E8E8"
+                                        BorderThickness="0,0,0,1">
                                     <Border.Styles>
                                         <Style Selector="Border:pointerover">
                                             <Setter Property="Background" Value="#F8F9FA"/>
                                         </Style>
                                     </Border.Styles>
+
                                     <Grid ColumnDefinitions="120,200,150,180,120,120,120">
-                                        <TextBlock Text="{Binding AmostraNumero}" Grid.Column="0" 
-                                                  VerticalAlignment="Center" FontWeight="Medium" 
-                                                  Foreground="#3498DB"/>
-                                        
-                                        <TextBlock Text="{Binding Amostra}" Grid.Column="1" 
-                                                  VerticalAlignment="Center" Foreground="#2C3E50"
-                                                  TextTrimming="CharacterEllipsis"/>
-                                        
-                                        <TextBlock Text="{Binding Local}" Grid.Column="2" 
-                                                  VerticalAlignment="Center" Foreground="#7F8C8D"/>
-                                        
-                                        <TextBlock Text="{Binding Responsavel}" Grid.Column="3" 
-                                                  VerticalAlignment="Center" Foreground="#7F8C8D"/>
-                                        
-                                        <TextBlock Text="{Binding DataEnsaio, StringFormat='{}{0:dd/MM/yyyy}'}" 
-                                                  Grid.Column="4" VerticalAlignment="Center" 
-                                                  FontFamily="Consolas" Foreground="#34495E"/>
-                                        
-                                        <Border Grid.Column="5" Background="#E8F5E8" CornerRadius="12" 
-                                               Padding="8,4" HorizontalAlignment="Left">
-                                            <TextBlock Text="{Binding FormatoCorpoProva}" 
-                                                      FontSize="12" FontWeight="Medium" 
-                                                      Foreground="#27AE60"/>
-                                            
+                                        <TextBlock Text="{Binding AmostraNumero}" Grid.Column="0"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Medium"
+                                                   Foreground="#3498DB"/>
+
+                                        <TextBlock Text="{Binding Amostra}" Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#2C3E50"
+                                                   TextTrimming="CharacterEllipsis"/>
+
+                                        <TextBlock Text="{Binding Local}" Grid.Column="2"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#7F8C8D"/>
+
+                                        <TextBlock Text="{Binding Responsavel}" Grid.Column="3"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#7F8C8D"/>
+
+                                        <TextBlock Text="{Binding DataEnsaio, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                                   Grid.Column="4"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="Consolas"
+                                                   Foreground="#34495E"/>
+
+                                        <Border Grid.Column="5"
+                                                Background="#E8F5E8"
+                                                CornerRadius="12"
+                                                Padding="8,4"
+                                                HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding FormatoCorpoProva}"
+                                                       FontSize="12"
+                                                       FontWeight="Medium"
+                                                       Foreground="#27AE60"/>
                                         </Border>
-                                        <TextBlock Text="{Binding EnsaioRealizado}" 
-                                                   Grid.Column="6" VerticalAlignment="Center" 
-                                                   FontFamily="Consolas" Foreground="#34495E"/>
+
+                                        <TextBlock Text="{Binding EnsaioRealizado}"
+                                                   Grid.Column="6"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="Consolas"
+                                                   Foreground="#34495E"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
-            </Grid>
+            </DockPanel>
         </Border>
 
         <!-- Botões de Ação -->
-        <Border Grid.Row="3" Background="#D3D3D3" CornerRadius="12" Padding="25"
+        <Border Grid.Row="3"
+                Background="#D3D3D3"
+                CornerRadius="12"
+                Padding="25"
                 BoxShadow="0 2 10 0 #10000000">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -147,36 +202,74 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Informações do lado esquerdo -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Background="#E8F4FD" CornerRadius="8" Padding="12,8">
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Border Background="#E8F4FD"
+                            CornerRadius="8"
+                            Padding="12,8">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📋" FontSize="16" VerticalAlignment="Center" 
-                                      Margin="0,0,8,0"/>
-                            <TextBlock Text="Total de ensaios: " FontWeight="Medium" 
-                                      VerticalAlignment="Center" Foreground="#2C3E50"/>
-                            <TextBlock Text="{Binding Ensaios.Count}" FontWeight="SemiBold" 
-                                      VerticalAlignment="Center" Foreground="#3498DB"/>
+                            <TextBlock Text="📋"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <TextBlock Text="Total de ensaios: "
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Foreground="#2C3E50"/>
+                            <TextBlock Text="{Binding Ensaios.Count}"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"
+                                       Foreground="#3498DB"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
                 <!-- Botões do lado direito -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="✨ Novo Ensaio" Width="140" Height="45" Margin="0,0,10,0"
-                            Background="#27AE60" Foreground="White" FontWeight="Medium" FontSize="14"
-                            CornerRadius="8" Click="NovoEnsaioButton_Click"/>
-                    
-                    <Button Content="📂 Abrir" Width="140" Height="45" Margin="0,0,10,0"
-                            Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
-                            CornerRadius="8" Click="AbrirEnsaioButton_Click"/>
-                    
-                    <Button Content="🗑️ Deletar" Width="120" Height="45" Margin="0,0,10,0"
-                            Background="#E74C3C" Foreground="White" FontWeight="Medium" FontSize="14"
-                            CornerRadius="8" Click="DeletarEnsaioButton_Click"/>
-                    
-                    <Button Content="🚪 Sair" Width="100" Height="45"
-                            Background="#95A5A6" Foreground="White" FontWeight="Medium" FontSize="14"
-                            CornerRadius="8" Click="SairButton_Click"/>
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal">
+                    <Button Content="✨ Novo Ensaio"
+                            Width="140"
+                            Height="45"
+                            Margin="0,0,10,0"
+                            Background="#27AE60"
+                            Foreground="White"
+                            FontWeight="Medium"
+                            FontSize="14"
+                            CornerRadius="8"
+                            Click="NovoEnsaioButton_Click"/>
+
+                    <Button Content="📂 Abrir"
+                            Width="140"
+                            Height="45"
+                            Margin="0,0,10,0"
+                            Background="#3498DB"
+                            Foreground="White"
+                            FontWeight="Medium"
+                            FontSize="14"
+                            CornerRadius="8"
+                            Click="AbrirEnsaioButton_Click"/>
+
+                    <Button Content="🗑️ Deletar"
+                            Width="120"
+                            Height="45"
+                            Margin="0,0,10,0"
+                            Background="#E74C3C"
+                            Foreground="White"
+                            FontWeight="Medium"
+                            FontSize="14"
+                            CornerRadius="8"
+                            Click="DeletarEnsaioButton_Click"/>
+
+                    <Button Content="🚪 Sair"
+                            Width="100"
+                            Height="45"
+                            Background="#95A5A6"
+                            Foreground="White"
+                            FontWeight="Medium"
+                            FontSize="14"
+                            CornerRadius="8"
+                            Click="SairButton_Click"/>
                 </StackPanel>
             </Grid>
         </Border>

@@ -4,7 +4,8 @@
         Title="Calibração do Sensor" Width="900" Height="650"
         CanResize="True"
         Icon="avares://TiltMachine/Assets/blzIcone_no_background.ico"
-        Background="#D3D3D3">
+        Background="#D3D3D3"
+        WindowState="Maximized">
 
     <Grid Margin="30">
         <Grid.RowDefinitions>
@@ -40,7 +41,7 @@
         <!-- Controles Principais -->
         <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20"
                 BoxShadow="0 2 10 0 #10000000">
-            <UniformGrid Rows="1" Columns="4">
+            <UniformGrid Rows="1" Columns="5">
                 <Button x:Name="btnIniciar" Content="🚀 Iniciar Calibração" Height="45" Margin="0,0,10,0"
                         Background="#3498DB" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="BtnIniciar_Click"/>
@@ -50,6 +51,16 @@
                 <Button x:Name="btnLimpar" Content="🗑️ Reiniciar " Height="45" Margin="10,0,0,0"
                         Background="#E67E22" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="BtnLimpar_Click"/>
+                <Button x:Name="btnImportarCsv"
+                        Content="📂 Importar CSV"
+                        Height="45"
+                        Margin="10,0,0,0"
+                        Background="#8E44AD"
+                        Foreground="White"
+                        FontWeight="Medium"
+                        FontSize="14"
+                        CornerRadius="8"
+                        Click="BtnImportarCsv_Click"/>
                 <Button x:Name="BtnSair" Content="🚪 Sair" Height="45" Margin="10,0,0,0"
                         Background="#E74C3C" Foreground="White" FontWeight="Medium" FontSize="14"
                         CornerRadius="8" Click="OnSairCalibracaoClick"/>
