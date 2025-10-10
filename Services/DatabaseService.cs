@@ -344,7 +344,7 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
             command.ExecuteNonQuery();
         }
         
-        public void DesativarOutrosCoeficientes(string sensorIdentificador, int coeficienteIdAtivo)
+        /*public void DesativarOutrosCoeficientes(string sensorIdentificador, int coeficienteIdAtivo)
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
@@ -361,7 +361,30 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
             command.Parameters.AddWithValue("$idAtivo", coeficienteIdAtivo);
             
             command.ExecuteNonQuery();
+        }*/
+        
+        public void DesativarOutrosCoeficientes(string sensorIdentificador, string ip, int coeficienteIdAtivo)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+    
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @"
+        UPDATE CoeficientesCalibracao 
+        SET Ativa = 0 
+        WHERE SensorIdentificador = $sensorId 
+        AND Ip = $ip 
+        AND Id != $idAtivo
+    ";
+    
+            command.Parameters.AddWithValue("$sensorId", sensorIdentificador);
+            command.Parameters.AddWithValue("$ip", ip);
+            command.Parameters.AddWithValue("$idAtivo", coeficienteIdAtivo);
+    
+            command.ExecuteNonQuery();
         }
+        
         
         public void DeletarCoeficiente(int id)
         {
@@ -393,38 +416,35 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                 string fullPath = Path.Combine(documentsPath, fileName);
 
                 using (var writer = new StreamWriter(fullPath, false, System.Text.Encoding.UTF8))
-                {
+                {   
+                    var cultura = System.Globalization.CultureInfo.InvariantCulture;
                     // Cabeçalho com informações da calibração
-                    writer.WriteLine("RELATÓRIO DE CALIBRAÇÃO");
-                    writer.WriteLine($"Data da Calibração,{coeficiente.DataCalibracao:dd/MM/yyyy HH:mm:ss}");
-                    writer.WriteLine($"IP do Equipamento,{coeficiente.Ip}");
-                    writer.WriteLine($"Sensor,{coeficiente.SensorIdentificador}");
-                    writer.WriteLine($"Quantidade de Pontos,{coeficiente.QuantidadePontos}");
-                    writer.WriteLine();
-                    
-                    // Coeficientes da equação
-                    writer.WriteLine("COEFICIENTES DA EQUAÇÃO");
-                    writer.WriteLine($"Coeficiente A (x²),{coeficiente.CoeficienteA:F6}");
-                    writer.WriteLine($"Coeficiente B (x),{coeficiente.CoeficienteB:F6}");
-                    writer.WriteLine($"Coeficiente C (constante),{coeficiente.CoeficienteC:F6}");
-                    writer.WriteLine($"RMSE (Erro Médio Quadrático),{coeficiente.ErroMedioQuadratico:F6}");
+                    writer.WriteLine($"Data da Calibração;{coeficiente.DataCalibracao:dd/MM/yyyy HH:mm:ss}");
+                    writer.WriteLine($"IP do Equipamento;{coeficiente.Ip}");
+                    writer.WriteLine($"Sensor;{coeficiente.SensorIdentificador}");
+                    writer.WriteLine($"Quantidade de Pontos;{coeficiente.QuantidadePontos}");
+
+                    writer.WriteLine($"Coeficiente A (x²);{coeficiente.CoeficienteA.ToString("F6", cultura)}");
+                    writer.WriteLine($"Coeficiente B (x);{coeficiente.CoeficienteB.ToString("F6", cultura)}");
+                    writer.WriteLine($"Coeficiente C (constante);{coeficiente.CoeficienteC.ToString("F6", cultura)}");
+                    writer.WriteLine($"RMSE (Erro Médio Quadrático);{coeficiente.ErroMedioQuadratico?.ToString("F6", cultura) ?? "N/A"}");
                     writer.WriteLine();
                     
                     // Equação formatada
                     if (Math.Abs(coeficiente.CoeficienteA) > 0.000001)
                     {
-                        writer.WriteLine($"Equação,y = {coeficiente.CoeficienteA:F6}x² + {coeficiente.CoeficienteB:F6}x + {coeficiente.CoeficienteC:F6}");
+                        writer.WriteLine($"Equação;y = {coeficiente.CoeficienteA.ToString("F6", cultura)}x² + {coeficiente.CoeficienteB.ToString("F6", cultura)}x + {coeficiente.CoeficienteC.ToString("F6", cultura)}");
                     }
                     else
                     {
-                        writer.WriteLine($"Equação,y = {coeficiente.CoeficienteB:F6}x + {coeficiente.CoeficienteC:F6}");
+                        writer.WriteLine($"Equação;y = {coeficiente.CoeficienteB.ToString("F6", cultura)}x + {coeficiente.CoeficienteC.ToString("F6", cultura)}");
                     }
                     writer.WriteLine();
                     
                     // Observações
                     if (!string.IsNullOrEmpty(coeficiente.Observacoes))
                     {
-                        writer.WriteLine($"Observações,{coeficiente.Observacoes}");
+                        writer.WriteLine($"Observações;{coeficiente.Observacoes}");
                         writer.WriteLine();
                     }
                     
@@ -441,7 +461,7 @@ namespace TiltMachine.Services // Ajuste para o namespace do seu projeto
                         
                         double erro = ponto.AnguloReferencia - valorPrevisto;
                         
-                        writer.WriteLine($"{ponto.Timestamp:dd/MM/yyyy HH:mm:ss},{ponto.LeituraSensor:F6},{ponto.AnguloReferencia:F2},{erro:F4}");
+                        writer.WriteLine($"{ponto.Timestamp:dd/MM/yyyy HH:mm:ss};{ponto.LeituraSensor.ToString("F6", cultura)};{ponto.AnguloReferencia.ToString("F2", cultura)}");
                     }
                 }
 

@@ -181,7 +181,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
         _ensaio = _propriedades;
         OnPropertyChanged(nameof(Ensaio));
     
-        if (App.Arduino != null)
+        if (App.Arduino != null && App.Arduino.IpConectado != null)
         {   
             ObterCoeficienteAtivo(App.Arduino.IpConectado);
             App.Arduino.EnsaioFinalizado += OnEnsaioFinalizado;

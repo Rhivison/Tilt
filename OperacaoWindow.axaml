@@ -6,7 +6,8 @@
         MinWidth="600" MinHeight="500"
         Background="#A9A9A9"
         Icon="/Assets/blzIcone_no_background.ico"
-        CanResize="False">
+        WindowState="Maximized"
+        CanResize="True">
 
     <Grid>
         <Grid.RowDefinitions>

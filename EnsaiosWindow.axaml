@@ -90,7 +90,8 @@
                 CornerRadius="12"
                 Padding="0"
                 Margin="0,0,0,20"
-                BoxShadow="0 2 10 0 #10000000">
+                BoxShadow="0 2 10 0 #10000000"
+                ClipToBounds="True">
 
             <!-- DockPanel mantém o cabeçalho fixo e a lista rolável -->
             <DockPanel LastChildFill="True">
@@ -118,10 +119,10 @@
                     </Grid>
                 </Border>
 
-                <!-- Lista rolável -->
+                <!-- Lista rolável - PADDING CORRIGIDO -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              Padding="20,10,20,20"
-                              HorizontalScrollBarVisibility="Disabled">
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="20,10,20,0">
                     <ListBox ItemsSource="{Binding Ensaios}"
                              SelectedItem="{Binding EnsaioSelecionado, Mode=TwoWay}"
                              BorderThickness="0"

@@ -14,7 +14,7 @@ public class ArduinoService
     private CancellationTokenSource? _cts;
     private readonly StringBuilder _messageBuilder = new();
 
-    private readonly string[] _ips = { "192.168.0.200", "192.168.0.201", "192.168.0.202" };
+    private readonly string[] _ips = { "192.168.1.200", "192.168.1.201", "192.168.1.202" };
     private readonly int _port = 5000;
     private string? _ipConectado;
 
