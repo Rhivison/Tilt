@@ -14,8 +14,9 @@ public class ArduinoService
     private CancellationTokenSource? _cts;
     private readonly StringBuilder _messageBuilder = new();
 
-    private readonly string _ip = "192.168.0.200";
+    private readonly string[] _ips = { "192.168.1.200", "192.168.1.201", "192.168.1.202" };
     private readonly int _port = 5000;
+    private string? _ipConectado;
 
     private bool _ensaioAtivo = false;
     private bool _calibracaoAtiva = false;
@@ -50,6 +51,8 @@ public class ArduinoService
         }
     }
 
+    public string? IpConectado => _ipConectado;
+
     public ArduinoService()
     {
         _ = ConnectAsync(); // Conecta automaticamente ao iniciar
@@ -63,22 +66,63 @@ public class ArduinoService
             _stream?.Close();
             _client?.Close();
 
-            _client = new TcpClient();
-            await _client.ConnectAsync(_ip, _port);
-            _stream = _client.GetStream();
+            // Tenta conectar em cada IP sequencialmente
+            bool conectou = false;
+            foreach (var ip in _ips)
+            {
+                try
+                {
+                    Console.WriteLine($"Tentando conectar em {ip}:{_port}...");
+                    _client = new TcpClient();
+                    
+                    // Timeout de 2 segundos para cada tentativa
+                    var connectTask = _client.ConnectAsync(ip, _port);
+                    if (await Task.WhenAny(connectTask, Task.Delay(2000)) == connectTask)
+                    {
+                        if (_client.Connected)
+                        {
+                            _stream = _client.GetStream();
+                            _ipConectado = ip;
+                            Conectado = true;
+                            conectou = true;
+                            Console.WriteLine($"Conectado com sucesso em {ip}:{_port}");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        _client.Close();
+                        Console.WriteLine($"Timeout ao conectar em {ip}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao conectar em {ip}: {ex.Message}");
+                    _client?.Close();
+                }
+            }
 
-            Conectado = true;
-
-            _cts = new CancellationTokenSource();
-            _ = Task.Run(() => ListenAsync(_cts.Token));
+            if (conectou)
+            {
+                _cts = new CancellationTokenSource();
+                _ = Task.Run(() => ListenAsync(_cts.Token));
+            }
+            else
+            {
+                Console.WriteLine("Não foi possível conectar em nenhum dos IPs disponíveis");
+                Conectado = false;
+                _ipConectado = null;
+                await Task.Delay(5000);
+                _ = ConnectAsync();
+            }
         }
         catch(Exception ex)
         {   
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Erro geral na conexão: {ex.Message}");
             Conectado = false;
+            _ipConectado = null;
             await Task.Delay(5000);
             _ = ConnectAsync();
-            
         }
     }
 
@@ -86,6 +130,7 @@ public class ArduinoService
     {
         await ConnectAsync();
     }
+    
     public async Task IniciarCalibracaoAsync()
     {
         _calibracaoAtiva = true;
@@ -93,6 +138,7 @@ public class ArduinoService
         CalibracaoIniciada?.Invoke();
         await EnviarComandoAsync("CALIBRACAO_START"); // comando para Arduino
     }
+    
     public async Task FinalizarCalibracaoAsync()
     {
         _calibracaoAtiva = false;
@@ -227,6 +273,7 @@ public class ArduinoService
         }
 
         Conectado = false;
+        _ipConectado = null;
         await Task.Delay(5000);
         await ConnectAsync();
     }
@@ -252,6 +299,7 @@ public class ArduinoService
         Console.WriteLine($"DEBUG: Linha de calibração não processada: {linha}");
     
     }
+    
     private void ProcessarDadosEnsaio(string linha)
     {
         // Usa cultura invariante para parsing correto dos números

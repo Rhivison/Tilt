@@ -13,6 +13,10 @@ const float GRAUS_POR_PASSO = (360.0 / (PASSOS_POR_REVOLUCAO * MICROSTEPPING * R
 
 bool modoReposicionamentoAtivo = false;
 
+int contagemZeros = 0;
+int ultimaSensorValue = 0;
+#define LIMIAR_MINIMO 10
+
 
 //const float GRAUS_POR_PASSO = 0.0225;
 // === CONTROLE DE VELOCIDADE OTIMIZADO ===
@@ -35,11 +39,11 @@ const int dirPin = 6;
 const int BOTAOVERDE = 7;
 const int BOTAOVERMELHO = 8;
 const int emergencia = 9;
-const int fc1 = 2;  // FC sentido vermelho
-const int fc2 = 4;  // FC sentido verde
+const int fc1 = 2;  // FC sentido vermelho verde fio
+const int fc2 = 4;  // FC sentido verde amarelo fio
 const int sensor = A3;
-const int sensorPin = A1;
-const int ETHERNET_CS = A2;
+const int sensorPin = A1; // fio branco sensor
+const int ETHERNET_CS = A2; 
 
 // === Estados e controle ===
 bool sentido1 = false, sentido2 = false;
@@ -205,9 +209,9 @@ void setupTimer1() {
 }
 
 // === Controle do motor ===
-void controleMotor() {
+/*void controleMotor() {
   // Atualiza estado dos sensores e botões
-
+  
   if (!controleRemotoAtivo) {
     sentido1 = !digitalRead(BOTAOVERDE);
     sentido2 = !digitalRead(BOTAOVERMELHO);
@@ -232,24 +236,36 @@ void controleMotor() {
   }
   // === Ensaio automático ativo ===
     if (modoEnsaioAtivo) {
-    if (sensorValue != 0 && (f2 || ignorarSeguranca) && (!estadoEmergencia || ignorarSeguranca)) {
-      digitalWrite(dirPin, LOW); // Sentido 2
-      motorAtivo = true;
-    } else {
-      // Finaliza o ensaio
-      motorAtivo = false;
-      modoEnsaioAtivo = false;
-      controleRemotoAtivo = false;
-      
-      // Envia dados finais e sinaliza fim
-      if (client && client.connected()) {
-        client.println("ENSAIO_FINALIZADO");
-        Serial.println("⚠️ ENSAIO FINALIZADO");
+     if (sensorValue == 0) {
+        contagemZeros++;
+      } else {
+          contagemZeros = 0;
+          ultimaSensorValue = sensorValue; // Atualiza apenas quando > 0
       }
-    }
+      
+      // Só finaliza se tiver 3+ leituras zero consecutivas
+      bool sensorValido = (contagemZeros < 10);
+      if (sensorValido && (f2 || ignorarSeguranca) && (!estadoEmergencia || ignorarSeguranca)) {
+        digitalWrite(dirPin, LOW); // Sentido 2
+        motorAtivo = true;
+      } else {
+        // Finaliza o ensaio
+        motorAtivo = false;
+        modoEnsaioAtivo = false;
+        controleRemotoAtivo = false;
+        contagemZeros = 0; // Reset
+        ultimaSensorValue = 0;
+        
+        // Envia dados finais e sinaliza fim
+        if (client && client.connected()) {
+          client.println("ENSAIO_FINALIZADO");
+          Serial.println("⚠️ ENSAIO FINALIZADO");
+        }
+      }
   }
   // === Controle manual ou remoto ===
   else {
+   
     if (sentido1 && !sentido2) {
       if ((!estadoEmergencia && f2) || ignorarSeguranca) {
         digitalWrite(dirPin, LOW);  // Sentido 1
@@ -271,6 +287,100 @@ void controleMotor() {
     }
   }
 
+}*/
+void controleMotor() {
+  // Atualiza estado dos sensores e botões
+  if (!controleRemotoAtivo) {
+    sentido1 = !digitalRead(BOTAOVERDE);
+    sentido2 = !digitalRead(BOTAOVERMELHO);
+  }
+  estadoEmergencia = digitalRead(emergencia); // LOW = acionado
+  f1 = !digitalRead(fc1); // true se fim de curso pressionado
+  f2 = !digitalRead(fc2);
+  sensorValue = analogRead(sensorPin);
+  
+  const bool ignorarSeguranca = false; // <<< Troque para true SOMENTE para testes
+  
+  if (modoReposicionamentoAtivo) {
+    if (!estadoEmergencia && f1) {
+      digitalWrite(dirPin, HIGH); // Sentido do botão vermelho (sentido2)
+      motorAtivo = true;
+    } else {
+      motorAtivo = false;
+      modoReposicionamentoAtivo = false;
+    }
+    return; // Ignora os outros modos (manual/ensaio)
+  }
+  
+  // === Ensaio automático ativo ===
+  if (modoEnsaioAtivo) {
+    // Define um limiar baixo para considerar como "próximo de zero"
+    const int LIMIAR_ZERO = 5; // Ajuste conforme necessário (0-10)
+    const int ZEROS_NECESSARIOS = 20; // Quantas leituras consecutivas baixas para finalizar
+    
+    // Conta leituras muito baixas consecutivas
+    if (sensorValue <= LIMIAR_ZERO) {
+      contagemZeros++;
+      
+      // Debug opcional
+      if (contagemZeros % 5 == 0) {
+        Serial.print("⚠️ Valor baixo detectado (");
+        Serial.print(sensorValue);
+        Serial.print(") - Contagem: ");
+        Serial.println(contagemZeros);
+      }
+    } else {
+      // Sensor tem valor válido, reseta contador
+      if (contagemZeros > 0) {
+        Serial.println("✓ Sensor recuperado, contador zerado");
+      }
+      contagemZeros = 0;
+      ultimaSensorValue = sensorValue;
+    }
+    
+    // Só finaliza após muitas leituras baixas consecutivas
+    bool sensorValido = (contagemZeros < ZEROS_NECESSARIOS);
+    
+    if (sensorValido && (f2 || ignorarSeguranca) && (!estadoEmergencia || ignorarSeguranca)) {
+      digitalWrite(dirPin, LOW); // Sentido 2
+      motorAtivo = true;
+    } else {
+      // Finaliza o ensaio
+      motorAtivo = false;
+      modoEnsaioAtivo = false;
+      controleRemotoAtivo = false;
+      contagemZeros = 0; // Reset
+      ultimaSensorValue = 0;
+      
+      // Envia dados finais e sinaliza fim
+      if (client && client.connected()) {
+        client.println("ENSAIO_FINALIZADO");
+        Serial.print("⚠️ ENSAIO FINALIZADO - Sensor final: ");
+        Serial.println(sensorValue);
+      }
+    }
+  }
+  
+  // === Controle manual ou remoto ===
+  else {
+    if (sentido1 && !sentido2) {
+      if ((!estadoEmergencia && f2) || ignorarSeguranca) {
+        digitalWrite(dirPin, LOW); // Sentido 1
+        motorAtivo = true;
+      } else {
+        motorAtivo = false;
+      }
+    } else if (sentido2 && !sentido1) {
+      if ((!estadoEmergencia && f1) || ignorarSeguranca) {
+        digitalWrite(dirPin, HIGH); // Sentido 2
+        motorAtivo = true;
+      } else {
+        motorAtivo = false;
+      }
+    } else {
+      motorAtivo = false;
+    }
+  }
 }
 
 // === Ethernet - Diagnóstico ===
@@ -510,7 +620,7 @@ void processarComando(EthernetClient& client, String comando) {
 // === Comunicação Ethernet ===
 void lerComandoEthernet() {
     if (!ethernetConectado) return;
-
+  
   // Aceita nova conexão se atual estiver desconectada
   if (!client || !client.connected()) {
     client = server.available();
@@ -595,6 +705,8 @@ void printLeitura() {
   Serial.print(controleRemotoAtivo ? "REMOTO" : "MANUAL");
   Serial.print(" | ENSAIO: ");
   Serial.print(modoEnsaioAtivo ? "ENSAIO" : "NORMAL");
+  Serial.print("| Sensor Value: ");
+  Serial.print(sensorValue);
   Serial.println();
 }
 
