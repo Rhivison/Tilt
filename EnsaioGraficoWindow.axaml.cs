@@ -34,6 +34,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
     private double? _anguloFinal;
     private CoeficienteCalibracao _coeficienteCalibracao;
     DatabaseService _service = new DatabaseService();
+    private List<DadoEnsaio> _dadosEnsaio;
     public event Action? EnsaioSalvo;
     
     private bool _isBtnPararEnabled;
@@ -235,10 +236,14 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
         try
         {   
             if (dados == null || dados.Count == 0)
-            {
+            {   
+                
                 ShowErrorAsync("ERRO", "Nenhum ponto coletado durante o ensaio!");
                 return;
             }
+
+            _dadosEnsaio = new List<DadoEnsaio>();
+            _dadosEnsaio = dados;
             var pontos = ConverterDadosParaGrafico(dados);
     
             ChartSeries = new ISeries[]
@@ -288,6 +293,89 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
         // Converte milissegundos para segundos relativos ao início do ensaio
         
         
+    }
+
+    public async void ExportarCsv()
+    {
+        if (_dadosEnsaio == null || _dadosEnsaio.Count == 0)
+        {
+            await ShowErrorAsync("Erro", "Não há dados do ensaio para exportar.");
+            return;
+        }
+
+        var dlg = new SaveFileDialog
+        {
+            Title = "Salvar dados em CSV",
+            DefaultExtension = "csv",
+            InitialFileName = $"Ensaio_{Ensaio.Amostra}_{Ensaio.AmostraNumero}.csv",
+            Filters = new List<FileDialogFilter>
+            {
+                new FileDialogFilter { Name = "CSV", Extensions = { "csv" } }
+            }
+        };
+
+        var filePath = await dlg.ShowAsync(this);
+
+        if (string.IsNullOrWhiteSpace(filePath))
+            return; // usuário cancelou
+
+        try
+        {
+            using (var writer = new System.IO.StreamWriter(filePath, false, System.Text.Encoding.UTF8))
+            {
+                // Cabeçalho com informações do ensaio
+                writer.WriteLine("=== RELATÓRIO DE ENSAIO ===");
+                writer.WriteLine($"Amostra:,{Ensaio.Amostra}");
+                writer.WriteLine($"Número da Amostra:,{Ensaio.AmostraNumero}");
+                writer.WriteLine($"Local:,{Ensaio.Local}");
+                writer.WriteLine($"Responsável:,{Ensaio.Responsavel}");
+                writer.WriteLine($"Data do Ensaio:,{Ensaio.DataEnsaio:dd/MM/yyyy HH:mm}");
+                writer.WriteLine($"Tipo de Rocha:,{Ensaio.TipoRocha}");
+                writer.WriteLine($"Formato:,{Ensaio.FormatoCorpoProva}");
+                writer.WriteLine($"Dimensões (A x L x P):,{Ensaio.Altura} x {Ensaio.Largura} x {Ensaio.Profundidade}");
+                writer.WriteLine($"Área de Contato:,{Ensaio.AreaContato}");
+                writer.WriteLine($"Taxa de Inclinação:,{Ensaio.TaxaInclinacao} °/min");
+                writer.WriteLine($"Ângulo Final:,{AnguloFinal:F2}°");
+                writer.WriteLine($"Coeficiente de Atrito:,{CoeficienteAtrito}");
+                writer.WriteLine($"Observações:,\"{Ensaio.Observacoes?.Replace("\"", "\"\"")}\"");
+                writer.WriteLine(); // Linha em branco
+                
+                // Cabeçalho dos dados
+                writer.WriteLine("=== DADOS DO ENSAIO ===");
+                writer.WriteLine("Tempo (s),Ângulo (°),Leitura Sensor,Tempo Absoluto (ms)");
+                
+                // Ordena dados por tempo
+                var dadosOrdenados = _dadosEnsaio.OrderBy(d => d.Tempo).ToList();
+                double tempoInicial = dadosOrdenados.First().Tempo;
+                
+                // Dados do ensaio
+                foreach (var dado in dadosOrdenados)
+                {
+                    double tempoSegundos = (dado.Tempo - tempoInicial) / 1000.0;
+                    double anguloCalibrado = await AplicarCalibração(dado.Angulo, _coeficienteCalibracao);
+                    
+                    writer.WriteLine($"{tempoSegundos:F3},{anguloCalibrado:F4},{dado.Angulo:F4},{dado.Tempo}");
+                }
+            }
+            
+            await ShowSuccessAsync("Sucesso", "Arquivo CSV exportado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorAsync("Erro ao exportar CSV", ex.Message);
+        }
+    }
+
+    private void OnExportarCsvClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            ExportarCsv();
+        }
+        catch (Exception exception)
+        {
+            ShowErrorAsync("Erro ao exportar CSV", exception.Message);
+        }
     }
     private List<ObservablePoint> ConverterDadosParaGrafico(List<DadoEnsaio> dados)
     {
@@ -381,6 +469,7 @@ public partial class EnsaioGraficoWindow : BaseWindow, INotifyPropertyChanged
                     {
                         e.Image(imgBytes);
                     });
+                    col.Item().Text($"Velocidade: {ensaio.TaxaInclinacao} °/min");
                     col.Item().Text($"Ângulo de Inclinação final: {lastAngle} ");
                     col.Item().Text(
                         lastAngle.HasValue
