@@ -41,8 +41,32 @@
           <TextBlock Text="Dashboard do Ensaio" FontSize="18" FontWeight="SemiBold" 
                     Foreground="#2C3E50"/>
         </StackPanel>
-        
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button x:Name="BtnIniciar" Content="▶️ Iniciar" Width="95" Height="35"
+                  Background="#27AE60" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnIniciarEnsaioClick"/>
+  
+          <Button x:Name="BtnParar" IsEnabled="{Binding IsBtnPararEnabled}" Content="⏸️ Parar" Width="85" Height="35"
+                  Background="#E74C3C" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnPararEnsaioClick"/>
+  
+          <Button x:Name="BtnReposicionar"  IsEnabled="{Binding IsBtnReposicionarEnabled}" Content="🔄 Reposic." Width="100" Height="35"
+                  Background="#3498DB" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnReposicionarClick"/>
+  
+          <Button x:Name="BtnExportarPdf" IsEnabled="{Binding IsBtnExportarEnabled}" Content="📋 PDF" Width="80" Height="35"
+                  Background="#8E44AD" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnExportarPdfClick"/>
+  
+          <Button x:Name="BtnExportarCsv" IsEnabled="{Binding IsBtnExportarEnabled}" Content="📊 CSV" Width="80" Height="35"
+                  Background="#16A085" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnExportarCsvClick"/>
+  
+          <Button x:Name="BtnSair" Content="🚪 Sair" Width="75" Height="35"
+                  Background="#95A5A6" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnSairEnsaioClick"/>
+        </StackPanel>
+        <!--<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
           <Button x:Name="BtnIniciar" Content="▶️ Iniciar" Width="90" Height="35"
                   Background="#27AE60" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnIniciarEnsaioClick"/>
@@ -59,10 +83,14 @@
                   Background="#8E44AD" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnExportarPdfClick"/>
           
-          <Button x:Name="BtnSair" Content="🚪 Sair" Width="90" Height="35"
+          <Button x:Name="BtnExportarCsv" IsEnabled="{Binding IsBtnExportarEnabled}" Content="📋 CSV" Width="70" Height="35"
+                  Background="#16A085" Foreground="White" FontWeight="SemiBold" FontSize="12"
+                  CornerRadius="6" Click="OnExportarCsvClick"/>
+          
+          <Button x:Name="BtnSair" Content="🚪 Sair" Width="70" Height="35"
                   Background="#95A5A6" Foreground="White" FontWeight="SemiBold" FontSize="12"
                   CornerRadius="6" Click="OnSairEnsaioClick"/>
-        </StackPanel>
+        </StackPanel>-->
       </Grid>
     </Border>
 
